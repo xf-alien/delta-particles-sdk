@@ -351,6 +351,8 @@ public:
 		/*ALERT(at_console, "monster CR: %f/%f = %f\n", pev->health, pev->max_health, pev->health / pev->max_health);*/
 		return pev->health / pev->max_health;
 	}
+
+	float m_flLastYawTime;
 };
 
 
