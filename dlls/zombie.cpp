@@ -66,7 +66,6 @@ public:
 	BOOL CheckRangeAttack1 ( float flDot, float flDist ) { return FALSE; }
 	BOOL CheckRangeAttack2 ( float flDot, float flDist ) { return FALSE; }
 	int TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType );
-	int FadeAmmount;
 };
 
 LINK_ENTITY_TO_CLASS( monster_zombie, CZombie );
@@ -360,7 +359,7 @@ void CZombie :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecD
 
 		if ( !HeadGibbed && pev->health <= flDamage * gSkillData.monHead && flDamage >= 30 )
 		{
-			if ( pev->body == 1 )	//  потому как zombie_technician реализован через "body = 1" 
+			if ( pev->body == 1 )	//  zombie_technician is implemented via "body = 1"
 				pev->body = 3;
 			else
 				pev->body = 2;
@@ -389,9 +388,9 @@ int CZombie :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 	if ( IsAlive() )
 		PainSound();
 
-	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 4) ) // отдельно дл€ дробовика =/, ибо через “рейсјтак работает неправильно
+	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 4) ) // Hack to handle shotgun shells as each shell is a separate TraceAttack
 	{
-		if ( pev->body == 1 )	//  потому как zombie_technician реализован через "body = 1" 
+		if ( pev->body == 1 )	//  zombie_technician is implemented via "body = 1" 
 			pev->body = 3;
 		else
 			pev->body = 2;
@@ -400,7 +399,7 @@ int CZombie :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 		HeadGibbed = TRUE;
 	}
 
-	BuckshotCount = 0; 	//обнул€ем число попавших дробинок дл€ след. выстрела (в случае, если жив осталс€)
+	BuckshotCount = 0; 	// reset the number of shells if zombie stayed alive
 	return CBaseMonster::TakeDamage( pevInflictor, pevAttacker, flDamage, bitsDamageType );
 }
 
@@ -693,10 +692,10 @@ class CZombieStealth : public CZombie
 	{
 		if ( m_Activity == ACT_WALK )	// always invisible if moving
 		{
-			if ( pev->renderamt != FadeAmmount )
+			if ( pev->renderamt != InvisOpacity() )
 				EMIT_SOUND (ENT(pev), CHAN_WEAPON, "debris/beamstart1.wav", 0.2, ATTN_NORM );
 
-			pev->renderamt = FadeAmmount;
+			pev->renderamt = InvisOpacity();
 			pev->rendermode = kRenderTransTexture;
 		}
 		else
@@ -804,13 +803,14 @@ class CZombieStealth : public CZombie
 		m_MonsterState		= MONSTERSTATE_NONE;
 		m_afCapability		= bits_CAP_DOORS_GROUP;
 
-		if ( g_iSkillLevel == SKILL_HARD )
-			FadeAmmount = 45;
-		else
-			FadeAmmount = 115;
-
 		MonsterInit();
+	}
+
+	int InvisOpacity() const {
+		if ( g_iSkillLevel == SKILL_HARD )
+			return 45;
+		else
+			return 115;
 	}
 };
 LINK_ENTITY_TO_CLASS( monster_zombie_assassin, CZombieStealth );
-
