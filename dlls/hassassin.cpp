@@ -112,7 +112,12 @@ public:
 
 	int		m_iShell;
 
-	int		FadeAmmount;
+	int InvisOpacity() const {
+		if ( g_iSkillLevel == SKILL_HARD )
+			return 20;
+		else
+			return 150;
+	}
 };
 LINK_ENTITY_TO_CLASS( monster_human_assassin, CHAssassin );
 
@@ -211,7 +216,7 @@ int CHAssassin :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, f
 {
 	Forget( bits_MEMORY_INCOVER );
 
-	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 5) ) // отдельно дл€ дробовика =/, ибо через “рейсјтак работает неправильно
+	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 5) ) // Hack to handle shotgun shells as each shell is a separate TraceAttack
 	{
 		SetBodygroup( 0, 1);
 
@@ -427,13 +432,7 @@ void CHAssassin :: Spawn()
 
 	m_HackedGunPos		= Vector( 0, 24, 48 );
 
-	if ( g_iSkillLevel == SKILL_HARD )
-		FadeAmmount = 20;
-	else
-		FadeAmmount = 150;
-
-	m_iTargetRanderamt	= FadeAmmount;
-	pev->renderamt		= FadeAmmount;
+	pev->renderamt = m_iTargetRanderamt	= InvisOpacity();
 	pev->rendermode		= kRenderTransTexture;
 
 	MonsterInit();
@@ -861,7 +860,7 @@ void CHAssassin :: RunAI( void )
 	if ( m_hEnemy == NULL || pev->deadflag != DEAD_NO || m_Activity == ACT_RUN || m_Activity == ACT_WALK || !(pev->flags & FL_ONGROUND))
 		m_iTargetRanderamt = 255;
 	else 
-		m_iTargetRanderamt = FadeAmmount;
+		m_iTargetRanderamt = InvisOpacity();
 
 	if (pev->renderamt > m_iTargetRanderamt)
 	{
