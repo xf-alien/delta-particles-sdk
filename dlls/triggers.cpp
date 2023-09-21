@@ -5164,6 +5164,7 @@ void CTriggerCamera::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYP
 	}
 		
 	m_hPlayer = pActivator;
+	CBasePlayer* pPlayer = static_cast<CBasePlayer*>(pActivator);
 
 	m_flReturnTime = gpGlobals->time + m_flWait;
 	pev->speed = m_initialSpeed;
@@ -5187,7 +5188,7 @@ void CTriggerCamera::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYP
 
 	if (FBitSet (pev->spawnflags, SF_CAMERA_PLAYER_TAKECONTROL ) )
 	{
-		((CBasePlayer *)pActivator)->EnableControl(FALSE);
+		pPlayer->EnableControl(FALSE);
 	}
 
 	if ( m_sPath )
@@ -5229,11 +5230,13 @@ void CTriggerCamera::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYP
 		if (pEntity)
 		{
 			SET_VIEW( pActivator->edict(), pEntity->edict() );
+			pPlayer->m_hViewEntity = pEntity;
 		}
 	}
 	else
 	{
 		SET_VIEW( pActivator->edict(), edict() );
+		pPlayer->m_hViewEntity = this;
 	}
 
 	SET_MODEL(ENT(pev), STRING(pActivator->pev->model) );
@@ -5254,11 +5257,17 @@ void CTriggerCamera::FollowTarget( )
 
 	if (m_hTarget == NULL || m_flReturnTime < gpGlobals->time)
 	{
-		if (m_hPlayer->IsAlive( ))
+		CBasePlayer* player = static_cast<CBasePlayer*>(static_cast<CBaseEntity*>(m_hPlayer));
+
+		if (player->IsAlive( ))
 		{
-			SET_VIEW( m_hPlayer->edict(), m_hPlayer->edict() );
-			((CBasePlayer *)((CBaseEntity *)m_hPlayer))->EnableControl(TRUE);
+			SET_VIEW( player->edict(), player->edict() );
+			player->EnableControl(TRUE);
 		}
+
+		player->m_hViewEntity = 0;
+		player->m_bResetViewEntity = false;
+
 		SUB_UseTargets( this, USE_TOGGLE, 0 );
 		pev->avelocity = Vector( 0, 0, 0 );
 		m_state = 0;
