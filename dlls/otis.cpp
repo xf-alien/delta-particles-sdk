@@ -29,6 +29,7 @@
 #include	"scripted.h"
 #include	"weapons.h"
 #include	"soundent.h"
+#include	"plane.h"
 
 //=========================================================
 // Monster's Anim Events Go Here
@@ -41,6 +42,13 @@
 #define	OTIS_BODY_GUNHOLSTERED		0
 #define	OTIS_BODY_GUNDRAWN			1
 #define OTIS_BODY_GUNGONE			2
+
+#define bits_COND_OTIS_NOFIRE	( bits_COND_SPECIAL1 )
+
+enum
+{
+	TASK_OTIS_CHECK_FIRE = LAST_COMMON_TASK + 1,
+};
 
 class COtis : public CTalkMonster
 {
@@ -79,6 +87,8 @@ public:
 	void TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType);
 	void Killed( entvars_t *pevAttacker, int iGib );
 	
+	BOOL NoFriendlyFire();
+
 	virtual int		Save( CSave &save );
 	virtual int		Restore( CRestore &restore );
 	static	TYPEDESCRIPTION m_SaveData[];
@@ -210,12 +220,40 @@ Schedule_t	slIdleOtStand[] =
 	},
 };
 
+// primary range attack
+Task_t tlOtRangeAttack1[] =
+{
+	{ TASK_STOP_MOVING, 0 },
+	{ TASK_FACE_ENEMY, (float)0 },
+	{ TASK_OTIS_CHECK_FIRE, (float)0 },
+	{ TASK_RANGE_ATTACK1, (float)0 },
+};
+
+Schedule_t slOtRangeAttack1[] =
+{
+	{
+		tlOtRangeAttack1,
+		ARRAYSIZE( tlOtRangeAttack1 ),
+		bits_COND_NEW_ENEMY |
+		bits_COND_ENEMY_DEAD |
+		bits_COND_LIGHT_DAMAGE |
+		bits_COND_HEAVY_DAMAGE |
+		bits_COND_ENEMY_OCCLUDED |
+		bits_COND_NO_AMMO_LOADED |
+		bits_COND_OTIS_NOFIRE |
+		bits_COND_HEAR_SOUND,
+		bits_SOUND_DANGER,
+		"Range Attack1"
+	},
+};
+
 DEFINE_CUSTOM_SCHEDULES( COtis )
 {
 	slOtFollow,
 	slOtisEnemyDraw,
 	slOtFaceTarget,
 	slIdleOtStand,
+	slOtRangeAttack1,
 };
 
 
@@ -223,7 +261,17 @@ IMPLEMENT_CUSTOM_SCHEDULES( COtis, CTalkMonster );
 
 void COtis :: StartTask( Task_t *pTask )
 {
-	CTalkMonster::StartTask( pTask );	
+	switch ( pTask->iTask ) {
+	case TASK_OTIS_CHECK_FIRE:
+		if( !NoFriendlyFire() )
+		{
+			SetConditions( bits_COND_OTIS_NOFIRE );
+		}
+		TaskComplete();
+		break;
+	default:
+		CTalkMonster::StartTask( pTask );
+	}
 }
 
 void COtis :: RunTask( Task_t *pTask )
@@ -604,7 +652,7 @@ int COtis :: TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, float 
 
 	}
 
-	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 5) ) // отдельно дл€ дробовика =/, ибо через “рейсјтак работает неправильно
+	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 5) ) // Hack to handle shotgun shells as each shell is a separate TraceAttack
 	{
 		SetBodygroup( 0, 1);
 
@@ -747,6 +795,8 @@ Schedule_t* COtis :: GetScheduleOfType ( int Type )
 		}
 		else
 			return psched;	
+	case SCHED_RANGE_ATTACK1:
+		return slOtRangeAttack1;
 	}
 
 	return CTalkMonster::GetScheduleOfType( Type );
@@ -858,4 +908,63 @@ MONSTERSTATE COtis :: GetIdealState ( void )
 void COtis::DeclineFollowing( void )
 {
 	PlaySentence( m_szGrp[TLK_DECLINE], 2, VOL_NORM, ATTN_NORM ); //LRC
+}
+
+BOOL COtis::NoFriendlyFire()
+{
+	if( m_hEnemy != 0 )
+	{
+		UTIL_MakeVectors( UTIL_VecToAngles( m_hEnemy->Center() - pev->origin ) );
+	}
+	else
+	{
+		// if there's no enemy, pretend there's a friendly in the way, so the npc won't shoot.
+		return FALSE;
+	}
+
+	CPlane backPlane;
+	CPlane leftPlane;
+	CPlane rightPlane;
+
+	Vector vecLeftSide;
+	Vector vecRightSide;
+	Vector v_left;
+	Vector v_dir;
+
+	v_dir = gpGlobals->v_right * ( pev->size.x * 1.5f );
+	vecLeftSide = pev->origin - v_dir;
+	vecRightSide = pev->origin + v_dir;
+
+	v_left = gpGlobals->v_right * -1.0f;
+
+	leftPlane.InitializePlane( gpGlobals->v_right, vecLeftSide );
+	rightPlane.InitializePlane( v_left, vecRightSide );
+	backPlane.InitializePlane( gpGlobals->v_forward, pev->origin );
+
+	for( int k = 1; k <= gpGlobals->maxClients; k++ )
+	{
+		CBaseEntity* pPlayer = UTIL_PlayerByIndex(k);
+		if (pPlayer && pPlayer->IsPlayer() && IRelationship(pPlayer) == R_AL && pPlayer->IsAlive())
+		{
+			if( backPlane.PointInFront( pPlayer->pev->origin ) &&
+				leftPlane.PointInFront( pPlayer->pev->origin ) &&
+				rightPlane.PointInFront( pPlayer->pev->origin ) )
+			{
+				//ALERT(at_aiconsole, "%s: Ally player at fire plane!\n", STRING(pev->classname));
+				// player is in the check volume! Don't shoot!
+				if ((m_hEnemy->pev->origin - pev->origin).Length2D() > (pPlayer->pev->origin - pev->origin).Length2D())
+				{
+					//ALERT(at_aiconsole, "%s: Ally player is between enemy (%s) and myself. Don't shoot!\n", STRING(pev->classname), STRING(m_hEnemy->pev->classname));
+					return FALSE;
+				}
+				else if (m_hEnemy->pev->deadflag == DEAD_DYING)
+				{
+					//ALERT(at_aiconsole, "%s: Enemy (%s) is dying and player is behind it. Stop shooting!\n", STRING(pev->classname), STRING(m_hEnemy->pev->classname));
+					return FALSE;
+				}
+			}
+		}
+	}
+
+	return TRUE;
 }
