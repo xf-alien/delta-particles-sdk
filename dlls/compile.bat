@@ -34,6 +34,7 @@ set SOURCES=agrunt.cpp ^
 	effects.cpp ^
 	egon.cpp ^
 	explode.cpp ^
+	female_npc.cpp ^
 	flyingmonster.cpp ^
 	func_break.cpp ^
 	func_tank.cpp ^
@@ -86,6 +87,7 @@ set SOURCES=agrunt.cpp ^
 	python.cpp ^
 	rat.cpp ^
 	roach.cpp ^
+	robotic_infantry.cpp ^
 	rpg.cpp ^
 	satchel.cpp ^
 	AI_BaseNPC_Schedule.cpp ^
@@ -104,6 +106,7 @@ set SOURCES=agrunt.cpp ^
 	subs.cpp ^
 	talkmonster.cpp ^
 	teamplay_gamerules.cpp ^
+	technician.cpp ^
 	tempmonster.cpp ^
 	tentacle.cpp ^
 	triggers.cpp ^
