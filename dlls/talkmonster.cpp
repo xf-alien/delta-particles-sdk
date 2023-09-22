@@ -1468,7 +1468,7 @@ void CTalkMonster::StartFollowing( CBaseEntity *pLeader )
 //LRC- redefined, now returns true if following would be physically possible
 BOOL CTalkMonster::CanFollow( void )
 {
-	if ( m_MonsterState == MONSTERSTATE_SCRIPT )
+	if ( m_MonsterState == MONSTERSTATE_SCRIPT || m_IdealMonsterState == MONSTERSTATE_SCRIPT )
 	{
 		if ( !m_pCine->CanInterruptByPlayerCall() )
 			return FALSE;
