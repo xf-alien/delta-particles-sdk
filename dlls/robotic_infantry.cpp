@@ -547,7 +547,7 @@ void Crinfantry::Killed( entvars_t *pevAttacker, int iGib )
 //=========================================================
 void Crinfantry :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType)
 {
-	if  (ptr->iHitgroup != 1 && bitsDamageType == DMG_CLUB) // Низзя отпиздить монтировкой!
+	if  (ptr->iHitgroup != 1 && bitsDamageType == DMG_CLUB) // Can't deal damage with crowbar!
 		{
 			flDamage = 0.01;
 			UTIL_Ricochet( ptr->vecEndPos, 1.0 );
@@ -815,33 +815,35 @@ void Crinfantry :: HandleAnimEvent( MonsterEvent_t *pEvent )
 			{
 			if (pev->spawnflags & SF_MONSTER_NO_WPN_DROP) break; //LRC
 
-			Vector	vecGunPos;
-			Vector	vecGunAngles;
-
-			GetAttachment( 0, vecGunPos, vecGunAngles );
-
-			// switch to body group with no gun.
-			SetBodygroup( GUN_GROUP, GUN_NONE );
-			DropItem( "item_battery", BodyTarget( pev->origin ), vecGunAngles );
-
-			// now spawn a gun.
-			if (FBitSet( pev->weapons, R_INFANTRY_SHOTGUN ))
+			if ( GetBodygroup( GUN_GROUP ) != GUN_NONE )
 			{
-				 DropItem( "weapon_shotgun", vecGunPos, vecGunAngles );
-			}
-			else if (FBitSet( pev->weapons, R_INFANTRY_SMG ))
-			{
-				 DropItem( "weapon_smg", vecGunPos, vecGunAngles );
-			}
-			else
-			{
-				 DropItem( "weapon_m4a1", vecGunPos, vecGunAngles );
-			}
-			if (FBitSet( pev->weapons, R_INFANTRY_GRENADELAUNCHER ))
-			{
-				DropItem( "ammo_ARgrenades", BodyTarget( pev->origin ), vecGunAngles );
-			}
+				Vector	vecGunPos;
+				Vector	vecGunAngles;
 
+				GetAttachment( 0, vecGunPos, vecGunAngles );
+
+				// switch to body group with no gun.
+				SetBodygroup( GUN_GROUP, GUN_NONE );
+				DropItem( "item_battery", BodyTarget( pev->origin ), vecGunAngles );
+
+				// now spawn a gun.
+				if (FBitSet( pev->weapons, R_INFANTRY_SHOTGUN ))
+				{
+					DropItem( "weapon_shotgun", vecGunPos, vecGunAngles );
+				}
+				else if (FBitSet( pev->weapons, R_INFANTRY_SMG ))
+				{
+					DropItem( "weapon_smg", vecGunPos, vecGunAngles );
+				}
+				else
+				{
+					DropItem( "weapon_m4a1", vecGunPos, vecGunAngles );
+				}
+				if (FBitSet( pev->weapons, R_INFANTRY_GRENADELAUNCHER ))
+				{
+					DropItem( "ammo_ARgrenades", BodyTarget( pev->origin ), vecGunAngles );
+				}
+			}
 			}
 			break;
 
