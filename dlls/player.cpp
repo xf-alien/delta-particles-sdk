@@ -3626,7 +3626,6 @@ void CBasePlayer :: ForceClientDllUpdate( void )
 ImpulseCommands
 ============
 */
-extern float g_flWeaponCheat;
 
 void CBasePlayer::ImpulseCommands( )
 {
@@ -3711,7 +3710,7 @@ void CBasePlayer::ImpulseCommands( )
 void CBasePlayer::CheatImpulseCommands( int iImpulse )
 {
 #if !defined( HLDEMO_BUILD )
-	if ( g_flWeaponCheat == 0.0 )
+	if ( g_enable_cheats->value == 0 )
 	{
 		return;
 	}
