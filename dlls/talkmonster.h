@@ -96,6 +96,8 @@ enum
 	LAST_TALKMONSTER_TASK,			// MUST be last
 };
 
+#define SF_MONSTER_IGNORE_PLAYER_PUSH	( 1 << 19 )
+
 class CTalkMonster : public CBaseMonster
 {
 public:

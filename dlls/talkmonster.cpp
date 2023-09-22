@@ -947,6 +947,9 @@ void CTalkMonster :: Touch( CBaseEntity *pOther )
 		if ( m_afMemory & bits_MEMORY_PROVOKED )
 			return;
 
+		if (FBitSet(pev->spawnflags, SF_MONSTER_IGNORE_PLAYER_PUSH))
+			return;
+
 		// Stay put during speech
 		if ( IsTalking() )
 			return;
