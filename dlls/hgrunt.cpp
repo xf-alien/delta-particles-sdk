@@ -667,7 +667,7 @@ int CHGrunt :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 {
 	Forget( bits_MEMORY_INCOVER );
 
-	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 5) ) // отдельно дл€ дробовика =/, ибо через “рейсјтак работает неправильно
+	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 5) ) // Hack to handle shotgun shells as each shell is a separate TraceAttack
 	{
 		SetBodygroup( HEAD_GROUP, HEAD_HEADLESS );
 
@@ -924,30 +924,33 @@ void CHGrunt :: HandleAnimEvent( MonsterEvent_t *pEvent )
 			{
 			if (pev->spawnflags & SF_MONSTER_NO_WPN_DROP) break; //LRC
 
-			Vector	vecGunPos;
-			Vector	vecGunAngles;
+			if ( GetBodygroup( GUN_GROUP ) != GUN_NONE )
+			{
+				Vector	vecGunPos;
+				Vector	vecGunAngles;
 
-			GetAttachment( 0, vecGunPos, vecGunAngles );
+				GetAttachment( 0, vecGunPos, vecGunAngles );
 
-			// switch to body group with no gun.
-			SetBodygroup( GUN_GROUP, GUN_NONE );
+				// switch to body group with no gun.
+				SetBodygroup( GUN_GROUP, GUN_NONE );
 
-			// now spawn a gun.
-			if (FBitSet( pev->weapons, HGRUNT_SHOTGUN ))
-			{
-				 DropItem( "weapon_shotgun", vecGunPos, vecGunAngles );
-			}
-			else if (FBitSet( pev->weapons, HGRUNT_SMG ))
-			{
-				 DropItem( "weapon_smg", vecGunPos, vecGunAngles );
-			}
-			else
-			{
-				 DropItem( "weapon_m4a1", vecGunPos, vecGunAngles );
-			}
-			if (FBitSet( pev->weapons, HGRUNT_GRENADELAUNCHER ))
-			{
-				DropItem( "ammo_ARgrenades", BodyTarget( pev->origin ), vecGunAngles );
+				// now spawn a gun.
+				if (FBitSet( pev->weapons, HGRUNT_SHOTGUN ))
+				{
+					DropItem( "weapon_shotgun", vecGunPos, vecGunAngles );
+				}
+				else if (FBitSet( pev->weapons, HGRUNT_SMG ))
+				{
+					DropItem( "weapon_smg", vecGunPos, vecGunAngles );
+				}
+				else
+				{
+					DropItem( "weapon_m4a1", vecGunPos, vecGunAngles );
+				}
+				if (FBitSet( pev->weapons, HGRUNT_GRENADELAUNCHER ))
+				{
+					DropItem( "ammo_ARgrenades", BodyTarget( pev->origin ), vecGunAngles );
+				}
 			}
 
 			}
