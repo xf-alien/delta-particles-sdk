@@ -393,7 +393,7 @@ void CBaseDoor::Spawn( )
 		SetTouch ( NULL );
 	}
 	else // touchable button
-		SetTouch( DoorTouch );
+		SetTouch( &CBaseDoor::DoorTouch );
 }
 //END
  
@@ -937,7 +937,7 @@ void CBaseDoor::Blocked( CBaseEntity *pOther )
 	if ( pev->dmg )
 		pOther->TakeDamage( pev, pev, pev->dmg, DMG_CRUSH );
 
-	if( true ) 	// Потому как заебло ебло уже от эксплойта блокировки дверей и подвижных объектов, ососбенно скриптовых и сюжетно важных.
+	if( true ) 	// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
 	{
 		// Detonate satchels
 		if( !strcmp( "monster_satchel", STRING( pOther->pev->classname ) ) )

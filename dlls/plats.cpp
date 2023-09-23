@@ -1618,7 +1618,7 @@ void CFuncTrackTrain :: UpdateSound( void )
 	if (!pev->noise)
 		return;
 
-	flpitch = TRAIN_STARTPITCH + (abs(pev->speed) * (TRAIN_MAXPITCH - TRAIN_STARTPITCH) / TRAIN_MAXSPEED);
+	flpitch = TRAIN_STARTPITCH + (fabs(pev->speed) * (TRAIN_MAXPITCH - TRAIN_STARTPITCH) / TRAIN_MAXSPEED);
 
 	if (!m_soundPlaying)
 	{
@@ -2420,7 +2420,7 @@ void CFuncTrackChange :: UpdateTrain( Vector &dest )
 	float time;
 	Vector vel = pev->velocity;
 
-	if (m_pfnThink == LinearMoveNow)
+	if (m_pfnThink == &CFuncTrackChange::LinearMoveNow)
 	{
 		// we're going to do a LinearMoveNow: calculate the velocity it'll have
 		Vector vecDest;
