@@ -66,6 +66,10 @@ public:
 	BOOL CheckRangeAttack1 ( float flDot, float flDist ) { return FALSE; }
 	BOOL CheckRangeAttack2 ( float flDot, float flDist ) { return FALSE; }
 	int TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType );
+
+	virtual int ZombiePitch() {
+		return 100 + RANDOM_LONG(-5,5);
+	}
 };
 
 LINK_ENTITY_TO_CLASS( monster_zombie, CZombie );
@@ -140,31 +144,25 @@ void CZombie :: SetYawSpeed ( void )
 
 void CZombie :: PainSound( void )
 {
-	int pitch = 95 + RANDOM_LONG(0,9);
-
 	if (RANDOM_LONG(0,5) < 2)
-		EMIT_SOUND_DYN ( ENT(pev), CHAN_VOICE, pPainSounds[ RANDOM_LONG(0,ARRAYSIZE(pPainSounds)-1) ], 1.0, ATTN_NORM, 0, pitch );
+		EMIT_SOUND_DYN ( ENT(pev), CHAN_VOICE, pPainSounds[ RANDOM_LONG(0,ARRAYSIZE(pPainSounds)-1) ], 1.0, ATTN_NORM, 0, ZombiePitch() );
 }
 
 void CZombie :: AlertSound( void )
 {
-	int pitch = 95 + RANDOM_LONG(0,9);
-
-	EMIT_SOUND_DYN ( ENT(pev), CHAN_VOICE, pAlertSounds[ RANDOM_LONG(0,ARRAYSIZE(pAlertSounds)-1) ], 1.0, ATTN_NORM, 0, pitch );
+	EMIT_SOUND_DYN ( ENT(pev), CHAN_VOICE, pAlertSounds[ RANDOM_LONG(0,ARRAYSIZE(pAlertSounds)-1) ], 1.0, ATTN_NORM, 0, ZombiePitch() );
 }
 
 void CZombie :: IdleSound( void )
 {
-	int pitch = 95 + RANDOM_LONG(0,9);
-
 	// Play a random idle sound
-	EMIT_SOUND_DYN ( ENT(pev), CHAN_VOICE, pIdleSounds[ RANDOM_LONG(0,ARRAYSIZE(pIdleSounds)-1) ], 1.0, ATTN_NORM, 0, 100 + RANDOM_LONG(-5,5) );
+	EMIT_SOUND_DYN ( ENT(pev), CHAN_VOICE, pIdleSounds[ RANDOM_LONG(0,ARRAYSIZE(pIdleSounds)-1) ], 1.0, ATTN_NORM, 0, ZombiePitch() );
 }
 
 void CZombie :: AttackSound( void )
 {
 	// Play a random attack sound
-	EMIT_SOUND_DYN ( ENT(pev), CHAN_VOICE, pAttackSounds[ RANDOM_LONG(0,ARRAYSIZE(pAttackSounds)-1) ], 1.0, ATTN_NORM, 0, 100 + RANDOM_LONG(-5,5) );
+	EMIT_SOUND_DYN ( ENT(pev), CHAN_VOICE, pAttackSounds[ RANDOM_LONG(0,ARRAYSIZE(pAttackSounds)-1) ], 1.0, ATTN_NORM, 0, ZombiePitch() );
 }
 
 
@@ -811,6 +809,10 @@ class CZombieStealth : public CZombie
 			return 45;
 		else
 			return 115;
+	}
+
+	virtual int ZombiePitch() {
+		return 110 + RANDOM_LONG(-5,5);
 	}
 };
 LINK_ENTITY_TO_CLASS( monster_zombie_assassin, CZombieStealth );
