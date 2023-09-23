@@ -98,6 +98,9 @@ enum
 
 #define SF_MONSTER_IGNORE_PLAYER_PUSH	( 1 << 19 )
 
+#define	SPEAK_NORMAL_CHECK 0
+#define	SPEAK_DISREGARD_ENEMY (1 << 0)
+
 class CTalkMonster : public CBaseMonster
 {
 public:
@@ -133,7 +136,7 @@ public:
 	int				FIdleStare( void );
 	int				FIdleHello( void );
 	void			IdleHeadTurn( Vector &vecFriend );
-	int				FOkToSpeak( void );
+	int				FOkToSpeak( int speakFlags = SPEAK_NORMAL_CHECK );
 	void			TrySmellTalk( void );
 	CBaseEntity		*EnumFriends( CBaseEntity *pentPrevious, int listNumber, BOOL bTrace );
 	void			AlertFriends( void );

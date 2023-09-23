@@ -438,7 +438,7 @@ void CScientist::DeclineFollowing( void )
 
 void CScientist :: Scream( void )
 {
-	if ( FOkToSpeak() )
+	if ( FOkToSpeak(SPEAK_DISREGARD_ENEMY) )
 	{
 		Talk( 10 );
 		m_hTalkTarget = m_hEnemy;
@@ -480,7 +480,7 @@ void CScientist :: StartTask( Task_t *pTask )
 		break;
 
 	case TASK_SAY_FEAR:
-		if ( FOkToSpeak() )
+		if ( FOkToSpeak(SPEAK_DISREGARD_ENEMY) )
 		{
 			Talk( 2 );
 			m_hTalkTarget = m_hEnemy;
@@ -828,8 +828,8 @@ int CScientist :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, f
 //=========================================================
 void CScientist :: GibMonster ( void )
 {
-	if ( !HeadGibbed )								// ..голова на месте?	
-	GibHeadMonster( Vector ( pev->origin.x, pev->origin.y, pev->origin.z + 16 ), TRUE );	// Да? Отрываем! =)					 
+	if ( !HeadGibbed )								// ..пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ?	
+	GibHeadMonster( Vector ( pev->origin.x, pev->origin.y, pev->origin.z + 16 ), TRUE );	// пїЅпїЅ? пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ! =)					 
 
 	CTalkMonster :: GibMonster( );
 }

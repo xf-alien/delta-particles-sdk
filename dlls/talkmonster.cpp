@@ -982,7 +982,7 @@ void CTalkMonster :: IdleRespond( void )
 	PlaySentence( m_szGrp[TLK_ANSWER], RANDOM_FLOAT(2.8, 3.2), VOL_NORM, ATTN_IDLE );
 }
 
-int CTalkMonster :: FOkToSpeak( void )
+int CTalkMonster :: FOkToSpeak( int speakFlags )
 {
 	// if in the grip of a barnacle, don't speak
 	if ( m_MonsterState == MONSTERSTATE_PRONE || m_IdealMonsterState == MONSTERSTATE_PRONE )
@@ -1011,7 +1011,7 @@ int CTalkMonster :: FOkToSpeak( void )
 		return FALSE;
 
 	// don't talk if you're in combat
-	if (m_hEnemy != NULL && FVisible( m_hEnemy ))
+	if (!FBitSet(speakFlags, SPEAK_DISREGARD_ENEMY) && m_hEnemy != NULL && FVisible( m_hEnemy ))
 		return FALSE;
 
 	return TRUE;

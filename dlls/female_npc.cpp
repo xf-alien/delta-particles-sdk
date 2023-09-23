@@ -224,7 +224,7 @@ int	CDiana :: Classify ( void )
 //=========================================================
 void CDiana :: AlertSound( void )
 {
-	if (m_hEnemy != NULL && (!(m_hEnemy->IsPlayer())))
+	if (m_hEnemy != NULL && !m_hEnemy->IsPlayer() && FOkToSpeak(SPEAK_DISREGARD_ENEMY))
 		PlaySentence( "DN_ATTACK", RANDOM_FLOAT(2.8, 3.2), VOL_NORM, ATTN_IDLE );
 }
 //=========================================================

@@ -325,7 +325,7 @@ void COtis :: AlertSound( void )
 {
 	if ( m_hEnemy != NULL )
 	{
-		if ( FOkToSpeak() )
+		if ( FOkToSpeak(SPEAK_DISREGARD_ENEMY) )
 		{
 			if (m_iszSpeakAs)
 			{
