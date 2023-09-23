@@ -816,6 +816,8 @@ void inline UpdateRange(int &minValue, int &maxValue, int Goal, int Best)
 
 void CGraph :: CheckNode(Vector vecOrigin, int iNode)
 {
+	extern cvar_t findnearestnodefix;
+
     // Have we already seen this point before?.
     //
     if (m_di[iNode].m_CheckedEvent == m_CheckedCounter) return;
@@ -826,9 +828,12 @@ void CGraph :: CheckNode(Vector vecOrigin, int iNode)
 	if ( flDist < m_flShortest )
 	{
 		TraceResult tr;
+		Vector vecStart = vecOrigin;
+		if (findnearestnodefix.value)
+			vecStart.z += NODE_HEIGHT;
 
 		// make sure that vecOrigin can trace to this node!
-		UTIL_TraceLine ( vecOrigin, m_pNodes[ iNode ].m_vecOriginPeek, ignore_monsters, 0, &tr );
+		UTIL_TraceLine ( vecStart, m_pNodes[ iNode ].m_vecOriginPeek, ignore_monsters, 0, &tr );
 
 		if ( tr.flFraction == 1.0 )
 		{
