@@ -620,6 +620,18 @@ void CBaseToggle :: LinearMoveDone( void )
 
 void CBaseToggle :: LinearMoveDoneNow( void )
 {
+	extern cvar_t linearmovedonefix;
+	if (linearmovedonefix.value)
+	{
+		Vector delta = m_vecFinalDest - pev->origin;
+		float error = delta.Length();
+		if( error > 0.03125f )
+		{
+			LinearMove( m_vecFinalDest, 100 );
+			return;
+		}
+	}
+
 	Vector vecDest;
 
 //	ALERT(at_console, "LMDone %s\n", STRING(pev->targetname));

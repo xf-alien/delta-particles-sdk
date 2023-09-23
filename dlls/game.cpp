@@ -46,6 +46,7 @@ cvar_t	mw_debug={"sohl_mwdebug","0", FCVAR_SERVER }; //LRC - debug info. for Mov
 cvar_t  mp_chattime = {"mp_chattime","10", FCVAR_SERVER };
 
 cvar_t	findnearestnodefix = { "findnearestnodefix", "0", FCVAR_SERVER };
+cvar_t	linearmovedonefix = { "linearmovedonefix", "0", FCVAR_SERVER };
 
 // Engine Cvars
 cvar_t 	*g_psv_gravity = NULL;
@@ -560,6 +561,7 @@ void GameDLLInit( void )
 	CVAR_REGISTER (&mp_chattime);
 
 	CVAR_REGISTER (&findnearestnodefix);
+	CVAR_REGISTER (&linearmovedonefix);
 
 // REGISTER CVARS FOR SKILL LEVEL STUFF
 	// Agrunt
