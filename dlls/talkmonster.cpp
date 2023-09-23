@@ -442,7 +442,8 @@ void CTalkMonster :: StartTask( Task_t *pTask )
 
 	case TASK_TLK_HEADRESET:
 		// reset head position after looking at something
-		m_hTalkTarget = NULL;
+		if (!IsTalking())
+			m_hTalkTarget = NULL;
 		TaskComplete();
 		break;
 
