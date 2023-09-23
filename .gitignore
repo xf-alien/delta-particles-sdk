@@ -4,3 +4,4 @@ cl_dll/*.dll
 *.ncb
 *.opt
 *.plg
+build/
