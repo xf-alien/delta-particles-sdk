@@ -459,7 +459,7 @@ void CTechnician :: StartTask( Task_t *pTask )
 		{
 			Talk( 2 );
 			m_hTalkTarget = m_hEnemy;
-			if ( m_hEnemy->IsPlayer() )
+			if ( m_hEnemy != 0 && m_hEnemy->IsPlayer() )
 				PlaySentence( "SC_SCARED", 5, VOL_NORM, ATTN_NORM );
 			else
 				PlaySentence( "SC_SCARED", 5, VOL_NORM, ATTN_NORM );
