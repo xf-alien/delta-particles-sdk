@@ -378,7 +378,7 @@ void CBaseMonster :: GibMonster( void )
 			WRITE_BYTE( 16 );									// size
 		MESSAGE_END();
 	
-		if ( m_bloodColor == 71 ) //  костыль с возвращением значения, ибо при 71 не справнятся gibs
+		if ( m_bloodColor == 71 ) // Make it spawn gibs
 			m_bloodColor = BLOOD_COLOR_RED; 
 	}
 
@@ -396,7 +396,7 @@ void CBaseMonster :: GibMonster( void )
 	{
 		if ( CVAR_GET_FLOAT("violence_hgibs") != 0 )// Only the player will ever fail this test
 		{
-//			CGib::SpawnHeadGib( pev ); // раз у меня голову можно отстрелить, то и спавним ее в коде NPC
+//			CGib::SpawnHeadGib( pev ); // This happens in npc code
 			CGib::SpawnRandomGibs( pev, 4, 1 );	// throw some human gibs.
 		}
 		gibbed = TRUE;
@@ -469,7 +469,7 @@ void CBaseMonster :: GibHeadMonster( Vector headPosition, BOOL Head )		// Specia
 		MESSAGE_END();
 		}
 		
-		if ( m_bloodColor == 71 ) //  костыль с возвращением значения, ибо при 71 не справнятся gibs
+		if ( m_bloodColor == 71 ) // Make it spawn gibs
 			m_bloodColor = BLOOD_COLOR_RED; 
 }
 
@@ -1980,9 +1980,9 @@ void CGib :: SpawnTreeGibs( entvars_t *pevVictim, int cGibs )
 		if ( pevVictim )
 		{
 			// spawn the gib somewhere in the monster's bounding volume
-			pGib->pev->origin.x = pevVictim->origin.x -+ (cSplat * 1);
-			pGib->pev->origin.y = pevVictim->origin.y -+ (cSplat * 1);
-			pGib->pev->origin.z = pevVictim->origin.z + (54 + cSplat * 1);
+			pGib->pev->origin.x = pevVictim->origin.x + RANDOM_FLOAT(-12, 12);
+			pGib->pev->origin.y = pevVictim->origin.y + RANDOM_FLOAT(-12, 12);
+			pGib->pev->origin.z = pevVictim->origin.z + (54 + cSplat * 25);
 
 			// make the gib fly away from the attack vector
 			pGib->pev->velocity = g_vecAttackDir * -1;
@@ -1992,11 +1992,11 @@ void CGib :: SpawnTreeGibs( entvars_t *pevVictim, int cGibs )
 			pGib->pev->velocity.y += RANDOM_FLOAT ( -0.25, 0.25 );
 			pGib->pev->velocity.z += RANDOM_FLOAT ( -0.25, 0.25 );
 
-			pGib->pev->velocity = pGib->pev->velocity * RANDOM_FLOAT ( 300, 400 );
+			pGib->pev->velocity = pGib->pev->velocity * RANDOM_FLOAT ( 100, 180 );
 
-			pGib->pev->avelocity.x = RANDOM_FLOAT ( 100, 200 );
-			pGib->pev->avelocity.y = RANDOM_FLOAT ( 100, 300 );
-			pGib->pev->avelocity.z = RANDOM_FLOAT ( 100, 300 );
+			pGib->pev->avelocity.x = RANDOM_FLOAT ( 100, 150 );
+			pGib->pev->avelocity.y = RANDOM_FLOAT ( 100, 200 );
+			pGib->pev->avelocity.z = RANDOM_FLOAT ( 100, 200 );
 
 			// copy owner's blood color
 			pGib->m_bloodColor = (CBaseEntity::Instance(pevVictim))->BloodColor();	
