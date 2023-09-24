@@ -30,7 +30,7 @@ cvar_t	timelimit	= {"mp_timelimit","0", FCVAR_SERVER };
 cvar_t	friendlyfire= {"mp_friendlyfire","0", FCVAR_SERVER };
 cvar_t	falldamage	= {"mp_falldamage","0", FCVAR_SERVER };
 cvar_t	weaponstay	= {"mp_weaponstay","0", FCVAR_SERVER };
-cvar_t	monsteryawspeedfix	= { "monsteryawspeedfix", "0", FCVAR_SERVER };
+cvar_t	monsteryawspeedfix	= { "monsteryawspeedfix", "1", FCVAR_SERVER };
 cvar_t	forcerespawn= {"mp_forcerespawn","1", FCVAR_SERVER };
 cvar_t	flashlight	= {"mp_flashlight","0", FCVAR_SERVER };
 cvar_t	aimcrosshair= {"mp_autocrosshair","1", FCVAR_SERVER };
@@ -46,7 +46,7 @@ cvar_t	mw_debug={"sohl_mwdebug","0", FCVAR_SERVER }; //LRC - debug info. for Mov
 cvar_t  mp_chattime = {"mp_chattime","10", FCVAR_SERVER };
 
 cvar_t	findnearestnodefix = { "findnearestnodefix", "0", FCVAR_SERVER };
-cvar_t	linearmovedonefix = { "linearmovedonefix", "0", FCVAR_SERVER };
+cvar_t	linearmovedonefix = { "linearmovedonefix", "1", FCVAR_SERVER };
 
 // Engine Cvars
 cvar_t 	*g_psv_gravity = NULL;
