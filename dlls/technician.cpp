@@ -360,10 +360,10 @@ Schedule_t	slTechHide[] =
 Task_t	tlTechStartle[] =
 {
 	{ TASK_SET_FAIL_SCHEDULE,		(float)SCHED_PANIC },		// If you fail, just panic!
-	{ TASK_RANDOM_SCREAM,			(float)0.3 },				// Scream 30% of the time
+	//{ TASK_RANDOM_SCREAM,			(float)0.3 },				// Scream 30% of the time
 	{ TASK_STOP_MOVING,				(float)0					},
 	{ TASK_PLAY_SEQUENCE_FACE_ENEMY,			(float)ACT_CROUCH			},
-	{ TASK_RANDOM_SCREAM,			(float)0.1 },				// Scream again 10% of the time
+	//{ TASK_RANDOM_SCREAM,			(float)0.1 },				// Scream again 10% of the time
 	{ TASK_PLAY_SEQUENCE_FACE_ENEMY,			(float)ACT_CROUCHIDLE		},
 	{ TASK_WAIT_RANDOM,				(float)1.0					},
 };
