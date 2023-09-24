@@ -68,7 +68,11 @@ set (CLDLL_SOURCES
 	../dlls/shotgun.cpp
 	../dlls/squeakgrenade.cpp
 	../dlls/tripmine.cpp
-	../dlls/glock.cpp
+	../dlls/wpn_shared/hl_wpn_glock.cpp
+	../dlls/pipewrench.cpp
+	../dlls/sniperrifle.cpp
+	../dlls/smg.cpp
+	../dlls/desert_eagle.cpp
 	ev_hldm.cpp
 	hl/hl_baseentity.cpp
 	hl/hl_events.cpp
@@ -90,18 +94,21 @@ set (CLDLL_SOURCES
 	geiger.cpp
 	health.cpp
 	hud.cpp
+	hud_caption.cpp
 	hud_msg.cpp
 	hud_redraw.cpp
+	hud_servers.cpp
 	hud_spectator.cpp
 	hud_update.cpp
 	in_camera.cpp
 	input.cpp
-	input_goldsource.cpp
-	input_mouse.cpp
-	input_xash3d.cpp
+	inputw32.cpp
 	menu.cpp
 	message.cpp
 	parsemsg.cpp
+	particlemgr.cpp
+	particlemsg.cpp
+	particlesys.cpp
 	../pm_shared/pm_debug.c
 	../pm_shared/pm_math.c
 	../pm_shared/pm_shared.c
@@ -127,9 +134,9 @@ if (USE_VGUI)
 		vgui_SchemeManager.cpp
 		vgui_ScorePanel.cpp
 		vgui_TeamFortressViewport.cpp
+		vgui_ServerBrowser.cpp
 		vgui_SpectatorPanel.cpp
 		vgui_teammenu.cpp
-		voice_status.cpp
 		../game_shared/vgui_checkbutton2.cpp
 		../game_shared/vgui_grid.cpp
 		../game_shared/vgui_helpers.cpp
@@ -156,16 +163,16 @@ include_directories (. hl/ ../dlls ../dlls/wpn_shared ../common ../engine ../pm_
 if (USE_VGUI)
 	SET(CMAKE_SKIP_RPATH TRUE)
 	link_directories(${CMAKE_SOURCE_DIR}/vgui_support/vgui-dev/lib)
-	include_directories(../vgui_support/vgui-dev/include)
+	#include_directories(../vgui_support/vgui-dev/include)
+	include_directories(../utils/vgui/include)
 else()
 	include_directories(../utils/fake_vgui/include)
 endif()
 
 if(USE_VOICEMGR)
-	#set(CLDLL_SOURCES
-	#	${CLDLL_SOURCES}
-	#	../game_shared/voice_banmgr.cpp
-	#	../game_shared/voice_status.cpp)
+	set(CLDLL_SOURCES
+		${CLDLL_SOURCES}
+		../game_shared/voice_status.cpp)
 endif()
 
 add_library (${CLDLL_LIBRARY} SHARED ${CLDLL_SOURCES})
@@ -177,8 +184,10 @@ endif()
 if (USE_VGUI)
 	if (WIN32)
 		add_library(vgui SHARED IMPORTED)
-		set_property(TARGET vgui PROPERTY IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/vgui_support/vgui-dev/lib/win32_vc6/vgui.dll")
-		set_property(TARGET vgui PROPERTY IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/vgui_support/vgui-dev/lib/win32_vc6/vgui.lib")
+		#set_property(TARGET vgui PROPERTY IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/vgui_support/vgui-dev/lib/win32_vc6/vgui.dll")
+		#set_property(TARGET vgui PROPERTY IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/vgui_support/vgui-dev/lib/win32_vc6/vgui.lib")
+		set_property(TARGET vgui PROPERTY IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/utils/vgui/lib/win32_vc6/vgui.dll")
+		set_property(TARGET vgui PROPERTY IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/utils/vgui/lib/win32_vc6/vgui.lib")
 		target_link_libraries(${CLDLL_LIBRARY} vgui)
 	elseif(APPLE)
 		target_link_libraries(${CLDLL_LIBRARY} "-Wl,--no-undefined -L${CMAKE_SOURCE_DIR}/vgui_support/vgui-dev/lib vgui.dylib")
@@ -186,6 +195,8 @@ if (USE_VGUI)
 		target_link_libraries(${CLDLL_LIBRARY} :vgui.so)
 	endif()
 endif()
+
+target_link_libraries(${CLDLL_LIBRARY} wsock32 ws2_32)
 
 if(WIN32)
 	target_link_libraries( ${CLDLL_LIBRARY} user32.lib )

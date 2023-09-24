@@ -57,6 +57,7 @@ set (SVDLL_SOURCES
 	crossbow.cpp
 	crowbar.cpp
 	defaultai.cpp
+	desert_eagle.cpp
 	doors.cpp
 	effects.cpp
 	egon.cpp
@@ -105,6 +106,7 @@ set (SVDLL_SOURCES
 	osprey.cpp
 	otis.cpp
 	pathcorner.cpp
+	pipewrench.cpp
 	plane.cpp
 	plats.cpp
 	player.cpp
@@ -121,6 +123,8 @@ set (SVDLL_SOURCES
 	shotgun.cpp
 	singleplay_gamerules.cpp
 	skill.cpp
+	smg.cpp
+	sniperrifle.cpp
 	sound.cpp
 	soundent.cpp
 	spectator.cpp
