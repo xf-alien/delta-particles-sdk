@@ -828,8 +828,8 @@ int CScientist :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, f
 //=========================================================
 void CScientist :: GibMonster ( void )
 {
-	if ( !HeadGibbed )								// ..������ �� �����?	
-	GibHeadMonster( Vector ( pev->origin.x, pev->origin.y, pev->origin.z + 16 ), TRUE );	// ��? ��������! =)					 
+	if ( !HeadGibbed )								// ..do I still have a head?
+		GibHeadMonster( Vector ( pev->origin.x, pev->origin.y, pev->origin.z + 16 ), TRUE );	// If yes, open it up! =)
 
 	CTalkMonster :: GibMonster( );
 }

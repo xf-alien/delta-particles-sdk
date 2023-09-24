@@ -455,7 +455,7 @@ void CTechnician :: StartTask( Task_t *pTask )
 		break;
 
 	case TASK_SAY_FEAR:
-		if ( FOkToSpeak() )
+		if ( FOkToSpeak(SPEAK_DISREGARD_ENEMY) )
 		{
 			Talk( 2 );
 			m_hTalkTarget = m_hEnemy;
@@ -767,8 +767,8 @@ int CTechnician :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, 
 
 void CTechnician :: GibMonster ( void )
 {
-	if ( !HeadGibbed )								// ..голова на месте?	
-	GibHeadMonster( Vector ( pev->origin.x, pev->origin.y, pev->origin.z + 16 ), TRUE );	// Да? Отрываем! =)					 
+	if ( !HeadGibbed )								// ..do I still have a head?
+		GibHeadMonster( Vector ( pev->origin.x, pev->origin.y, pev->origin.z + 16 ), TRUE );	// If yes, open it up! =)
 
 	CTalkMonster :: GibMonster( );
 }
@@ -1064,7 +1064,7 @@ MONSTERSTATE CTechnician :: GetIdealState ( void )
 
 BOOL CTechnician::CanHeal( void )
 {
-    if ( (m_healTime > gpGlobals->time) || (m_hTargetEnt == NULL) || (m_hTargetEnt->pev->armorvalue >= 60 ) ) // брони меньше 60
+    if ( (m_healTime > gpGlobals->time) || (m_hTargetEnt == NULL) || (m_hTargetEnt->pev->armorvalue >= 60 ) )
         return FALSE;
     
     return TRUE;
@@ -1079,7 +1079,7 @@ void CTechnician::Heal( void )
     if ( target.Length() > 100 )
         return;
     
-    m_hTargetEnt->pev->armorvalue += 15; // восстановить 15 ед.брони
+    m_hTargetEnt->pev->armorvalue += 15;
     if ( m_hTargetEnt->pev->armorvalue > 100 )
         m_hTargetEnt->pev->armorvalue = 100;
 

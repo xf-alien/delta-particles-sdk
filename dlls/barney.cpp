@@ -277,7 +277,7 @@ void CBarney :: AlertSound( void )
 {
 	if ( m_hEnemy != NULL )
 	{
-		if ( FOkToSpeak() )
+		if ( FOkToSpeak(SPEAK_DISREGARD_ENEMY) )
 		{
 			if (m_iszSpeakAs)
 			{
@@ -634,7 +634,7 @@ int CBarney :: TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, floa
 		}
 	}
 
-	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 5) ) // отдельно дл€ дробовика =/, ибо через “рейсјтак работает неправильно
+	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 5) ) // Hack to handle shotgun shells as each shell is a separate TraceAttack
 	{
 		SetBodygroup( 0, 1);
 
