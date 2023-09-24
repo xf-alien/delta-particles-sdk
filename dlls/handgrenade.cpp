@@ -102,6 +102,12 @@ void CHandGrenade::Holster( int skiplocal /* = 0 */ )
 	if ( m_pPlayer->m_rgAmmo[ m_iPrimaryAmmoType ] >= 1 )
 		SendWeaponAnim( HANDGRENADE_HOLSTER );
 
+	if( m_flStartThrow )
+	{
+		m_flStartThrow = 0.0f;
+		m_flReleaseThrow = 0.0f;
+	}
+
 	EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "common/null.wav", 1.0, ATTN_NORM);
 }
 
