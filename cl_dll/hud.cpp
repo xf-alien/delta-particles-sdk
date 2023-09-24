@@ -468,6 +468,7 @@ void CHud :: VidInit( void )
 #ifdef ENGINE_DEBUG
 	CONPRINT("## CHud::VidInit\n");
 #endif
+	int j;
 	m_scrinfo.iSize = sizeof(m_scrinfo);
 	GetScreenInfo(&m_scrinfo);
 

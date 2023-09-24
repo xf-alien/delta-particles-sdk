@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -12,7 +12,9 @@
 #include "hud_servers.h"
 #include "net_api.h"
 #include <string.h>
+#define HSPRITE WINDOWS_HSPRITE
 #include <winsock.h>
+#undef HSPRITE
 
 static int	context_id;
 

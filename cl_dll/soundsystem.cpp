@@ -15,7 +15,9 @@
 //
 // $NoKeywords: $
 //=============================================================================
+#define HSPRITE WINDOWS_HSPRITE
 #include <windows.h>
+#undef HSPRITE
 #include <dsound.h>
 #include <mmsystem.h>
 #include "r_studioint.h"
