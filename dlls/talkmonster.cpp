@@ -57,8 +57,6 @@ char *CTalkMonster::m_szFriends[TLK_CFRIENDS] =
 	"monster_barney",
 	"monster_scientist",
 	"monster_sitting_scientist",
-	"female_npc",
-	"cohen",
 	"monster_otis",
 	"monster_technician",
 	"monster_diana_hayes",
