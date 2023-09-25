@@ -1,3 +1,6 @@
 dlls/*.dll
 cl_dll/*.dll
 *.pdb
+*.ncb
+*.opt
+*.plg
