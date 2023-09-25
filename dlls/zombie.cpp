@@ -355,7 +355,7 @@ void CZombie :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecD
 
 		HeadPos = ptr->vecEndPos;
 
-		if ( !HeadGibbed && pev->health <= flDamage * gSkillData.monHead && flDamage >= 30 )
+		if ( !HeadGibbed && pev->health <= flDamage * gSkillData.monHead && flDamage >= 10 )
 		{
 			if ( pev->body == 1 )	//  zombie_technician is implemented via "body = 1"
 				pev->body = 3;

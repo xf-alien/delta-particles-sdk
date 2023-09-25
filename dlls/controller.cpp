@@ -391,16 +391,15 @@ void CController :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector 
 		
 		HeadPos = ptr->vecEndPos;
 		ptr->iHitgroup = HITGROUP_HEAD;
+		flDamage = flDamage / gSkillData.monHead;	// чтоб в "голову" не прилетало слишком много урона
 
-		if ( !HeadGibbed && pev->health <= flDamage && flDamage >= 30 )
+		if ( !HeadGibbed && pev->health <= flDamage * gSkillData.monHead && flDamage * gSkillData.monHead >= 10 )
 		{
 			pev->body = 1;
 
 			GibHeadMonster( ptr->vecEndPos, FALSE );
 			HeadGibbed = TRUE;
 		}
-	
-		flDamage /= gSkillData.monHead;			// чтоб в "голову" не прилетало слишком много урона
 	}
 	
 	CSquadMonster::TraceAttack( pevAttacker, flDamage, vecDir, ptr, bitsDamageType );

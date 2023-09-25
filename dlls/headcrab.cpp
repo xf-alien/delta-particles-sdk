@@ -454,7 +454,7 @@ int CHeadCrab :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, fl
 	if ( bitsDamageType & DMG_ACID )
 		flDamage = 0;
 
-	if ( BuckshotCount >= 5 || ((bitsDamageType & DMG_BULLET) && flDamage >= 30) )
+	if ( BuckshotCount >= 5 || ((bitsDamageType & DMG_BULLET) && flDamage >= 10) )
 		GibMonster();
 
 	BuckshotCount = 0;

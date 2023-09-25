@@ -793,7 +793,7 @@ void CHoundeye :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector ve
 		GibMonster();
 	else
 	{
-		if ( ptr->iHitgroup == 10 && !HeadGibbed && (flDamage >= 30 || (BuckshotCount >= 4 && BuckshotCount < 8)) )
+		if ( ptr->iHitgroup == 10 && pev->health <= flDamage && !HeadGibbed && flDamage >= 10 )
 		{
 			ptr->iHitgroup = HITGROUP_HEAD;
 			flDamage *= gSkillData.monHead; 
@@ -809,8 +809,15 @@ void CHoundeye :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector ve
 
 int CHoundeye :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType )
 {
-	if ( BuckshotCount >= 8 )
+	if ( BuckshotCount >= 7 )
 		GibMonster();
+	if	(BuckshotCount >= 4 && BuckshotCount < 7 && !HeadGibbed)
+	{
+		flDamage = pev->health;
+		pev->body = 1;
+		GibHeadMonster( HeadPos, FALSE );
+		HeadGibbed = TRUE;
+	}
 
 	BuckshotCount = 0;
 	return CBaseMonster::TakeDamage( pevInflictor, pevAttacker, flDamage, bitsDamageType );

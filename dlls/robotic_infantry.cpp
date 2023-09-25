@@ -572,7 +572,7 @@ void Crinfantry :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector v
 		MESSAGE_END(); 
 		}
 		else
-		flDamage = flDamage / 2;
+		flDamage = flDamage / 2.25;
 	
 		UTIL_Ricochet( ptr->vecEndPos, 1.0 );
 	}

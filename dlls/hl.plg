@@ -6,13 +6,13 @@
 --------------------Configuration: hl - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\yura-\AppData\Local\Temp\RSPDDE7.tmp" with contents
+Creating temporary file "C:\Users\yura-\AppData\Local\Temp\RSPE1D.tmp" with contents
 [
 /nologo /G5 /MT /W3 /Zi /O2 /I "..\dlls" /I "..\engine" /I "..\common" /I "..\pm_shared" /I "..\game_shared" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "QUIVER" /D "VOXEL" /D "QUAKE2" /D "VALVE_DLL" /D "CLIENT_WEAPONS" /Fr".\Releasehl/" /Fp".\Releasehl/hl.pch" /YX /Fo".\Releasehl/" /Fd".\Releasehl/" /FD /c 
-"F:\Yuris\Modding\Delta SDK\dlls\talkmonster.cpp"
+"F:\Yuris\Modding\Delta SDK\dlls\houndeye.cpp"
 ]
-Creating command line "cl.exe @"C:\Users\yura-\AppData\Local\Temp\RSPDDE7.tmp"" 
-Creating temporary file "C:\Users\yura-\AppData\Local\Temp\RSPDDE8.tmp" with contents
+Creating command line "cl.exe @"C:\Users\yura-\AppData\Local\Temp\RSPE1D.tmp"" 
+Creating temporary file "C:\Users\yura-\AppData\Local\Temp\RSPE1E.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /incremental:no /pdb:".\Releasehl/spirit.pdb" /map:".\Releasehl/spirit.map" /debug /machine:I386 /def:".\hl.def" /out:".\Releasehl/spirit.dll" /implib:".\Releasehl/spirit.lib" 
 ".\Releasehl\aflock.obj"
@@ -129,10 +129,10 @@ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32
 ".\Releasehl\xen.obj"
 ".\Releasehl\zombie.obj"
 ]
-Creating command line "link.exe @"C:\Users\yura-\AppData\Local\Temp\RSPDDE8.tmp""
+Creating command line "link.exe @"C:\Users\yura-\AppData\Local\Temp\RSPE1E.tmp""
 <h3>Output Window</h3>
 Compiling...
-talkmonster.cpp
+houndeye.cpp
 Linking...
    Creating library .\Releasehl/spirit.lib and object .\Releasehl/spirit.exp
 

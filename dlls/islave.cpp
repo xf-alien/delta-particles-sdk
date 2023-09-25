@@ -56,6 +56,7 @@ public:
 	int TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType);
 	int BuckshotCount;
 	BOOL HeadGibbed;
+	Vector HeadPos;
 
 	void DeathSound( void );
 	void PainSound( void );
@@ -604,6 +605,14 @@ int CISlave :: TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, floa
 	if (m_iPlayerReact == 0)
 		m_afMemory |= bits_MEMORY_PROVOKED;
 
+	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 4) ) // отдельно дл€ дробовика =/, ибо через “рейсјтак работает неправильно
+	{
+		SetBodygroup( 0, 1);
+
+		GibHeadMonster( HeadPos, FALSE );
+		HeadGibbed = TRUE;
+	}
+
 	BuckshotCount = 0;
 	return CSquadMonster::TakeDamage(pevInflictor, pevAttacker, flDamage, bitsDamageType);
 }
@@ -621,7 +630,7 @@ void CISlave::TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir
 
 		ptr->iHitgroup = HITGROUP_HEAD;
 
-		if ( (((bitsDamageType & DMG_BULLET) && pev->health <= flDamage && flDamage >= 30) ||  BuckshotCount >= 4) && !HeadGibbed )
+		if ( pev->health <= flDamage * gSkillData.monHead && flDamage >=10 && !HeadGibbed)
 		{
 			pev->body = 1;
 

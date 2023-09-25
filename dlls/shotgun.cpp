@@ -119,17 +119,16 @@ int CShotgun::GetItemInfo(ItemInfo *p)
 BOOL CShotgun::Deploy( )
 {
 	g_engfuncs.pfnSetClientMaxspeed(m_pPlayer->edict(), 230 );
-	m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.95;
-	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.95;
+//	m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.95;	// Для помпы
+//	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.95;	// Для помпы
 
-	if (m_iClip <= 0)
-	{
-	return DefaultDeploy( "models/v_shotgun.mdl", "models/p_shotgun.mdl", SHOTGUN_DRAW2, "shotgun" );
-	}
-	else
-	{
-	return DefaultDeploy( "models/v_shotgun.mdl", "models/p_shotgun.mdl", SHOTGUN_DRAW, "shotgun" );
-	}
+	m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.5;
+	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.5;	
+
+//	if (m_iClip <= 0)
+		return DefaultDeploy( "models/v_shotgun.mdl", "models/p_shotgun.mdl", SHOTGUN_DRAW2, "shotgun" );
+//	else
+//		return DefaultDeploy( "models/v_shotgun.mdl", "models/p_shotgun.mdl", SHOTGUN_DRAW, "shotgun" );
 }
 void CShotgun::Holster( int skiplocal /* = 0 */ )
 {
