@@ -623,7 +623,15 @@ void CBaseToggle :: LinearMoveDoneNow( void )
 	extern cvar_t linearmovedonefix;
 	if (linearmovedonefix.value)
 	{
-		Vector delta = m_vecFinalDest - pev->origin;
+		Vector delta;
+		if (m_pMoveWith)
+		{
+			delta = m_vecFinalDest + m_pMoveWith->pev->origin - pev->origin;
+		}
+		else
+		{
+			delta = m_vecFinalDest - pev->origin;
+		}
 		float error = delta.Length();
 		if( error > 0.03125f )
 		{
