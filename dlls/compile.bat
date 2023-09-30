@@ -120,7 +120,7 @@ set SOURCES=agrunt.cpp ^
 	../pm_shared/pm_debug.c ../pm_shared/pm_math.c ../pm_shared/pm_shared.c ../game_shared/voice_gamemgr.cpp
 set DEFINES=/DCLIENT_WEAPONS /Dsnprintf=_snprintf /DNO_VOICEGAMEMGR /DNDEBUG
 set LIBS=user32.lib
-set OUTNAME=hl.dll
+set OUTNAME=delta_particles.dll
 
 cl %DEFINES% %LIBS% %SOURCES% %INCLUDES% -o %OUTNAME% /link /dll /out:%OUTNAME% /release /def:".\hl.def"
 
