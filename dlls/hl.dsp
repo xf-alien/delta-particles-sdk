@@ -54,15 +54,15 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /map /debug /machine:I386 /def:".\hl.def" /out:".\Releasehl/spirit.dll"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /map /debug /machine:I386 /def:".\hl.def" /out:".\Releasehl/delta_particles.dll"
 # SUBTRACT LINK32 /profile
 # Begin Custom Build
 TargetDir=.\Releasehl
-InputPath=.\Releasehl\spirit.dll
+InputPath=.\Releasehl\delta_particles.dll
 SOURCE="$(InputPath)"
 
-"F:\Yuris\Modding\Delta SDK\dlls\Releasehl\spirit.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	copy $(TargetDir)\delta_particles.dll "F:\Yuris\Modding\Delta SDK\dlls\Releasehl\spirit.dll"
+"F:\Yuris\Modding\Delta SDK\dlls\Releasehl\delta_particles.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy $(TargetDir)\delta_particles.dll "F:\Yuris\Modding\Delta SDK\dlls\Releasehl\delta_particles.dll"
 
 # End Custom Build
 
@@ -90,15 +90,15 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386
-# ADD LINK32 user32.lib advapi32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /def:".\hl.def" /out:".\debughl/spirit.dll" /implib:".\Debug\hl.lib"
+# ADD LINK32 user32.lib advapi32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /def:".\hl.def" /out:".\debughl/delta_particles.dll" /implib:".\Debug\hl.lib"
 # SUBTRACT LINK32 /profile
 # Begin Custom Build
 TargetDir=.\debughl
-InputPath=.\debughl\spirit.dll
+InputPath=.\debughl\delta_particles.dll
 SOURCE="$(InputPath)"
 
-"C:\sierra\half-life\spiritdev\dlls\spirit.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	copy $(TargetDir)\spirit.dll "C:\sierra\half-life\spiritdev\dlls\spirit.dll"
+"C:\sierra\half-life\spiritdev\dlls\delta_particles.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy $(TargetDir)\delta_particles.dll "C:\sierra\half-life\spiritdev\dlls\delta_particles.dll"
 
 # End Custom Build
 
@@ -128,14 +128,14 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo /subsystem:windows /dll /debug /machine:I386 /def:".\hl.def"
 # SUBTRACT BASE LINK32 /profile
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo /subsystem:windows /dll /profile /debug /machine:I386 /def:".\hl.def" /out:".\Profilehl/spirit.dll"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo /subsystem:windows /dll /profile /debug /machine:I386 /def:".\hl.def" /out:".\Profilehl/delta_particles.dll"
 # Begin Custom Build
 TargetDir=.\Profilehl
-InputPath=.\Profilehl\spirit.dll
+InputPath=.\Profilehl\delta_particles.dll
 SOURCE="$(InputPath)"
 
-"D:\Games\SoHL\delta_mod\dlls\spirit.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	copy $(TargetDir)\spirit.dll "D:\Games\SoHL\delta_mod\dlls\spirit.dll"
+"D:\Games\SoHL\delta_mod\dlls\delta_particles.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy $(TargetDir)\delta_particles.dll "D:\Games\SoHL\delta_mod\dlls\delta_particles.dll"
 
 # End Custom Build
 
