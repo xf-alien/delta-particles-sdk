@@ -133,7 +133,7 @@ void CSniperrifle::Holster( int skiplocal /* = 0 */ )
 
 	if (m_pPlayer->pev->fov != 0 )
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0;
+		SetZoom(0);
 
 	#ifndef CLIENT_DLL
 		UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
@@ -236,19 +236,19 @@ void CSniperrifle::SecondaryAttack()
 
 	if ( m_pPlayer->m_iFOV == 65 )
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 35;
+		SetZoom(35);
 
 		EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic1.wav", 1.0, ATTN_NORM);
 	}
 	else if ( m_pPlayer->m_iFOV == 0 )
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 65;
+		SetZoom(65);
 
 		EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic1.wav", 1.0, ATTN_NORM);
 	}	
 	else
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
+		SetZoom(0);
 
 		EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic2.wav", 1.0, ATTN_NORM);
 	}
@@ -260,7 +260,7 @@ void CSniperrifle::Reload( void )
 {
 	if (m_pPlayer->m_iFOV != 0 )
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0;
+		SetZoom(0);
 
 #ifndef CLIENT_DLL
 		UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
@@ -315,7 +315,7 @@ void CSniperrifle::ItemPostFrame()
 {
 	if (m_pPlayer->m_iFOV != 0 && m_flUnzoomTime && m_flUnzoomTime < gpGlobals->time) 
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
+		SetZoom(0);
 		m_flUnzoomTime = 0;
 
 #ifndef CLIENT_DLL
@@ -324,6 +324,20 @@ void CSniperrifle::ItemPostFrame()
 	}
 
 	CBasePlayerWeapon::ItemPostFrame();
+}
+
+void CSniperrifle::SetZoom(int fov)
+{
+	if (fov)
+	{
+		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = fov;
+		m_pPlayer->pev->viewmodel = iStringNull;
+	}
+	else
+	{
+		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0;
+		m_pPlayer->pev->viewmodel = MAKE_STRING("models/v_barrett_m82.mdl");
+	}
 }
 
 class CSniperrifleAmmoClip : public CBasePlayerAmmo
