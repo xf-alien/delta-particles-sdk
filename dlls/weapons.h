@@ -610,6 +610,7 @@ public:
 #endif
 	}
 
+	void SetZoom(int fov);
 private:
 	unsigned short m_usFirePython;
 };

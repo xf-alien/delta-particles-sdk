@@ -222,7 +222,7 @@ void CPython::SecondaryAttack()
 
 	if (!m_iClip && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0)
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0;
+		SetZoom(0);
 		if (!m_fSpotActive)
 			m_fSpotActive = !m_fSpotActive;
 		WeaponIdle();
@@ -231,11 +231,11 @@ void CPython::SecondaryAttack()
  
 	if ( m_pPlayer->pev->fov != 0 )
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
+		SetZoom(0);
 	}
 	else if ( m_pPlayer->m_iFOV != 65 )
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 65;
+		SetZoom(65);
 	}
 	
 	m_fSpotActive = !m_fSpotActive;
@@ -405,6 +405,20 @@ void CPython::UpdateSpot( void )
 		UTIL_SetOrigin( m_pSpot, tr.vecEndPos );
 	}
 #endif
+}
+
+void CPython::SetZoom(int fov)
+{
+	if (fov)
+	{
+		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = fov;
+		m_pPlayer->pev->viewmodel = iStringNull;
+	}
+	else
+	{
+		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0;
+		m_pPlayer->pev->viewmodel = MAKE_STRING("models/v_357.mdl");
+	}
 }
 
 class CPythonAmmo : public CBasePlayerAmmo
