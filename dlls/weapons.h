@@ -1152,9 +1152,6 @@ public:
 #endif
 	}
 
-	float UnZoomTime;
-	float ZoomAgainTime;
-
 private:
 	unsigned short m_usSniperrifle;
 };
