@@ -645,7 +645,7 @@ void CHGrunt :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecD
 
 		Vector HeadPos = ptr->vecEndPos;
 
-		if ( pev->health <= flDamage * gSkillData.monHead && flDamage >= 30 && !HeadGibbed )
+		if ( pev->health <= flDamage * gSkillData.monHead && flDamage >= 10 && !HeadGibbed )
 		{
 			SetBodygroup( HEAD_GROUP, HEAD_HEADLESS );
 

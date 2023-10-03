@@ -51,7 +51,7 @@ void CSMG::Spawn( )
 	SET_MODEL(ENT(pev), "models/w_smg.mdl");
 	m_iId = WEAPON_SMG;
 
-	m_iDefaultAmmo = RANDOM_LONG(18,32);
+	m_iDefaultAmmo = RANDOM_LONG(12,24);
 
 	FallInit();
 }

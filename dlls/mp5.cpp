@@ -37,7 +37,7 @@ void CMP5::Spawn( )
 	m_iId = WEAPON_MP5;
 	SET_MODEL(ENT(pev), "models/w_m4a1.mdl");
 
-	m_iDefaultAmmo = RANDOM_LONG(10,23);
+	m_iDefaultAmmo = RANDOM_LONG(8,21);
 
 	FallInit();// get ready to fall down.
 }

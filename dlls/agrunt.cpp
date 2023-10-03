@@ -272,9 +272,9 @@ void CAGrunt :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecD
 		if ( flDamage >= gSkillData.plrDmg14MM )
 			flDamage = pev->health; // OneShot! Barrett..
 		else 
-			flDamage = flDamage / 1.25; // More than normal damage, but less than headshot.
+			flDamage = flDamage / 1.25; 
 
-		if ( pev->health <= flDamage * gSkillData.monHead && flDamage >=10 && !HeadGibbed)
+		if ( pev->health <= flDamage * gSkillData.monHead && flDamage >= 8 && !HeadGibbed)
 		{
 			SetBodygroup( 0, 1);
 			GibHeadMonster( ptr->vecEndPos, FALSE );

@@ -41,6 +41,7 @@ public:
 	void Precache( void );
 	void SetYawSpeed( void );
 	int  Classify ( void );
+	BOOL IsBlood ( void );
 	void HandleAnimEvent( MonsterEvent_t *pEvent );
 	void TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType);
 	int IgnoreConditions ( void );
@@ -248,17 +249,42 @@ void CZombie :: HandleAnimEvent( MonsterEvent_t *pEvent )
 	}
 }
 
+BOOL CZombie :: IsBlood ( void )
+{
+	int Blood = RANDOM_LONG(0,100);
+
+	if (g_iSkillLevel == SKILL_HARD && Blood >= 35)
+		return TRUE;
+	else if (g_iSkillLevel == SKILL_MEDIUM && Blood >= 50)
+		return TRUE;
+	else if (g_iSkillLevel == SKILL_EASY && Blood >= 75)
+		return TRUE;
+
+	return FALSE;
+}
+
 //=========================================================
 // Spawn
 //=========================================================
 void CZombie :: Spawn()
 {
 	Precache( );
+	
+	if ( !IsBlood() )
+	{
+		if (pev->model)
+			SET_MODEL(ENT(pev), STRING(pev->model)); //LRC
+		else
+			SET_MODEL(ENT(pev), "models/zombie.mdl");
+	}
+	else 
+	{
+		if (pev->body == 1) // сброс body, если у нас technician
+			pev->body = 0;
 
-	if (pev->model)
-		SET_MODEL(ENT(pev), STRING(pev->model)); //LRC
-	else
-		SET_MODEL(ENT(pev), "models/zombie.mdl");
+		SET_MODEL(ENT(pev), "models/zombie_blood.mdl");
+	}
+
 	UTIL_SetSize( pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX );
 
 	pev->solid			= SOLID_SLIDEBOX;
@@ -287,6 +313,7 @@ void CZombie :: Precache()
 		PRECACHE_MODEL("models/zombie.mdl");
 		PRECACHE_MODEL("models/zombie_assassin.mdl");
 		PRECACHE_MODEL("models/zombie_barney.mdl");
+		PRECACHE_MODEL("models/zombie_blood.mdl");
 		PRECACHE_MODEL("models/zombie_soldier.mdl");
 		PRECACHE_MODEL("models/xen_zombie_suit.mdl");
 
@@ -496,10 +523,15 @@ class CZombieBarney : public CZombie
 	{
 		Precache( );
 
-		if (pev->model)
-			SET_MODEL(ENT(pev), STRING(pev->model)); //LRC
-		else
-			SET_MODEL(ENT(pev), "models/zombie_barney.mdl");
+		if ( !IsBlood() )
+		{
+			if (pev->model)
+				SET_MODEL(ENT(pev), STRING(pev->model)); //LRC
+			else
+				SET_MODEL(ENT(pev), "models/zombie_barney.mdl");
+		}
+		else 
+			SET_MODEL(ENT(pev), "models/zombie_blood.mdl");
 		UTIL_SetSize( pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX );
 
 		pev->solid			= SOLID_SLIDEBOX;
@@ -616,10 +648,15 @@ class CZombieSoldier : public CZombie
 	{
 		Precache( );
 
-		if (pev->model)
-			SET_MODEL(ENT(pev), STRING(pev->model)); //LRC
-		else
-			SET_MODEL(ENT(pev), "models/zombie_soldier.mdl");
+		if ( !IsBlood() )
+		{
+			if (pev->model)
+				SET_MODEL(ENT(pev), STRING(pev->model)); //LRC
+			else
+				SET_MODEL(ENT(pev), "models/zombie_soldier.mdl");
+		}
+		else 
+			SET_MODEL(ENT(pev), "models/zombie_blood.mdl");
 		UTIL_SetSize( pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX );
 
 		pev->solid			= SOLID_SLIDEBOX;
@@ -688,7 +725,7 @@ class CZombieStealth : public CZombie
 	//=========================================================
 	void CZombieStealth :: HandleAnimEvent( MonsterEvent_t *pEvent )
 	{
-		if ( m_Activity == ACT_WALK )	// always invisible if moving
+		if ( m_Activity == ACT_RUN )	// always invisible if moving
 		{
 			if ( pev->renderamt != InvisOpacity() )
 				EMIT_SOUND (ENT(pev), CHAN_WEAPON, "debris/beamstart1.wav", 0.2, ATTN_NORM );
@@ -806,9 +843,9 @@ class CZombieStealth : public CZombie
 
 	int InvisOpacity() const {
 		if ( g_iSkillLevel == SKILL_HARD )
-			return 45;
+			return 70;
 		else
-			return 115;
+			return 150;
 	}
 
 	virtual int ZombiePitch() {
