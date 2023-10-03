@@ -197,7 +197,7 @@ BOOL CPython::Deploy( )
 
 void CPython::Holster( int skiplocal /* = 0 */ )
 {
-	if ( m_fInZoom )
+	if ( m_pPlayer->m_iFOV != 0 )
 		SecondaryAttack( );
 
 	g_engfuncs.pfnSetClientMaxspeed(m_pPlayer->edict(), 230 );
@@ -218,30 +218,27 @@ void CPython::Holster( int skiplocal /* = 0 */ )
 
 void CPython::SecondaryAttack()
 {
-UpdateSpot();
+	UpdateSpot();
 
 	if (!m_iClip && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0)
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0;
-		m_fInZoom = 0;
-		if (! m_fSpotActive)
-		m_fSpotActive = ! m_fSpotActive;
+		SetZoom(0);
+		if (!m_fSpotActive)
+			m_fSpotActive = !m_fSpotActive;
 		WeaponIdle();
 		return;
 	}
  
 	if ( m_pPlayer->pev->fov != 0 )
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
-		m_fInZoom = 0;
+		SetZoom(0);
 	}
-	else if ( m_pPlayer->pev->fov != 65 )
+	else if ( m_pPlayer->m_iFOV != 65 )
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 65;
-		m_fInZoom = 1;
+		SetZoom(65);
 	}
 	
-	m_fSpotActive = ! m_fSpotActive;
+	m_fSpotActive = !m_fSpotActive;
 
 #ifndef CLIENT_DLL
 	if (!m_fSpotActive && m_pSpot)
@@ -256,67 +253,66 @@ UpdateSpot();
 
 void CPython::PrimaryAttack()
 {
-		
 	UpdateSpot();
 	
- if (m_fCanShoot == 1)
- {
- m_flCanShootTime = gpGlobals->time + 0.7;
- m_fCanShoot = 0;
-
-	// don't fire underwater
-	if (m_pPlayer->pev->waterlevel == 3 && m_pPlayer->pev->watertype > CONTENT_FLYFIELD)
+	if (m_fCanShoot == 1)
 	{
-		PlayEmptySound( );
 		m_flCanShootTime = gpGlobals->time + 0.7;
 		m_fCanShoot = 0;
-		return;
+
+		// don't fire underwater
+		if (m_pPlayer->pev->waterlevel == 3 && m_pPlayer->pev->watertype > CONTENT_FLYFIELD)
+		{
+			PlayEmptySound( );
+			m_flCanShootTime = gpGlobals->time + 0.7;
+			m_fCanShoot = 0;
+			return;
+		}
+
+		if (m_iClip <= 0)
+		{
+			PlayEmptySound( );
+			m_flCanShootTime = gpGlobals->time + 0.7;
+			m_fCanShoot = 0;
+			return;
+		}
+
+		m_pPlayer->m_iWeaponVolume = LOUD_GUN_VOLUME;
+		m_pPlayer->m_iWeaponFlash = BRIGHT_GUN_FLASH;
+		m_pPlayer->pev->effects = (int)(m_pPlayer->pev->effects) | EF_MUZZLEFLASH;
+
+		m_iClip--;
+
+		if (m_iClip == 2)
+		EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_STATIC, "fvox/ammo_low.wav", 1.0, ATTN_NORM);
+
+	#ifndef CLIENT_DLL
+
+		UTIL_ScreenShake( pev->origin, 4, 150.0, 0.2, 120 ); 
+		m_pPlayer->SetAnimation( PLAYER_ATTACK1 );	// player "shoot" animation
+
+	#endif
+
+		UTIL_MakeVectors( m_pPlayer->pev->v_angle + m_pPlayer->pev->punchangle );
+		Vector vecSrc	 = m_pPlayer->GetGunPosition( );
+		Vector vecAiming = m_pPlayer->GetAutoaimVector( AUTOAIM_10DEGREES );
+		Vector vecDir;
+		vecDir = m_pPlayer->FireBulletsPlayer( 1, vecSrc, vecAiming, VECTOR_CONE_1DEGREES, 8192, BULLET_PLAYER_357, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed );
+
+		int flags;
+	#if defined( CLIENT_WEAPONS )
+		flags = FEV_NOTHOST;
+	#else
+		flags = 0;
+	#endif
+
+		PLAYBACK_EVENT_FULL( flags, m_pPlayer->edict(), m_usFirePython, 0.0, (float *)&g_vecZero, (float *)&g_vecZero, vecDir.x, vecDir.y, 0, 0, 0, 0 );
+
+		if (!m_iClip && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0)
+			// HEV suit - indicate out of ammo condition
+			m_pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
+			m_flTimeWeaponIdle = 0.7;
 	}
-
-	if (m_iClip <= 0)
-	{
-		PlayEmptySound( );
-		m_flCanShootTime = gpGlobals->time + 0.7;
-		m_fCanShoot = 0;
-		return;
-	}
-
-	m_pPlayer->m_iWeaponVolume = LOUD_GUN_VOLUME;
-	m_pPlayer->m_iWeaponFlash = BRIGHT_GUN_FLASH;
-	m_pPlayer->pev->effects = (int)(m_pPlayer->pev->effects) | EF_MUZZLEFLASH;
-
-	m_iClip--;
-
-	if (m_iClip == 2)
-	EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_STATIC, "fvox/ammo_low.wav", 1.0, ATTN_NORM);
-
-#ifndef CLIENT_DLL
-
-	UTIL_ScreenShake( pev->origin, 4, 150.0, 0.2, 120 ); 
-	m_pPlayer->SetAnimation( PLAYER_ATTACK1 );	// player "shoot" animation
-
-#endif
-
-	UTIL_MakeVectors( m_pPlayer->pev->v_angle + m_pPlayer->pev->punchangle );
-	Vector vecSrc	 = m_pPlayer->GetGunPosition( );
-	Vector vecAiming = m_pPlayer->GetAutoaimVector( AUTOAIM_10DEGREES );
-	Vector vecDir;
-	vecDir = m_pPlayer->FireBulletsPlayer( 1, vecSrc, vecAiming, VECTOR_CONE_1DEGREES, 8192, BULLET_PLAYER_357, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed );
-
-    int flags;
-#if defined( CLIENT_WEAPONS )
-	flags = FEV_NOTHOST;
-#else
-	flags = 0;
-#endif
-
-	PLAYBACK_EVENT_FULL( flags, m_pPlayer->edict(), m_usFirePython, 0.0, (float *)&g_vecZero, (float *)&g_vecZero, vecDir.x, vecDir.y, 0, 0, 0, 0 );
-
-	if (!m_iClip && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0)
-		// HEV suit - indicate out of ammo condition
-		m_pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
-		m_flTimeWeaponIdle = 0.7;
- }
 }
 
 
@@ -324,7 +320,7 @@ void CPython::Reload( void )
 {
 	UpdateSpot( );
 
-	if ( m_fInZoom )
+	if ( m_pPlayer->m_iFOV != 0 )
 		SecondaryAttack( );
 
 	if( m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0 || m_iClip == PYTHON_MAX_CLIP )
@@ -346,7 +342,7 @@ void CPython::Reload( void )
 #endif
 }
 
-// Какой-то лютый костыль для решения отставания ЛЦУ при зажатой ЛКМ
+// Hack to deal with laser delay
 void CPython::ItemPostFrame()
 {
 	if ( m_flCanShootTime < gpGlobals->time) 
@@ -409,6 +405,20 @@ void CPython::UpdateSpot( void )
 		UTIL_SetOrigin( m_pSpot, tr.vecEndPos );
 	}
 #endif
+}
+
+void CPython::SetZoom(int fov)
+{
+	if (fov)
+	{
+		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = fov;
+		m_pPlayer->pev->viewmodel = iStringNull;
+	}
+	else
+	{
+		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0;
+		m_pPlayer->pev->viewmodel = MAKE_STRING("models/v_357.mdl");
+	}
 }
 
 class CPythonAmmo : public CBasePlayerAmmo

@@ -3124,6 +3124,8 @@ void CBasePlayer :: Precache( void )
 	if (CVAR_GET_FLOAT("v_dark"))
 		g_fEnvFadeTime = gpGlobals->time + 10;
 #endif
+
+	pev->fov = m_iFOV;		// Vit_amiN: restore the FOV on level change or map/saved game load
 }
 
 
@@ -3611,6 +3613,7 @@ void CBasePlayer :: ForceClientDllUpdate( void )
 	m_iClientHealth  = -1;
 	m_iClientBattery = -1;
 	m_ClientSndRoomtype = -1;
+	m_iClientFOV = -1;
 	m_iTrain |= TRAIN_NEW;  // Force new train message.
 	m_fWeapon = FALSE;          // Force weapon send
 	m_fKnownItem = FALSE;    // Force weaponinit messages.

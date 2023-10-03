@@ -118,30 +118,29 @@ BOOL CSniperrifle::Deploy( )
 
 	if (m_iClip <= 0)
 	{
-	return DefaultDeploy( "models/v_barrett_m82.mdl", "models/p_barrett_m82.mdl", SNIPERRIFLE_DRAW_EMPTY, "sniperrifle" );
+		return DefaultDeploy( "models/v_barrett_m82.mdl", "models/p_barrett_m82.mdl", SNIPERRIFLE_DRAW_EMPTY, "sniperrifle" );
 	}
 	else
 	{
-	return DefaultDeploy( "models/v_barrett_m82.mdl", "models/p_barrett_m82.mdl", SNIPERRIFLE_DRAW, "sniperrifle" );
+		return DefaultDeploy( "models/v_barrett_m82.mdl", "models/p_barrett_m82.mdl", SNIPERRIFLE_DRAW, "sniperrifle" );
 	}
 }
 
 void CSniperrifle::Holster( int skiplocal /* = 0 */ )
 {
 	g_engfuncs.pfnSetClientMaxspeed(m_pPlayer->edict(), 230 );
-   m_fInReload = FALSE;// cancel any reload in progress.
+   	m_fInReload = FALSE;// cancel any reload in progress.
 
-   if (m_pPlayer->pev->fov != 0 )
-   {
-     m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0;
-     m_fInZoom = 0;
+	if (m_pPlayer->pev->fov != 0 )
+	{
+		SetZoom(0);
 
-#ifndef CLIENT_DLL
-UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
-#endif
+	#ifndef CLIENT_DLL
+		UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
+	#endif
 
-	 EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic2.wav", 1.0, ATTN_NORM);
-   }
+		EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic2.wav", 1.0, ATTN_NORM);
+	}
 
    m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5;
 
@@ -209,8 +208,7 @@ void CSniperrifle::PrimaryAttack()
 	
 	if (m_pPlayer->pev->fov == 0 )
 	{
-	m_fInZoom = 0;
-	m_flUnzoomTime = 0;
+		m_flUnzoomTime = 0;
 	}
 
 	if (!m_iClip && m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0)
@@ -233,27 +231,24 @@ void CSniperrifle::SecondaryAttack()
 	}
  
 #ifndef CLIENT_DLL
-UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
+	UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
 #endif
 
-	if ( m_pPlayer->pev->fov == 65 )
+	if ( m_pPlayer->m_iFOV == 65 )
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 35;
-		m_fInZoom = 1;
+		SetZoom(35);
 
 		EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic1.wav", 1.0, ATTN_NORM);
 	}
-	else if ( m_pPlayer->pev->fov == 0 )
-			{
-			m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 65;
-			m_fInZoom = 1;
+	else if ( m_pPlayer->m_iFOV == 0 )
+	{
+		SetZoom(65);
 
-			EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic1.wav", 1.0, ATTN_NORM);
-			}	
+		EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic1.wav", 1.0, ATTN_NORM);
+	}	
 	else
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
-		m_fInZoom = 0;
+		SetZoom(0);
 
 		EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic2.wav", 1.0, ATTN_NORM);
 	}
@@ -263,18 +258,16 @@ UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
 
 void CSniperrifle::Reload( void )
 {
-	m_fInZoom = 0;
-
-   if (m_pPlayer->pev->fov != 0 )
-   {
-     m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0;
+	if (m_pPlayer->m_iFOV != 0 )
+	{
+		SetZoom(0);
 
 #ifndef CLIENT_DLL
-UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
+		UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
 #endif
 
-	 EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic2.wav", 1.0, ATTN_NORM);
-   }
+		EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_WEAPON, "weapons/sniper_optic2.wav", 1.0, ATTN_NORM);
+	}
 
 	int iResult;
 
@@ -320,18 +313,31 @@ void CSniperrifle::WeaponIdle( void )
 
 void CSniperrifle::ItemPostFrame()
 {
-	if (m_fInZoom && m_flUnzoomTime && m_flUnzoomTime < gpGlobals->time) 
+	if (m_pPlayer->m_iFOV != 0 && m_flUnzoomTime && m_flUnzoomTime < gpGlobals->time) 
 	{
-		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
-		m_fInZoom = 0;
+		SetZoom(0);
 		m_flUnzoomTime = 0;
 
 #ifndef CLIENT_DLL
-UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
+		UTIL_ScreenFade( m_pPlayer, Vector(0,0,0), 0.25, 0.05, 255, FFADE_IN );
 #endif
 	}
 
 	CBasePlayerWeapon::ItemPostFrame();
+}
+
+void CSniperrifle::SetZoom(int fov)
+{
+	if (fov)
+	{
+		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = fov;
+		m_pPlayer->pev->viewmodel = iStringNull;
+	}
+	else
+	{
+		m_pPlayer->pev->fov = m_pPlayer->m_iFOV = 0;
+		m_pPlayer->pev->viewmodel = MAKE_STRING("models/v_barrett_m82.mdl");
+	}
 }
 
 class CSniperrifleAmmoClip : public CBasePlayerAmmo

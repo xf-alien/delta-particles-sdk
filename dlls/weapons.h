@@ -598,7 +598,6 @@ public:
 	CPythonSpot *m_pSpot;
 	int m_fSpotActive;
 
-	int m_fInZoom; // don't save this
 	int m_fCanShoot;
 	float m_flCanShootTime;
 
@@ -611,6 +610,7 @@ public:
 #endif
 	}
 
+	void SetZoom(int fov);
 private:
 	unsigned short m_usFirePython;
 };
@@ -1142,7 +1142,6 @@ public:
 	float m_flNextAnimTime;
 	int m_iShell;
 
-	int m_fInZoom; // don't save this
 	float m_flUnzoomTime;
 
 	virtual BOOL UseDecrement( void )
@@ -1154,9 +1153,7 @@ public:
 #endif
 	}
 
-	float UnZoomTime;
-	float ZoomAgainTime;
-
+	void SetZoom(int fov);
 private:
 	unsigned short m_usSniperrifle;
 };
