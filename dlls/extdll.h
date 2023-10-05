@@ -65,6 +65,16 @@ typedef int BOOL;
 #include "stdlib.h"
 #include "math.h"
 
+#ifndef _WIN32
+// Need to declare again on Linux?
+#ifndef min
+#define min(a,b)  (((a) < (b)) ? (a) : (b))
+#endif
+#ifndef max
+#define max(a,b)  (((a) > (b)) ? (a) : (b))
+#endif
+#endif
+
 // Header file containing definition of globalvars_t and entvars_t
 typedef int	func_t;					//
 typedef int	string_t;				// from engine's pr_comp.h;
