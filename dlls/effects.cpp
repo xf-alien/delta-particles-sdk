@@ -4304,7 +4304,7 @@ void CItemSoda::CanTouch ( CBaseEntity *pOther )
 	}
 
 	pOther->TakeHealth( 1, DMG_GENERIC );// a bit of health.
-	EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/can_use1.wav", 1, ATTN_NORM);
+	EMIT_SOUND(ENT(pev), CHAN_STATIC, "items/can_use1.wav", 1, ATTN_NORM);
 
 	if ( !FNullEnt( pev->owner ) )
 	{
