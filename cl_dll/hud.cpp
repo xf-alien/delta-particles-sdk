@@ -38,7 +38,7 @@ cvar_t *cl_subtitles = NULL;
 
 #include "demo.h"
 #include "demo_api.h"
-#include "vgui_scorepanel.h"
+#include "vgui_ScorePanel.h"
 
 class CHLVoiceStatusHelper : public IVoiceStatusHelper
 {

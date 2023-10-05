@@ -102,7 +102,9 @@ set (CLDLL_SOURCES
 	hud_update.cpp
 	in_camera.cpp
 	input.cpp
-	inputw32.cpp
+	input_mouse.cpp
+	input_goldsource.cpp
+	input_xash3d.cpp
 	menu.cpp
 	message.cpp
 	parsemsg.cpp
@@ -196,7 +198,9 @@ if (USE_VGUI)
 	endif()
 endif()
 
-target_link_libraries(${CLDLL_LIBRARY} wsock32 ws2_32)
+if(WIN32)
+	target_link_libraries(${CLDLL_LIBRARY} wsock32 ws2_32)
+endif()
 
 if(WIN32)
 	target_link_libraries( ${CLDLL_LIBRARY} user32.lib )

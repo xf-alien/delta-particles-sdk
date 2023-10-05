@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright (c) 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -117,7 +117,7 @@ protected:
 	bool              _buildMode;
 	bool              _wantedBuildMode;
 	Panel*            _mouseArenaPanel;
-	Cursor*           _cursor[Cursor::DefaultCursor::dc_last];
+	Cursor*           _cursor[Cursor::dc_last];
 	Cursor*           _cursorOveride;
 private:
 	long              _nextTickMillis;

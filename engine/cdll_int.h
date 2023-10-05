@@ -34,6 +34,8 @@ extern "C" {
 
 typedef int HSPRITE;	// handle to a graphic
 
+#include "wrect.h"
+
 #define SCRINFO_SCREENFLASH 1
 #define SCRINFO_STRETCHED	2
 

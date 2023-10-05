@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -13,7 +13,7 @@
 
 
 #include <assert.h>
-
+#include <string.h>
 
 class CBitVecAccessor
 {

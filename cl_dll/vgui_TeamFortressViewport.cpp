@@ -636,7 +636,7 @@ void TeamFortressViewport::Initialize( void )
 		strcpy(m_sTeamNames[i], "");
 	}
 
-	App::getInstance()->setCursorOveride( App::getInstance()->getScheme()->getCursor(Scheme::SchemeCursor::scu_none) );
+	App::getInstance()->setCursorOveride( App::getInstance()->getScheme()->getCursor(Scheme::scu_none) );
 }
 
 class CException;
@@ -668,9 +668,10 @@ int TeamFortressViewport::CreateCommandMenu( char * menuFile, int direction, int
 		SetCurrentCommandMenu( NULL );
 		return newIndex;
 	}
-
+#ifdef _WIN32
 try
 {
+#endif
 	// First, read in the localisation strings
 
 	// Detpack strings
@@ -875,6 +876,7 @@ try
 
 		pfile = gEngfuncs.COM_ParseFile(pfile, token);
 	}
+#ifdef _WIN32
 }
 catch( CException *e )
 {
@@ -884,6 +886,7 @@ catch( CException *e )
 	m_iInitialized = false;
 	return newIndex;
 }
+#endif
 
 	SetCurrentMenu( NULL );
 	SetCurrentCommandMenu( NULL );
@@ -1889,7 +1892,7 @@ void TeamFortressViewport::UpdateCursorState()
 	if ( m_pSpectatorPanel->m_menuVisible || m_pCurrentMenu || m_pTeamMenu->isVisible() || m_pServerBrowser->isVisible() || GetClientVoiceMgr()->IsInSquelchMode() )
 	{
 		g_iVisibleMouse = true;
-		App::getInstance()->setCursorOveride( App::getInstance()->getScheme()->getCursor(Scheme::SchemeCursor::scu_arrow) );
+		App::getInstance()->setCursorOveride( App::getInstance()->getScheme()->getCursor(Scheme::scu_arrow) );
 		return;
 	}
 	else if ( m_pCurrentCommandMenu )
@@ -1898,7 +1901,7 @@ void TeamFortressViewport::UpdateCursorState()
 		if ( gHUD.m_pCvarStealMouse->value != 0.0f )
 		{
 			g_iVisibleMouse = true;
-			App::getInstance()->setCursorOveride( App::getInstance()->getScheme()->getCursor(Scheme::SchemeCursor::scu_arrow) );
+			App::getInstance()->setCursorOveride( App::getInstance()->getScheme()->getCursor(Scheme::scu_arrow) );
 			return;
 		}
 	}
@@ -1910,7 +1913,7 @@ void TeamFortressViewport::UpdateCursorState()
 	}
 
 	g_iVisibleMouse = false;
-	App::getInstance()->setCursorOveride( App::getInstance()->getScheme()->getCursor(Scheme::SchemeCursor::scu_none) );
+	App::getInstance()->setCursorOveride( App::getInstance()->getScheme()->getCursor(Scheme::scu_none) );
 }
 
 void TeamFortressViewport::UpdateHighlights()

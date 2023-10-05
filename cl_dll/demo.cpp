@@ -18,8 +18,6 @@
 #include "demo_api.h"
 #include <memory.h>
 
-#define DLLEXPORT __declspec( dllexport )
-
 int g_demosniper = 0;
 int g_demosniperdamage = 0;
 float g_demosniperorg[3];

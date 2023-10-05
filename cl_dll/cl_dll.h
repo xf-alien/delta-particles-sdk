@@ -31,10 +31,14 @@ typedef float vec_t;
 typedef int (*pfnUserMsgHook)(const char *pszName, int iSize, void *pbuf);
 
 #include "util_vector.h"
-#define EXPORT	_declspec( dllexport )
 
 #include "../engine/cdll_int.h"
 #include "../dlls/cdll_dll.h"
+
+#if !_WIN32
+#define _cdecl
+#endif
+#include "exportdef.h"
 
 extern cl_enginefunc_t gEngfuncs;
 

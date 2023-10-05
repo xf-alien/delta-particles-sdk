@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -17,7 +17,7 @@
 #include "pm_shared.h"
 #include "vgui_TeamFortressViewport.h"
 #include "vgui_SpectatorPanel.h"
-#include "vgui_scorepanel.h"
+#include "vgui_ScorePanel.h"
 
 #define PANEL_HEIGHT 32
 

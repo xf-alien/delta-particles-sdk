@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -19,8 +19,6 @@
 #include "pm_defs.h"
 #include "pmtrace.h"	
 #include "pm_shared.h"
-
-#define DLLEXPORT __declspec( dllexport )
 
 void Game_AddObjects( void );
 

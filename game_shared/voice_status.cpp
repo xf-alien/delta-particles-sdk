@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -44,7 +44,7 @@
 #include "VGUI_TextImage.h"
 #include "vgui_loadtga.h"
 #include "vgui_helpers.h"
-#include "vgui_mousecode.h"
+#include "VGUI_MouseCode.h"
 
 
 
@@ -102,14 +102,13 @@ int g_BannedPlayerPrintCount;
 void ForEachBannedPlayer(char id[16])
 {
 	char str[256];
-	sprintf(str, "Ban %d: %2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x\n",
+	sprintf(str, "BAN %d: %2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X\n",
 		g_BannedPlayerPrintCount++,
 		id[0], id[1], id[2], id[3], 
 		id[4], id[5], id[6], id[7], 
 		id[8], id[9], id[10], id[11], 
 		id[12], id[13], id[14], id[15]
 		);
-	strupr(str);
 	gEngfuncs.pfnConsolePrint(str);
 }
 

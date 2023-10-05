@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -17,8 +17,6 @@
 #include "cl_entity.h"
 #include "triangleapi.h"
 #include "particlemgr.h"
-
-#define DLLEXPORT __declspec( dllexport )
 
 extern "C"
 {

@@ -21,7 +21,7 @@
 #include "hud.h"
 #include "cl_util.h"
 #include "netadr.h"
-#include "vgui_schememanager.h"
+#include "vgui_SchemeManager.h"
 
 
 
@@ -34,8 +34,6 @@ extern "C"
 #include "hud_servers.h"
 #include "vgui_int.h"
 #include "interface.h"
-
-#define DLLEXPORT __declspec( dllexport )
 
 
 cl_enginefunc_t gEngfuncs;
@@ -285,4 +283,7 @@ void DLLEXPORT HUD_DirectorMessage( int iSize, void *pbuf )
 	 gHUD.m_Spectator.DirectorMessage( iSize, pbuf );
 }
 
-
+bool IsXashFWGS()
+{
+	return false;
+}

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -80,7 +80,8 @@
 #ifdef _WIN32
 # define VGUIAPI __declspec( dllexport )
 #else
-# define VGUIAPI
+# define VGUIAPI __attribute__ ((visibility("default")))
+#include <sys/types.h> // size_t define
 #endif
 
 #define null 0L

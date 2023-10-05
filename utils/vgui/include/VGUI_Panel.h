@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -28,6 +28,9 @@ TODO:
 #include<VGUI_Dar.h>
 #include<VGUI_Scheme.h>
 #include<VGUI_Color.h>
+#include <VGUI_MouseCode.h>
+#include <VGUI_KeyCode.h>
+#include <VGUI_RepaintSignal.h>
 
 namespace vgui
 {
