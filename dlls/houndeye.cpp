@@ -100,7 +100,7 @@ public:
 	BOOL FCanActiveIdle ( void );
 	int BuckshotCount;
 	Schedule_t *GetScheduleOfType ( int Type );
-	Schedule_t *CHoundeye :: GetSchedule( void );
+	Schedule_t *GetSchedule( void );
 	BOOL HeadGibbed;
 	Vector HeadPos;
 

@@ -279,7 +279,7 @@ void CZombie :: Spawn()
 	}
 	else 
 	{
-		if (pev->body == 1) // сброс body, если у нас technician
+		if (pev->body == 1) // reset body, if zombie was set as technician
 			pev->body = 0;
 
 		SET_MODEL(ENT(pev), "models/zombie_blood.mdl");
@@ -434,11 +434,12 @@ int CZombie :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 
 class CZombieBarney : public CZombie
 {
+public:
 	//=========================================================
 	// HandleAnimEvent - catches the monster-specific messages
 	// that occur when tagged animation frames are played.
 	//=========================================================
-	void CZombieBarney :: HandleAnimEvent( MonsterEvent_t *pEvent )
+	void HandleAnimEvent( MonsterEvent_t *pEvent )
 	{
 		switch( pEvent->event )
 		{
@@ -519,7 +520,7 @@ class CZombieBarney : public CZombie
 	//=========================================================
 	// Spawn
 	//=========================================================
-	void CZombieBarney :: Spawn()
+	void Spawn()
 	{
 		Precache( );
 
@@ -559,11 +560,12 @@ LINK_ENTITY_TO_CLASS( monster_zombie_barney, CZombieBarney );
 
 class CZombieSoldier : public CZombie
 {
+public:
 	//=========================================================
 	// HandleAnimEvent - catches the monster-specific messages
 	// that occur when tagged animation frames are played.
 	//=========================================================
-	void CZombieSoldier :: HandleAnimEvent( MonsterEvent_t *pEvent )
+	void HandleAnimEvent( MonsterEvent_t *pEvent )
 	{
 		switch( pEvent->event )
 		{
@@ -644,7 +646,7 @@ class CZombieSoldier : public CZombie
 	//=========================================================
 	// Spawn
 	//=========================================================
-	void CZombieSoldier :: Spawn()
+	void Spawn()
 	{
 		Precache( );
 
@@ -683,10 +685,11 @@ LINK_ENTITY_TO_CLASS( monster_zombie_soldier, CZombieSoldier );
 
 class CZombieSuit : public CZombieSoldier
 {
+public:
 	//=========================================================
 	// Spawn
 	//=========================================================
-	void CZombieSuit :: Spawn()
+	void Spawn()
 	{
 		Precache( );
 
@@ -719,11 +722,12 @@ LINK_ENTITY_TO_CLASS( monster_zombie_suit, CZombieSuit );
 
 class CZombieStealth : public CZombie
 {
+public:
 	//=========================================================
 	// HandleAnimEvent - catches the monster-specific messages
 	// that occur when tagged animation frames are played.
 	//=========================================================
-	void CZombieStealth :: HandleAnimEvent( MonsterEvent_t *pEvent )
+	void HandleAnimEvent( MonsterEvent_t *pEvent )
 	{
 		if ( m_Activity == ACT_RUN )	// always invisible if moving
 		{
@@ -818,7 +822,7 @@ class CZombieStealth : public CZombie
 	//=========================================================
 	// Spawn
 	//=========================================================
-	void CZombieStealth :: Spawn()
+	void Spawn()
 	{
 		Precache( );
 

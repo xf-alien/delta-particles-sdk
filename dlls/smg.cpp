@@ -274,7 +274,7 @@ void CSMG::SecondaryAttack()
 	m_flNextPrimaryAttack = m_flNextSecondaryAttack = m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 1.85;
 }
 
-void CSMG::ItemPostFrame() // Адский костыль для отрисовки глушителя при сейв-ресторе
+void CSMG::ItemPostFrame() // Hack to restore silencer on save-restore
 {
 	if ( m_iSilencer )
 	pev->body = 1;
@@ -322,7 +322,8 @@ LINK_ENTITY_TO_CLASS( ammo_45ACPclip, CSMGAmmoClip );
 
 class CSMG_nosilencer : public CSMG
 {
-	int CSMG_nosilencer::GetItemInfo(ItemInfo *p)
+public:
+	int GetItemInfo(ItemInfo *p)
 	{
 		p->pszName = STRING(pev->classname);
 		p->pszAmmo1 = "45ACP";
@@ -339,7 +340,7 @@ class CSMG_nosilencer : public CSMG
 		return 1;
 	}
 
-	int CSMG_nosilencer::AddToPlayer( CBasePlayer *pPlayer )
+	int AddToPlayer( CBasePlayer *pPlayer )
 	{
 		m_iSilencer = FALSE;
 
@@ -353,7 +354,7 @@ class CSMG_nosilencer : public CSMG
 		return FALSE;
 	}
 
-	void CSMG_nosilencer::Spawn( )
+	void Spawn( )
 	{
 		pev->classname = MAKE_STRING("weapon_smg_nosilencer");
 		Precache( );
@@ -365,7 +366,7 @@ class CSMG_nosilencer : public CSMG
 		FallInit();
 	}
 
-	void CSMG_nosilencer::SecondaryAttack()
+	void SecondaryAttack()
 	{
 		m_iSilencer = FALSE;
 		m_flNextPrimaryAttack = m_flNextSecondaryAttack = 0.08;
