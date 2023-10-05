@@ -4,4 +4,6 @@ cl_dll/*.dll
 *.ncb
 *.opt
 *.plg
+.vscode/
 build/
+build-*/
