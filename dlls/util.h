@@ -187,7 +187,7 @@ typedef enum
 					// In_Use isn't very useful, I'll probably remove it.
 } STATE;
  
-extern char* GetStringForState( STATE state );
+extern const char* GetStringForState( STATE state );
 
 // Things that toggle (buttons/triggers/doors) need this
 typedef enum
@@ -353,7 +353,7 @@ extern char *UTIL_dtos3( int d );
 extern char *UTIL_dtos4( int d );
 
 // Writes message to console with timestamp and FragLog header.
-extern void			UTIL_LogPrintf( char *fmt, ... );
+extern void			UTIL_LogPrintf( const char *fmt, ... );
 
 // Sorta like FInViewCone, but for nonmonsters. 
 extern float UTIL_DotPoints ( const Vector &vecSrc, const Vector &vecCheck, const Vector &vecDir );
