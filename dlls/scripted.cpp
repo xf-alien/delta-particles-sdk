@@ -652,8 +652,8 @@ void ScriptEntityCancel( edict_t *pentCine )
 	// make sure they are a scripted_sequence
 	if (FClassnameIs( pentCine, "scripted_sequence" ) || FClassnameIs( pentCine, "scripted_action" ))
 	{
-		((CCineMonster *)VARS(pentCine))->m_iState = STATE_OFF;
 		CCineMonster *pCineTarget = GetClassPtr((CCineMonster *)VARS(pentCine));
+		pCineTarget->m_iState = STATE_OFF;
 		// make sure they have a monster in mind for the script
 		CBaseEntity		*pEntity = pCineTarget->m_hTargetEnt;
 		CBaseMonster	*pTarget = NULL;
