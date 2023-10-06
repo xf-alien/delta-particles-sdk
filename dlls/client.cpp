@@ -496,6 +496,41 @@ void ClientCommand( edict_t *pEntity )
 	{
 		// MenuSelect returns true only if the command is properly handled,  so don't print a warning
 	}
+	else if ( FStrEq( pcmd, "beament" ) )
+	{
+		CBasePlayer * pPlayer = GetClassPtr((CBasePlayer *)pev);
+		const char* name = CMD_ARGV(1);
+		if (name)
+		{
+			CBaseEntity* pEntity = UTIL_FindEntityByTargetname(NULL, name);
+			if (pEntity)
+			{
+				ALERT(at_console, "%s: %f, %f, %f. Time: %f. ", name, pEntity->pev->origin.x, pEntity->pev->origin.y, pEntity->pev->origin.z, gpGlobals->time);
+				ALERT(at_console, "movetype: %d, solid: %d\n", pEntity->pev->movetype, pEntity->pev->solid);
+				MESSAGE_BEGIN( MSG_BROADCAST, SVC_TEMPENTITY );
+					WRITE_BYTE( TE_BEAMPOINTS);
+					WRITE_COORD( pPlayer->pev->origin.x );
+					WRITE_COORD( pPlayer->pev->origin.y );
+					WRITE_COORD( pPlayer->pev->origin.z );
+					WRITE_COORD( pEntity->pev->origin.x );
+					WRITE_COORD( pEntity->pev->origin.y );
+					WRITE_COORD( pEntity->pev->origin.z );
+
+					WRITE_SHORT( g_sModelIndexLaser );
+					WRITE_BYTE( 0 ); // frame start
+					WRITE_BYTE( 10 ); // framerate
+					WRITE_BYTE( 200 ); // life
+					WRITE_BYTE( 16 );  // width
+					WRITE_BYTE( 0 );   // noise
+					WRITE_BYTE( 0 );   // r, g, b
+					WRITE_BYTE( 0 );   // r, g, b
+					WRITE_BYTE( 200 );   // r, g, b
+					WRITE_BYTE( 255 );	// brightness
+					WRITE_BYTE( 10 );		// speed
+				MESSAGE_END();
+			}
+		}
+	}
 	else
 	{
 		// tell the user they entered an unknown command
