@@ -199,9 +199,13 @@ called every screen frame to
 redraw the HUD.
 ===========================
 */
+extern void DrawFlashlight();
 
 int DLLEXPORT HUD_Redraw( float time, int intermission )
 {
+	if (gHUD.m_bFlashlight)
+		DrawFlashlight();
+
 	gHUD.Redraw( time, intermission );
 
 	return 1;

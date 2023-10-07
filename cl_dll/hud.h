@@ -53,6 +53,9 @@ typedef struct {
 
 typedef struct cvar_s cvar_t;
 
+extern cvar_t* cl_flashlight_custom;
+extern cvar_t* cl_flashlight_radius;
+extern cvar_t* cl_flashlight_fade_distance;
 
 #define HUD_ACTIVE	1
 #define HUD_INTERMISSION 2
@@ -785,6 +788,7 @@ public:
 
 	float GetSensitivity();
 
+	int m_bFlashlight;
 };
 
 class TeamFortressViewport;

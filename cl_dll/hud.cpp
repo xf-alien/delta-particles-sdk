@@ -90,6 +90,10 @@ extern client_sprite_t *GetSpriteList(client_sprite_t *pList, const char *psz, i
 extern cvar_t *sensitivity;
 cvar_t *cl_lw = NULL;
 
+cvar_t* cl_flashlight_custom = NULL;
+cvar_t* cl_flashlight_radius = NULL;
+cvar_t* cl_flashlight_fade_distance = NULL;
+
 void ShutdownInput (void);
 
 //DECLARE_MESSAGE(m_Logo, Logo)
@@ -375,6 +379,10 @@ void CHud :: Init( void )
 	cl_lw = gEngfuncs.pfnGetCvarPointer( "cl_lw" );
 
 	cl_subtitles = CVAR_CREATE( "cl_subtitles", "1", FCVAR_ARCHIVE );
+
+	cl_flashlight_custom = CVAR_CREATE( "cl_flashlight_custom", "1", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
+	cl_flashlight_radius = CVAR_CREATE( "cl_flashlight_radius", "100", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
+	cl_flashlight_fade_distance = CVAR_CREATE( "cl_flashlight_fade_distance", "600", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 
 	m_pSpriteList = NULL;
 	m_pShinySurface = NULL; //LRC
