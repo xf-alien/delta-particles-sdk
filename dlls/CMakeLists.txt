@@ -40,6 +40,7 @@ set (SVDLL_SOURCES
 	airtank.cpp
 	aflock.cpp
 	alias.cpp
+	ammobox.cpp
 	animating.cpp
 	animation.cpp
 	apache.cpp

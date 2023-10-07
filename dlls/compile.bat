@@ -12,6 +12,7 @@ set SOURCES=agrunt.cpp ^
 	airtank.cpp ^
 	aflock.cpp ^
 	alias.cpp ^
+	ammobox.cpp ^
 	animating.cpp ^
 	animation.cpp ^
 	apache.cpp ^
