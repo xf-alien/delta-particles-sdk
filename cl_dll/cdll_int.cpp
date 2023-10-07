@@ -251,6 +251,13 @@ Called by engine every frame that client .dll is loaded
 
 void DLLEXPORT HUD_Frame( double time )
 {
+	// We're too lazy to make new weapons work properly with predicting at the moment. Just forcibly disable it.
+	extern cvar_t* cl_lw;
+	if (cl_lw && cl_lw->value)
+	{
+		gEngfuncs.Cvar_SetValue("cl_lw", 0.0f);
+	}
+
 	ServersThink( time );
 
 	GetClientVoiceMgr()->Frame(time);
