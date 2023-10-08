@@ -327,7 +327,7 @@ public:
 	BOOL	m_fNVGisON;
 
 	void UpdateSuitLightBattery(bool on);
-	bool HasNVG() { return (pev->weapons & (1<<WEAPON_SUIT)); }
+	bool HasNVG() { return (pev->weapons & (1<<WEAPON_SUIT)) != 0; }
 	bool NVGIsOn() { return m_fNVGisON; }
 	void NVGToggle();
 	void NVGTurnOn();
