@@ -384,7 +384,7 @@ void CHud :: Init( void )
 	cl_flashlight_custom = CVAR_CREATE( "cl_flashlight_custom", "1", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 	cl_flashlight_radius = CVAR_CREATE( "cl_flashlight_radius", "100", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 	cl_flashlight_fade_distance = CVAR_CREATE( "cl_flashlight_fade_distance", "600", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
-	cl_nvgradius = CVAR_CREATE( "cl_nvgradius", "775", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
+	cl_nvgradius = CVAR_CREATE( "cl_nvgradius", "450", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 
 	m_pSpriteList = NULL;
 	m_pShinySurface = NULL; //LRC

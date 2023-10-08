@@ -152,6 +152,7 @@ int CHudFlashlight::Draw(float flTime)
 DECLARE_MESSAGE( m_Nightvision, Nightvision )
 
 #define NIGHTVISION_SPRITE_NAME "sprites/visor.spr"
+#define NIGHTVISION_FRAME_UPDATE_DELAY 0.3f
 
 int CHudNightvision::Init(void)
 {
@@ -162,6 +163,7 @@ int CHudNightvision::Init(void)
 	m_iFlags |= HUD_ACTIVE;
 
 	m_pLight = 0;
+	m_frameUpdateTime = 0;
 
 	return 1;
 }
@@ -180,6 +182,7 @@ int CHudNightvision::VidInit(void)
 
 	// current frame.
 	m_iFrame = 0;
+	m_frameUpdateTime = 0;
 	return 1;
 }
 
@@ -254,7 +257,11 @@ void CHudNightvision::DrawNVG(float flTime)
 	}
 
 	// Increase sprite frame.
-	m_iFrame++;
+	if (flTime > m_frameUpdateTime)
+	{
+		m_iFrame++;
+		m_frameUpdateTime = flTime + NIGHTVISION_FRAME_UPDATE_DELAY;
+	}
 
 	if( !m_pLight || m_pLight->die < flTime )
 	{
@@ -303,7 +310,7 @@ void CHudNightvision::RemoveDlight()
 float CHudNightvision::NvgRadius()
 {
 	extern cvar_t *cl_nvgradius;
-	float radius = cl_nvgradius && cl_nvgradius->value > 0 ? cl_nvgradius->value : 775;
+	float radius = cl_nvgradius && cl_nvgradius->value > 0 ? cl_nvgradius->value : 450;
 	if (radius < NVG_RADIUS_MIN)
 		return NVG_RADIUS_MIN;
 	else if (radius > NVG_RADIUS_MAX)

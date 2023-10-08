@@ -453,6 +453,7 @@ private:
 	dlight_t* m_pLight;
 	HSPRITE m_hSprite;
 	int m_iFrame, m_nFrameCount;
+	float m_frameUpdateTime;
 };
 
 //
