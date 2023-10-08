@@ -133,6 +133,10 @@ SOURCE=.\ev_hldm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\dlls\exportdef.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\dlls\gauss.cpp
 # End Source File
 # Begin Source File
