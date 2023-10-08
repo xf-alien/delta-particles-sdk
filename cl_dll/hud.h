@@ -28,6 +28,7 @@
 #include "wrect.h"
 #include "cl_dll.h"
 #include "ammo.h"
+#include "dlight.h"
 
 #define DHN_DRAWZERO 1
 #define DHN_2DIGITS  2
@@ -433,6 +434,27 @@ private:
 	int	  m_iWidth;		// width of the battery innards
 };
 
+class CHudNightvision : public CHudBase
+{
+public:
+	int Init( void );
+	int VidInit( void );
+	int Draw( float flTime );
+	void Reset( void );
+	int MsgFunc_Nightvision( const char *pszName, int iSize, void *pbuf );
+	void DrawNVG(float flTime);
+	dlight_t* MakeDynLight(float flTime, int r, int g, int b);
+	void UpdateDynLight(dlight_t* dynLight, float radius, const Vector &origin);
+	void RemoveDlight();
+	float NvgRadius();
+	bool IsOn();
+private:
+	int m_fOn;
+	dlight_t* m_pLight;
+	HSPRITE m_hSprite;
+	int m_iFrame, m_nFrameCount;
+};
+
 //
 //-----------------------------------------------------
 //
@@ -747,6 +769,7 @@ public:
 	CHudStatusIcons m_StatusIcons;
 	CHudParticle	m_Particle; // (LRC) -- 30/08/02 November235: Particles to Order
 	CHudCaption		m_Caption;
+	CHudNightvision m_Nightvision;
 
 	void Init( void );
 	void VidInit( void );

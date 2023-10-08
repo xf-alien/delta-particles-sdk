@@ -2829,32 +2829,11 @@ void CFade::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType
 	{
 		if ( pActivator->IsNetClient() )
 		{
-			#ifdef XENWARRIOR
-			if (pActivator->IsPlayer() && ((CBasePlayer*)pActivator)->FlashlightIsOn())
-			{
-				((CBasePlayer*)pActivator)->FlashlightTurnOff();
-				if (pev->spawnflags & SF_FADE_PERMANENT)
-					g_fEnvFadeTime = gpGlobals->time + 1E6;
-				else
-					g_fEnvFadeTime = gpGlobals->time + Duration() + HoldTime();
-			}
-			#endif
-
 			UTIL_ScreenFade( pActivator, pev->rendercolor, Duration(), HoldTime(), pev->renderamt, fadeFlags );
 		}
 	}
 	else
 	{
-		#ifdef XENWARRIOR
-		CBasePlayer *pPlayer = (CBasePlayer*)UTIL_FindEntityByTargetname(NULL, "*player");
-		if (pPlayer)
-			((CBasePlayer*)pPlayer)->FlashlightTurnOff();
-		if (pev->spawnflags & SF_FADE_PERMANENT)
-			g_fEnvFadeTime = gpGlobals->time + 1E6;
-		else
-			g_fEnvFadeTime = gpGlobals->time + Duration() + HoldTime();
-		#endif
-
 		UTIL_ScreenFadeAll( pev->rendercolor, Duration(), HoldTime(), pev->renderamt, fadeFlags );
 	}
 	SUB_UseTargets( this, USE_TOGGLE, 0 );

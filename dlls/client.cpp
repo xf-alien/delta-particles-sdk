@@ -485,6 +485,10 @@ void ClientCommand( edict_t *pEntity )
 	{
 		GetClassPtr((CBasePlayer *)pev)->SelectLastItem();
 	}
+	else if( FStrEq( pcmd, "nightvision" ) )
+	{
+		GetClassPtr( (CBasePlayer *)pev )->NVGToggle();
+	}
 	else if ( FStrEq( pcmd, "spectate" ) && (pev->flags & FL_PROXY) )	// added for proxy support
 	{
 		CBasePlayer * pPlayer = GetClassPtr((CBasePlayer *)pev);
@@ -802,6 +806,9 @@ void ClientPrecache( void )
 	PRECACHE_SOUND( SOUND_FLASHLIGHT_ON );
 	PRECACHE_SOUND( SOUND_FLASHLIGHT_OFF );
 
+	PRECACHE_SOUND( SOUND_NVG_ON );
+	PRECACHE_SOUND( SOUND_NVG_OFF );
+
 // player gib sounds
 	PRECACHE_SOUND("common/bodysplat.wav");		               
 
@@ -821,10 +828,6 @@ void ClientPrecache( void )
 	PRECACHE_SOUND("common/wpn_moveselect.wav");
 	PRECACHE_SOUND("common/wpn_select.wav");
 	PRECACHE_SOUND("common/wpn_denyselect.wav");
-
-#ifdef XENWARRIOR
-	PRECACHE_SOUND( SOUND_FLASHLIGHT_IDLE );
-#endif
 
 	// geiger sounds
 

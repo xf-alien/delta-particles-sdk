@@ -19,19 +19,6 @@
 #include "pm_materials.h"
 
 
-//LRC - code for Werner Spahl's mod.
-//#define XENWARRIOR
-
-#ifdef XENWARRIOR
-#define SOUND_FLASHLIGHT_IDLE   "ambience/alien_clicker1.wav"
-#define LF_FLASH_RESUME (1<<13)
-#define LF_FLASH_RESUME2 (1<<14)
-
-extern float g_fEnvFadeTime;
-#endif
-
-
-
 #define PLAYER_FATAL_FALL_SPEED		1024// approx 60 feet
 #define PLAYER_MAX_SAFE_FALL_SPEED	580// approx 20 feet
 #define DAMAGE_FOR_FALL_SPEED		(float) 100 / ( PLAYER_FATAL_FALL_SPEED - PLAYER_MAX_SAFE_FALL_SPEED )// damage per unit per second.
@@ -72,6 +59,9 @@ extern float g_fEnvFadeTime;
 
 #define	SOUND_FLASHLIGHT_ON		"items/flashlight1.wav"
 #define	SOUND_FLASHLIGHT_OFF	"items/flashlight1.wav"
+
+#define SOUND_NVG_ON "items/nvg_on.wav"
+#define SOUND_NVG_OFF "items/nvg_off.wav"
 
 #define TEAM_NAME_LENGTH	16
 
@@ -251,7 +241,7 @@ public:
 	BOOL			IsOnLadder( void );
 	BOOL			FlashlightIsOn( void );
 	void			FlashlightTurnOn( void );
-	void			FlashlightTurnOff( void );
+	void			FlashlightTurnOff( bool playOffSound = true );
 	
 	void UpdatePlayerSound ( void );
 	void DeathSound ( void );
@@ -333,7 +323,15 @@ public:
 	char m_SbarString1[ SBAR_STRING_SIZE ];
 	
 	float m_flNextChatTime;
-	
+
+	BOOL	m_fNVGisON;
+
+	void UpdateSuitLightBattery(bool on);
+	bool HasNVG() { return (pev->weapons & (1<<WEAPON_SUIT)); }
+	bool NVGIsOn() { return m_fNVGisON; }
+	void NVGToggle();
+	void NVGTurnOn();
+	void NVGTurnOff( bool playOffSound = true );
 };
 
 #define AUTOAIM_2DEGREES  0.0348994967025

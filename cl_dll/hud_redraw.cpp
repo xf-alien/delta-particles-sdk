@@ -175,6 +175,7 @@ int CHud :: Redraw( float flTime, int intermission )
 			pList = pList->pNext;
 		}
 	}
+	m_Nightvision.Draw( flTime );
 
 	// are we in demo mode? do we need to draw the logo in the top corner?
 	if (m_iLogo)

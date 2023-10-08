@@ -21,6 +21,7 @@
 #include "hud.h"
 #include "cl_util.h"
 #include "parsemsg.h"
+#include "r_efx.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -146,4 +147,171 @@ int CHudFlashlight::Draw(float flTime)
 
 
 	return 1;
+}
+
+DECLARE_MESSAGE( m_Nightvision, Nightvision )
+
+#define NIGHTVISION_SPRITE_NAME "sprites/visor.spr"
+
+int CHudNightvision::Init(void)
+{
+	m_fOn = 0;
+
+	HOOK_MESSAGE(Nightvision);
+
+	m_iFlags |= HUD_ACTIVE;
+
+	m_pLight = 0;
+
+	return 1;
+}
+
+void CHudNightvision::Reset(void)
+{
+	m_fOn = 0;
+}
+
+int CHudNightvision::VidInit(void)
+{
+	m_hSprite = LoadSprite(NIGHTVISION_SPRITE_NAME);
+
+	// Get the number of frames available in this sprite.
+	m_nFrameCount = SPR_Frames(m_hSprite);
+
+	// current frame.
+	m_iFrame = 0;
+	return 1;
+}
+
+
+int CHudNightvision::MsgFunc_Nightvision(const char *pszName, int iSize, void *pbuf)
+{
+	BEGIN_READ( pbuf, iSize );
+	m_fOn = READ_BYTE();
+	if (!m_fOn) {
+		RemoveDlight();
+	}
+
+	return 1;
+}
+
+int CHudNightvision::Draw(float flTime)
+{
+	if( gEngfuncs.IsSpectateOnly() )
+	{
+		return 1;
+	}
+
+	if (gHUD.m_iHideHUDDisplay & (HIDEHUD_FLASHLIGHT | HIDEHUD_ALL))
+		return 1;
+
+	// Only display this if the player is equipped with the suit.
+	if (!(gHUD.m_iWeaponBits & (1<<(WEAPON_SUIT)) ))
+		return 1;
+
+	if (m_fOn) {
+			DrawNVG(flTime);
+	}
+	return 1;
+}
+
+void CHudNightvision::DrawNVG(float flTime)
+{
+	int r, g, b, x, y;
+
+	r = 255;
+	g = 255;
+	b = 255;
+	int a = 255;
+
+	ScaleColors(r, g, b, a);
+
+	// Top left of the screen.
+	x = y = 0;
+
+	// Reset the number of frame if we are at last frame.
+	if (m_iFrame >= m_nFrameCount)
+		m_iFrame = 0;
+
+	const int nvgSpriteWidth = SPR_Width(m_hSprite, 0);
+	const int nvgSpriteHeight = SPR_Height(m_hSprite, 0);
+
+	const int colCount = (int)ceil(ScreenWidth / (float)nvgSpriteWidth);
+	const int rowCount = (int)ceil(ScreenHeight / (float)nvgSpriteHeight);
+
+	//
+	// draw nightvision scanlines sprite.
+	//
+	SPR_Set(m_hSprite, r, g, b);
+
+	int i, j;
+	for (i = 0; i < rowCount; ++i) // height
+	{
+		for (j = 0; j < colCount; ++j) // width
+		{
+			SPR_DrawAdditive(m_iFrame, x + (j * 256), y + (i * 256), NULL);
+		}
+	}
+
+	// Increase sprite frame.
+	m_iFrame++;
+
+	if( !m_pLight || m_pLight->die < flTime )
+	{
+		r = 250;
+		g = 250;
+		b = 250;
+		m_pLight = MakeDynLight(flTime, r, g, b);
+	}
+	UpdateDynLight( m_pLight, NvgRadius(), gHUD.m_vecOrigin + Vector(0.0f, 0.0f, 32.0f ) );
+}
+
+dlight_t* CHudNightvision::MakeDynLight(float flTime, int r, int g, int b)
+{
+	dlight_t* dLight = gEngfuncs.pEfxAPI->CL_AllocDlight( 0 );
+
+	// I hope no one is crazy so much to keep NVG for 9999 seconds
+	dLight->die = flTime + 9999.0f;
+	dLight->color.r = r;
+	dLight->color.g = g;
+	dLight->color.b = b;
+
+	return dLight;
+}
+
+void CHudNightvision::UpdateDynLight(dlight_t *dynLight, float radius, const Vector &origin)
+{
+	if( dynLight )
+	{
+		dynLight->origin = origin;
+		dynLight->radius = radius;
+	}
+}
+
+void CHudNightvision::RemoveDlight()
+{
+	if( m_pLight )
+	{
+		m_pLight->die = 0;
+		m_pLight = NULL;
+	}
+}
+
+#define NVG_RADIUS_MIN 400
+#define NVG_RADIUS_MAX 1000
+
+float CHudNightvision::NvgRadius()
+{
+	extern cvar_t *cl_nvgradius;
+	float radius = cl_nvgradius && cl_nvgradius->value > 0 ? cl_nvgradius->value : 775;
+	if (radius < NVG_RADIUS_MIN)
+		return NVG_RADIUS_MIN;
+	else if (radius > NVG_RADIUS_MAX)
+		return NVG_RADIUS_MAX;
+	return radius;
+}
+
+bool CHudNightvision::IsOn()
+{
+	return m_fOn;
 }

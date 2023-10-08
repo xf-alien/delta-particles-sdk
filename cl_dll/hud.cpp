@@ -93,6 +93,7 @@ cvar_t *cl_lw = NULL;
 cvar_t* cl_flashlight_custom = NULL;
 cvar_t* cl_flashlight_radius = NULL;
 cvar_t* cl_flashlight_fade_distance = NULL;
+cvar_t *cl_nvgradius = NULL;
 
 void ShutdownInput (void);
 
@@ -383,6 +384,7 @@ void CHud :: Init( void )
 	cl_flashlight_custom = CVAR_CREATE( "cl_flashlight_custom", "1", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 	cl_flashlight_radius = CVAR_CREATE( "cl_flashlight_radius", "100", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 	cl_flashlight_fade_distance = CVAR_CREATE( "cl_flashlight_fade_distance", "600", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
+	cl_nvgradius = CVAR_CREATE( "cl_nvgradius", "775", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 
 	m_pSpriteList = NULL;
 	m_pShinySurface = NULL; //LRC
@@ -425,6 +427,7 @@ void CHud :: Init( void )
 	ServersInit();
 
 	m_Caption.Init();
+	m_Nightvision.Init();
 
 	MsgFunc_ResetHUD(0, 0, NULL );
 }
@@ -578,6 +581,7 @@ void CHud :: VidInit( void )
 	GetClientVoiceMgr()->VidInit();
 	m_Particle.VidInit(); // (LRC) -- 30/08/02 November235: Particles to Order
 	m_Caption.VidInit();
+	m_Nightvision.VidInit();
 }
 
 int CHud::MsgFunc_Logo(const char *pszName,  int iSize, void *pbuf)

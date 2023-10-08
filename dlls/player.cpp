@@ -70,12 +70,6 @@ extern CGraph	WorldGraph;
 #define	FLASH_DRAIN_TIME	 1.2 //100 units/3 minutes
 #define	FLASH_CHARGE_TIME	 0.2 // 100 units/20 seconds  (seconds per unit)
 
-#ifdef XENWARRIOR
-  float g_fEnvFadeTime = 0;    // flashlight can't be used until this time expires.
-							// this is just a big hack, doesn't work with saverestore, etc...
-							// Doing it properly would just be effort.
-#endif
-
 // Global Savedata for player
 TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] = 
 {
@@ -159,7 +153,7 @@ TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] =
 	//DEFINE_ARRAY( CBasePlayer, m_rgAmmoLast, FIELD_INTEGER, MAX_AMMO_SLOTS ), // Don't need to restore
 	//DEFINE_FIELD( CBasePlayer, m_fOnTarget, FIELD_BOOLEAN ), // Don't need to restore
 	//DEFINE_FIELD( CBasePlayer, m_nCustomSprayFrames, FIELD_INTEGER ), // Don't need to restore
-	
+	DEFINE_FIELD( CBasePlayer, m_fNVGisON, FIELD_BOOLEAN ),
 };	
 
 
@@ -210,6 +204,7 @@ int gmsgStatusText = 0;
 int gmsgStatusValue = 0; 
 
 int gmsgCaption = 0;
+int gmsgNightvision = 0;
 
 void LinkUserMessages( void )
 {
@@ -266,6 +261,7 @@ void LinkUserMessages( void )
 	gmsgStatusValue = REG_USER_MSG("StatusValue", 3); 
 
 	gmsgCaption = REG_USER_MSG("Caption", -1);
+	gmsgNightvision = REG_USER_MSG( "Nightvision", 1 );
 }
 
 LINK_ENTITY_TO_CLASS( player, CBasePlayer );
@@ -2691,11 +2687,6 @@ void CBasePlayer::PostThink()
 	if (!IsAlive())
 		goto pt_end;
 
-	#ifdef XENWARRIOR
-	if (FlashlightIsOn())
-		UTIL_ScreenFade(this, Vector(150, 20, 150), 0, 0, 100, FFADE_STAYOUT );
-	#endif
-
 	// Handle Tank controlling
 	if ( m_pTank != NULL )
 	{ // if they've moved too far from the gun,  or selected a weapon, unuse the gun
@@ -3117,14 +3108,6 @@ void CBasePlayer :: Precache( void )
 	if ( gInitHUD )
 		m_fInitHUD = TRUE;
 
-#ifdef XENWARRIOR
-	g_fEnvFadeTime = 0;
-	if (FlashlightIsOn()) m_iLFlags |= LF_FLASH_RESUME;
-
-	if (CVAR_GET_FLOAT("v_dark"))
-		g_fEnvFadeTime = gpGlobals->time + 10;
-#endif
-
 	pev->fov = m_iFOV;		// Vit_amiN: restore the FOV on level change or map/saved game load
 }
 
@@ -3536,11 +3519,7 @@ CBaseEntity *FindEntityForward( CBaseEntity *pMe )
 
 BOOL CBasePlayer :: FlashlightIsOn( void )
 {
-#ifdef XENWARRIOR
-	return FBitSet(pev->effects, EF_BRIGHTLIGHT);
-#else
 	return FBitSet(pev->effects, EF_DIMLIGHT);
-#endif
 }
 
 
@@ -3551,52 +3530,86 @@ void CBasePlayer :: FlashlightTurnOn( void )
 		return;
 	}
 
-#ifdef XENWARRIOR
-	if (g_fEnvFadeTime > gpGlobals->time)
-	{
-		return;
-	}
-#endif
-
 	if ( (pev->weapons & (1<<WEAPON_SUIT)) )
 	{
+		NVGTurnOff(false);
 		EMIT_SOUND_DYN( ENT(pev), CHAN_WEAPON, SOUND_FLASHLIGHT_ON, 1.0, ATTN_NORM, 0, PITCH_NORM );
-
-#ifdef XENWARRIOR
-		SetBits(pev->effects, EF_BRIGHTLIGHT);
-		pev->fov = m_iFOV = 90;
-#else
-		SetBits(pev->effects, EF_DIMLIGHT);
-		MESSAGE_BEGIN( MSG_ONE, gmsgFlashlight, NULL, pev );
-		WRITE_BYTE(1);
-		WRITE_BYTE(m_iFlashBattery);
-		MESSAGE_END();
-#endif
-
-		m_flFlashLightTime = FLASH_DRAIN_TIME + gpGlobals->time;
-
+		SetBits( pev->effects, EF_DIMLIGHT );
+		UpdateSuitLightBattery(true);
 	}
 }
 
 
-void CBasePlayer :: FlashlightTurnOff( void )
+void CBasePlayer :: FlashlightTurnOff( bool playOffSound )
 {
 	if (FlashlightIsOn())
-		EMIT_SOUND_DYN( ENT(pev), CHAN_WEAPON, SOUND_FLASHLIGHT_OFF, 1.0, ATTN_NORM, 0, PITCH_NORM );
-#ifdef XENWARRIOR
-    ClearBits(pev->effects, EF_BRIGHTLIGHT);
-	UTIL_ScreenFade(this, Vector(150, 50, 50), 0, 0, 100, FFADE_IN );
-	pev->fov = m_iFOV = 0;
-#else
-    ClearBits(pev->effects, EF_DIMLIGHT);
+	{
+		if (playOffSound)
+			EMIT_SOUND_DYN( ENT(pev), CHAN_WEAPON, SOUND_FLASHLIGHT_OFF, 1.0, ATTN_NORM, 0, PITCH_NORM );
+		ClearBits( pev->effects, EF_DIMLIGHT );
+		UpdateSuitLightBattery(false);
+	}
+}
+
+void CBasePlayer::UpdateSuitLightBattery(bool on)
+{
 	MESSAGE_BEGIN( MSG_ONE, gmsgFlashlight, NULL, pev );
-		WRITE_BYTE(0);
-		WRITE_BYTE(m_iFlashBattery);
+		WRITE_BYTE( on ? 1 : 0 );
+		WRITE_BYTE( m_iFlashBattery );
 	MESSAGE_END();
-#endif
 
 	m_flFlashLightTime = FLASH_CHARGE_TIME + gpGlobals->time;
+}
 
+void CBasePlayer::NVGToggle()
+{
+	if (NVGIsOn())
+	{
+		NVGTurnOff();
+	}
+	else
+	{
+		NVGTurnOn();
+	}
+}
+
+void CBasePlayer::NVGTurnOn()
+{
+	if( !HasNVG() || !g_pGameRules->FAllowFlashlight() )
+	{
+		return;
+	}
+
+	if (!m_fNVGisON)
+	{
+		FlashlightTurnOff(false);
+		EMIT_SOUND_DYN( ENT( pev ), CHAN_WEAPON, SOUND_NVG_ON, 1.0, ATTN_NORM, 0, PITCH_NORM );
+
+		m_fNVGisON = TRUE;
+		MESSAGE_BEGIN( MSG_ONE, gmsgNightvision, NULL, pev );
+			WRITE_BYTE( 1 );
+		MESSAGE_END();
+
+		UpdateSuitLightBattery(true);
+	}
+}
+
+void CBasePlayer::NVGTurnOff(bool playOffSound)
+{
+	if (m_fNVGisON)
+	{
+		if (playOffSound)
+		{
+			EMIT_SOUND_DYN( ENT( pev ), CHAN_WEAPON, SOUND_NVG_OFF, 1.0, ATTN_NORM, 0, PITCH_NORM );
+		}
+
+		m_fNVGisON = FALSE;
+		MESSAGE_BEGIN( MSG_ONE, gmsgNightvision, NULL, pev );
+			WRITE_BYTE( 0 );
+		MESSAGE_END();
+
+		UpdateSuitLightBattery(false);
+	}
 }
 
 /*
@@ -4212,6 +4225,18 @@ void CBasePlayer :: UpdateClientData( void )
 
 		FireTargets( "game_playerspawn", this, this, USE_TOGGLE, 0 );
 
+		MESSAGE_BEGIN( MSG_ONE, gmsgFlashlight, NULL, pev );
+			WRITE_BYTE( FlashlightIsOn() || NVGIsOn() ? 1 : 0 );
+			WRITE_BYTE( m_iFlashBattery );
+		MESSAGE_END();
+
+		if (HasNVG())
+		{
+			MESSAGE_BEGIN( MSG_ONE, gmsgNightvision, NULL, pev );
+				WRITE_BYTE( NVGIsOn() ? 1 : 0 );
+			MESSAGE_END();
+		}
+
 		InitStatusBar();
 	}
 
@@ -4303,7 +4328,7 @@ void CBasePlayer :: UpdateClientData( void )
 	// Update Flashlight
 	if ((m_flFlashLightTime) && (m_flFlashLightTime <= gpGlobals->time))
 	{
-		if (FlashlightIsOn())
+		if (FlashlightIsOn() || NVGIsOn())
 		{
 			if (m_iFlashBattery)
 			{
