@@ -328,7 +328,7 @@ public:
 
 	void UpdateSuitLightBattery(bool on);
 	bool HasNVG() { return (pev->weapons & (1<<WEAPON_SUIT)) != 0; }
-	bool NVGIsOn() { return m_fNVGisON; }
+	bool NVGIsOn() { return m_fNVGisON != FALSE; }
 	void NVGToggle();
 	void NVGTurnOn();
 	void NVGTurnOff( bool playOffSound = true );

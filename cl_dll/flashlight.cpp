@@ -313,5 +313,5 @@ float CHudNightvision::NvgRadius()
 
 bool CHudNightvision::IsOn()
 {
-	return m_fOn;
+	return m_fOn != 0;
 }
