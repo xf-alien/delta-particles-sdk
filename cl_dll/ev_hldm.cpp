@@ -639,51 +639,40 @@ void EV_FireShotGunDouble( event_args_t *args )
 		// Add muzzle flash to current weapon model
 		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( SHOTGUN_FIRE2, 2 );
-		V_PunchAxis( 0, -10.0 );
+		V_PunchAxis( 0, -5.0 );
 	}
 
-	for ( j = 0; j < 2; j++ )
+	EV_GetDefaultShellInfo( args, origin, velocity, ShellVelocity, ShellOrigin, forward, shellRight, up, 32, -12, 6 );
+
+	// XaeroX: don't eject brass shell in first-person mode
+	// but instead, store shell velocity in viewmodel, for a studio event
+	if ( !CL_IsThirdPerson() ) 
 	{
-		// XaeroX: shellRight is actually left
-		EV_GetDefaultShellInfo( args, origin, velocity, ShellVelocity, ShellOrigin, forward, shellRight, up, 32, -12, 6 );
-
-		// XaeroX: don't eject brass shell in first-person mode
-		// but instead, store shell velocity in viewmodel, for a studio event
-		if ( !CL_IsThirdPerson() ) 
-		{
-			cl_entity_t *view = gEngfuncs.GetViewModel();
-			if ( view ) {
-				// two brass shells are to be ejected
-				++view->curstate.iuser4;
-				// because we have two different shells here, we have to store
-				// two different velocities, in vuser1 and in vuser2.
-				// And there will be 2 events in the anim: 5005 and 5006
-				if ( j == 0 )
-					VectorCopy( ShellVelocity, view->curstate.vuser1 )
-				else
-					VectorCopy( ShellVelocity, view->curstate.vuser2 );
-			}
-		}
-		else
-		{
-			// XaeroX: thirdperson mode, eject immediately
-			EV_EjectBrass ( ShellOrigin, ShellVelocity, angles[ YAW ], 
-							gEngfuncs.pEventAPI->EV_FindModelIndex( "models/shotgunshell.mdl" ), TE_BOUNCE_SHOTSHELL ); 
+		cl_entity_t *view = gEngfuncs.GetViewModel();
+		if ( view ) {
+			++view->curstate.iuser4;
+			VectorCopy( ShellVelocity, view->curstate.vuser1 );
 		}
 	}
+	else
+	{
+		// XaeroX: thirdperson mode, eject immediately
+		EV_EjectBrass ( ShellOrigin, ShellVelocity, angles[ YAW ], 
+						gEngfuncs.pEventAPI->EV_FindModelIndex( "models/shotgunshell.mdl" ), TE_BOUNCE_SHOTSHELL ); 
+	}
 
-	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/dbarrel1.wav", gEngfuncs.pfnRandomFloat(0.98, 1.0), ATTN_NORM, 0, 85 + gEngfuncs.pfnRandomLong( 0, 0x1f ) );
+	gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/sbarrel1.wav", gEngfuncs.pfnRandomFloat(0.98, 1.0), ATTN_NORM, 0, 85 + gEngfuncs.pfnRandomLong( 0, 0x1f ) );
 
 	EV_GetGunPosition( args, vecSrc, origin );
 	VectorCopy( forward, vecAiming );
 
 	if ( gEngfuncs.GetMaxClients() > 1 )
 	{
-		EV_HLDM_FireBullets( idx, forward, right, up, 8, vecSrc, vecAiming, 2048, BULLET_PLAYER_BUCKSHOT, 0, &tracerCount[idx-1], 0.17365, 0.04362 );
+		EV_HLDM_FireBullets( idx, forward, right, up, 4, vecSrc, vecAiming, 2048, BULLET_PLAYER_BUCKSHOT, 0, &tracerCount[idx-1], 0.17365, 0.04362 );
 	}
 	else
 	{
-		EV_HLDM_FireBullets( idx, forward, right, up, 12, vecSrc, vecAiming, 2048, BULLET_PLAYER_BUCKSHOT, 0, &tracerCount[idx-1], 0.08716, 0.08716 );
+		EV_HLDM_FireBullets( idx, forward, right, up, 6, vecSrc, vecAiming, 2048, BULLET_PLAYER_BUCKSHOT, 0, &tracerCount[idx-1], 0.08716, 0.08716 );
 	}
 }
 
