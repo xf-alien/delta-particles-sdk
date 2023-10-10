@@ -452,6 +452,10 @@ void CBaseMonster :: RunTask ( Task_t *pTask )
 		}
 	case TASK_DIE:
 		{
+			if ( pev->frame >= 50 )
+			{
+				pev->iuser3 = -1;
+			}
 			if ( m_fSequenceFinished && pev->frame >= 255 )
 			{
 				pev->deadflag = DEAD_DEAD;
