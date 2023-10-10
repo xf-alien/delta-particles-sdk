@@ -227,7 +227,7 @@ void CShotgun::SecondaryAttack( void )
 		return;
 	}
 
-	if (m_iClip <= 1)
+	if (m_iClip <= 0)
 	{
 		Reload( );
 		PlayEmptySound( );
@@ -237,9 +237,9 @@ void CShotgun::SecondaryAttack( void )
 	m_pPlayer->m_iWeaponVolume = LOUD_GUN_VOLUME;
 	m_pPlayer->m_iWeaponFlash = NORMAL_GUN_FLASH;
 
-	m_iClip -= 2;
+	m_iClip--;
 
-	if (m_iClip == 2 || m_iClip == 1)
+	if (m_iClip == 2)
 	EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_STATIC, "fvox/ammo_low.wav", 1.0, ATTN_NORM);
 
 	int flags;
@@ -276,7 +276,7 @@ void CShotgun::SecondaryAttack( void )
 	else
 	{
 		// untouched default single player
-		vecDir = m_pPlayer->FireBulletsPlayer( 12, vecSrc, vecAiming, VECTOR_CONE_10DEGREES, 2048, BULLET_PLAYER_BUCKSHOT, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed );
+		vecDir = m_pPlayer->FireBulletsPlayer( 6, vecSrc, vecAiming, VECTOR_CONE_15DEGREES, 2048, BULLET_PLAYER_BUCKSHOT, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed );
 	}
 		
 	PLAYBACK_EVENT_FULL( flags, m_pPlayer->edict(), m_usDoubleFire, 0.0, (float *)&g_vecZero, (float *)&g_vecZero, vecDir.x, vecDir.y, 0, 0, 0, 0 );
@@ -285,8 +285,8 @@ void CShotgun::SecondaryAttack( void )
 		// HEV suit - indicate out of ammo condition
 		m_pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
 
-	m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 1.50;
-	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1.50;
+	m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.55;
+	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.3;
 	if (m_iClip != 0)
 		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 6.0;
 	else
@@ -306,7 +306,7 @@ void CShotgun::Reload( void )
 	if (m_flNextPrimaryAttack > UTIL_WeaponTimeBase())
 		return;
 
-	if (m_iClip == 0) // Speial If it's empty
+	if (m_iClip == 0) // Special If it's empty
 	{
 		SendWeaponAnim( SHOTGUN_START_EMPTY_RELOAD );
 		m_iClip += 1;
