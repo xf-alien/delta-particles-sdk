@@ -183,10 +183,14 @@ void CMonsterMaker::TryMakeMonster( void )
 
 	CBaseEntity *pList[2];
 	int count = UTIL_EntitiesInBox( pList, 2, mins, maxs, FL_CLIENT|FL_MONSTER );
-	if ( count )
+	for ( int i=0; i<count; ++i )
 	{
-		// don't build a stack of monsters!
-		return;
+		// Dead bodies don't block spawn
+		if (pList[i]->pev->deadflag != DEAD_DEAD)
+		{
+			// don't build a stack of monsters!
+			return;
+		}
 	}
 
 	if (m_fSpawnDelay)
