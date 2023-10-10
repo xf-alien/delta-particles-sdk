@@ -583,7 +583,7 @@ int CHudAmmo::MsgFunc_CurWeapon(const char *pszName, int iSize, void *pbuf )
 	int iClip = READ_CHAR();
 
 	// detect if we're also on target
-	if ( iState > 1 )
+	if ( iState & 0x40 )
 	{
 		fOnTarget = TRUE;
 	}
@@ -631,7 +631,7 @@ int CHudAmmo::MsgFunc_CurWeapon(const char *pszName, int iSize, void *pbuf )
 	}
 	else if ( !(gHUD.m_iHideHUDDisplay & ( HIDEHUD_WEAPONS | HIDEHUD_ALL )) )
 	{
-		if ( gHUD.m_iFOV >= 90 )
+		if ( gHUD.m_iFOV >= 90 && !(iState & 0x80) )
 		{ // normal crosshairs
 			if (fOnTarget && m_pWeapon->hAutoaim)
 				SetCrosshair(m_pWeapon->hAutoaim, m_pWeapon->rcAutoaim, 255, 255, 255);

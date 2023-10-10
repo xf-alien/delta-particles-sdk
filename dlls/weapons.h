@@ -213,6 +213,7 @@ typedef	enum
 #define ITEM_FLAG_EXHAUSTIBLE		16 // A player can totally exhaust their ammo supply and lose this weapon
 
 #define WEAPON_IS_ONTARGET 0x40
+#define WEAPON_USE_SMG_SILENCER_CROSSHAIR 0x80
 
 typedef struct
 {

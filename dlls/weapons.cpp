@@ -841,6 +841,12 @@ int CBasePlayerWeapon::UpdateClientData( CBasePlayer *pPlayer )
 			state = WEAPON_IS_ONTARGET;
 		else
 			state = 1;
+		if (pPlayer->m_pActiveItem->m_iId == WEAPON_SMG)
+		{
+			CSMG* pSmg = (CSMG*)pPlayer->m_pActiveItem;
+			if (pSmg->m_iSilencer)
+				state |= WEAPON_USE_SMG_SILENCER_CROSSHAIR;
+		}
 	}
 
 	// Forcing send of all data!
