@@ -152,7 +152,7 @@ int CHudFlashlight::Draw(float flTime)
 DECLARE_MESSAGE( m_Nightvision, Nightvision )
 
 #define NIGHTVISION_SPRITE_NAME "sprites/visor.spr"
-#define NIGHTVISION_FRAME_UPDATE_DELAY 0.3f
+#define NIGHTVISION_FRAME_UPDATE_DELAY 0.1f
 
 int CHudNightvision::Init(void)
 {
