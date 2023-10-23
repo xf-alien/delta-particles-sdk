@@ -587,7 +587,10 @@ void CBigMomma :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector ve
 int CBigMomma :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType )
 {
 //	if ( bitsDamageType & DMG_ENERGYBEAM )
-	//	flDamage = 20;
+//	flDamage = 20;
+
+	if ( flDamage > 200 ) //ограничение урона, чтоб не убивало за 3-4 выстрела из LightGun
+		flDamage = 200;
 
 	// Don't take any acid damage -- BigMomma's mortar is acid
 	if ( bitsDamageType & DMG_ACID )

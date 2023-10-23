@@ -809,9 +809,9 @@ void CHoundeye :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector ve
 
 int CHoundeye :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType )
 {
-	if ( BuckshotCount >= 7 )
+	if ( BuckshotCount >= 6 )
 		GibMonster();
-	if	(BuckshotCount >= 4 && BuckshotCount < 7 && !HeadGibbed)
+	if	(BuckshotCount >= 4 && BuckshotCount < 6 && !HeadGibbed)
 	{
 		flDamage = pev->health;
 		pev->body = 1;
