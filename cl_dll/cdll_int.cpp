@@ -35,6 +35,7 @@ extern "C"
 #include "vgui_int.h"
 #include "interface.h"
 
+#include "hud_sprite.h"
 
 cl_enginefunc_t gEngfuncs;
 CHud gHUD;
@@ -170,6 +171,8 @@ int DLLEXPORT HUD_VidInit( void )
 
 	VGui_Startup();
 
+	ScaledRenderer::Instance().HUD_VidInit();
+
 	return 1;
 }
 
@@ -188,6 +191,8 @@ void DLLEXPORT HUD_Init( void )
 	InitInput();
 	gHUD.Init();
 	Scheme_Init();
+
+	ScaledRenderer::Instance().HUD_Init();
 }
 
 
@@ -265,6 +270,8 @@ void DLLEXPORT HUD_Frame( double time )
 	ServersThink( time );
 
 	GetClientVoiceMgr()->Frame(time);
+
+	ScaledRenderer::Instance().HUD_Frame(time);
 }
 
 

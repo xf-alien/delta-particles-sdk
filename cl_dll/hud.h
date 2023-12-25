@@ -20,6 +20,10 @@
 // CHud handles the message, calculation, and drawing the HUD
 //
 
+#pragma once
+#if !defined(HUD_H)
+#define HUD_H
+
 #define FOG_LIMIT 30000
 #define RGB_YELLOWISH 0x00FFFFFF //100, 0, 225 6400E1
 #define RGB_REDISH 0x00FF1010 //255,160,0
@@ -717,6 +721,7 @@ public:
 	int		m_iRes;
 	cvar_t  *m_pCvarStealMouse;
 	cvar_t	*m_pCvarDraw;
+	cvar_t	*m_pCvarCrosshair;
 	CShinySurface *m_pShinySurface; //LRC
 	Vector	m_vecSkyPos; //LRC
 	int		m_iSkyMode;  //LRC
@@ -813,6 +818,9 @@ public:
 	float GetSensitivity();
 
 	int m_bFlashlight;
+
+	bool m_iHardwareMode;
+	bool hasHudScaleInEngine;
 };
 
 class TeamFortressViewport;
@@ -826,3 +834,4 @@ extern int g_iUser1;
 extern int g_iUser2;
 extern int g_iUser3;
 
+#endif

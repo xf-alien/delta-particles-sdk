@@ -15,7 +15,8 @@
 //
 // cl_util.h
 //
-
+#if !defined(CL_UTIL_H)
+#define CL_UTIL_H
 #include "cvardef.h"
 
 #ifndef TRUE
@@ -43,7 +44,9 @@ inline char* CVAR_GET_STRING( const char *x ) {	return gEngfuncs.pfnGetCvarStrin
 inline struct cvar_s *CVAR_CREATE( const char *cv, const char *val, const int flags ) {	return gEngfuncs.pfnRegisterVariable( (char*)cv, (char*)val, flags ); }
 
 #define SPR_Load (*gEngfuncs.pfnSPR_Load)
-#define SPR_Set (*gEngfuncs.pfnSPR_Set)
+inline void SPR_Set(HSPRITE hPic, int r, int g, int b) {
+	gEngfuncs.pfnSPR_Set(hPic, r, g, b);
+}
 #define SPR_Frames (*gEngfuncs.pfnSPR_Frames)
 #define SPR_GetList (*gEngfuncs.pfnSPR_GetList)
 
@@ -52,14 +55,18 @@ inline struct cvar_s *CVAR_CREATE( const char *cv, const char *val, const int fl
 // SPR_DrawHoles  draws the current sprites,  with color index255 not drawn (transparent)
 #define SPR_DrawHoles (*gEngfuncs.pfnSPR_DrawHoles)
 // SPR_DrawAdditive  adds the sprites RGB values to the background  (additive transulency)
-#define SPR_DrawAdditive (*gEngfuncs.pfnSPR_DrawAdditive)
+inline void SPR_DrawAdditive(int frame, int x, int y, const wrect_t *prc) {
+	gEngfuncs.pfnSPR_DrawAdditive(frame, x, y, prc);
+}
 
 // SPR_EnableScissor  sets a clipping rect for HUD sprites.  (0,0) is the top-left hand corner of the screen.
 #define SPR_EnableScissor (*gEngfuncs.pfnSPR_EnableScissor)
 // SPR_DisableScissor  disables the clipping rect
 #define SPR_DisableScissor (*gEngfuncs.pfnSPR_DisableScissor)
 //
-#define FillRGBA (*gEngfuncs.pfnFillRGBA)
+inline void FillRGBA(int x, int y, int width, int height, int r, int g, int b, int a) {
+	gEngfuncs.pfnFillRGBA(x, y, width, height, r, g, b, a);
+}
 
 
 // ScreenHeight returns the height of the screen, in pixels
@@ -78,7 +85,11 @@ inline struct cvar_s *CVAR_CREATE( const char *cv, const char *val, const int fl
 #define GetScreenInfo (*gEngfuncs.pfnGetScreenInfo)
 #define ServerCmd (*gEngfuncs.pfnServerCmd)
 #define ClientCmd (*gEngfuncs.pfnClientCmd)
-#define SetCrosshair (*gEngfuncs.pfnSetCrosshair)
+
+inline void SetCrosshair(HSPRITE hspr, wrect_t rc, int r, int g, int b) {
+	gEngfuncs.pfnSetCrosshair(hspr, rc, r, g, b);
+}
+
 #define AngleVectors (*gEngfuncs.pfnAngleVectors)
 
 
@@ -160,3 +171,5 @@ inline void UnpackRGB(int &r, int &g, int &b, unsigned long ulRGB)\
 HSPRITE LoadSprite(const char *pszName);
 
 bool IsXashFWGS();
+
+#endif

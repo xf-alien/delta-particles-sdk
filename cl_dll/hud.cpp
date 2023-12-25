@@ -30,11 +30,17 @@
 #include "vgui_int.h"
 #include "vgui_TeamFortressViewport.h"
 
+#include "r_studioint.h"
+extern engine_studio_api_t IEngineStudio;
+
 cvar_t *cl_rollspeed;
 cvar_t *cl_rollangle;
 cvar_t *cl_strafing;
 
 cvar_t *cl_subtitles = NULL;
+
+cvar_t *hud_renderer = NULL;
+cvar_t *hud_scale = NULL;
 
 #include "demo.h"
 #include "demo_api.h"
@@ -378,6 +384,7 @@ void CHud :: Init( void )
 	m_pCvarStealMouse = CVAR_CREATE( "hud_capturemouse", "1", FCVAR_ARCHIVE );
 	m_pCvarDraw = CVAR_CREATE( "hud_draw", "1", FCVAR_ARCHIVE );
 	cl_lw = gEngfuncs.pfnGetCvarPointer( "cl_lw" );
+	m_pCvarCrosshair = gEngfuncs.pfnGetCvarPointer( "crosshair" );
 
 	cl_subtitles = CVAR_CREATE( "cl_subtitles", "1", FCVAR_ARCHIVE );
 
@@ -385,6 +392,14 @@ void CHud :: Init( void )
 	cl_flashlight_radius = CVAR_CREATE( "cl_flashlight_radius", "100", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 	cl_flashlight_fade_distance = CVAR_CREATE( "cl_flashlight_fade_distance", "600", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 	cl_nvgradius = CVAR_CREATE( "cl_nvgradius", "450", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
+
+	hasHudScaleInEngine = gEngfuncs.pfnGetCvarPointer( "hud_scale" ) != NULL;
+
+	if (!hasHudScaleInEngine)
+	{
+		hud_renderer = CVAR_CREATE("hud_renderer", "1.0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE);
+		hud_scale = CVAR_CREATE("hud_scale", "0.0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE);
+	}
 
 	m_pSpriteList = NULL;
 	m_pShinySurface = NULL; //LRC
@@ -479,6 +494,9 @@ void CHud :: VidInit( void )
 #ifdef ENGINE_DEBUG
 	CONPRINT("## CHud::VidInit\n");
 #endif
+
+	m_iHardwareMode = IEngineStudio.IsHardware();
+
 	int j;
 	m_scrinfo.iSize = sizeof(m_scrinfo);
 	GetScreenInfo(&m_scrinfo);
