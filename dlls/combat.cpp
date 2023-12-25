@@ -1220,6 +1220,9 @@ void RadiusDamage( Vector vecSrc, entvars_t *pevInflictor, entvars_t *pevAttacke
 	else
 		falloff = 1.0;
 
+	if ( (flRadius > 250) && (flRadius < 310) ) // Урон от взрывчатки в моде увеличен. Нужно, чтоб игрока не рвало на куски от урона до 150 ед (подствол, гранаты, рпг...) .
+		flRadius = 250;
+
 	int bInWater = (UTIL_PointContents ( vecSrc ) == CONTENTS_WATER);
 
 	vecSrc.z += 1;// in case grenade is lying on the ground

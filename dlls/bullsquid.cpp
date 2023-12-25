@@ -787,6 +787,10 @@ void CBullsquid :: Precache()
 	PRECACHE_SOUND("bullchicken/bc_spithit1.wav");
 	PRECACHE_SOUND("bullchicken/bc_spithit2.wav");
 
+	PRECACHE_SOUND("bullchicken/bc_step1.wav");
+	PRECACHE_SOUND("bullchicken/bc_step2.wav");
+	PRECACHE_SOUND("aslave/slv_step3.wav");
+
 }	
 
 //=========================================================

@@ -168,7 +168,7 @@ void CGlock::SecondaryAttack( void )
 	if (m_fBurstShot == 0)
 		m_fBurstFire = TRUE;
 
-	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.38;
+	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.32;
 }
 
 void CGlock::PrimaryAttack( void )
@@ -261,9 +261,9 @@ void CGlock::ItemPostFrame()
 		m_fBurstShot++;
 		m_fBurstFire = TRUE;
 
-		m_flNextPrimaryAttack = m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.38;
+		m_flNextPrimaryAttack = m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.32;
 
-		m_flBurstTime = gpGlobals->time + 0.1;
+		m_flBurstTime = gpGlobals->time + 0.085;
 		GlockFire( 0.03, 0.1, FALSE );
 
 		if (m_fBurstShot == 3)
@@ -271,7 +271,7 @@ void CGlock::ItemPostFrame()
 			m_fBurstFire = FALSE;
 			m_fBurstShot = 0;
 
-			m_flNextPrimaryAttack = m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.38;
+			m_flNextPrimaryAttack = m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.32;
 		}
 		if (m_iClip <= 0)
 			PlayEmptySound();

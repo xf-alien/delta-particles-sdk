@@ -396,6 +396,9 @@ void CHoundeye :: Precache()
 	PRECACHE_SOUND("houndeye/he_blast2.wav");
 	PRECACHE_SOUND("houndeye/he_blast3.wav");
 
+	PRECACHE_SOUND("houndeye/he_footstep1.wav");
+	PRECACHE_SOUND("houndeye/he_footstep2.wav");
+
 	m_iSpriteTexture = PRECACHE_MODEL( "sprites/shockwave.spr" );
 }	
 

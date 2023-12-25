@@ -81,8 +81,10 @@ void CGauss::Precache( void )
 
 	PRECACHE_SOUND("items/9mmclip1.wav");
 	PRECACHE_SOUND("items/deploy_lightgun.wav");
+	PRECACHE_SOUND("weapons/common_hand1.wav");
 
-	PRECACHE_SOUND("weapons/gauss2.wav");
+	PRECACHE_SOUND("weapons/lightgun_ray1.wav");
+	PRECACHE_SOUND("weapons/lightgun_charge.wav");
 	PRECACHE_SOUND("weapons/electro4.wav");
 	PRECACHE_SOUND("weapons/electro5.wav");
 	PRECACHE_SOUND("weapons/electro6.wav");
@@ -115,7 +117,7 @@ int CGauss::GetItemInfo(ItemInfo *p)
 	p->iMaxAmmo1 = URANIUM_MAX_CARRY;
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = -1;
-	p->iMaxClip = WEAPON_NOCLIP;
+	p->iMaxClip = GAUSS_MAX_CLIP;
 	p->iSlot = 3;
 	p->iPosition = 3;
 	p->iId = m_iId = WEAPON_GAUSS;
@@ -137,6 +139,8 @@ void CGauss::Holster( int skiplocal /* = 0 */ )
 {
 	g_engfuncs.pfnSetClientMaxspeed(m_pPlayer->edict(), 230 );
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.35;
+
+	m_fInReload = FALSE;// cancel any reload in progress.
 	
 	SendWeaponAnim( GAUSS_HOLSTER );
 	m_fInAttack = 0;
@@ -153,7 +157,7 @@ void CGauss::PrimaryAttack()
 		return;
 	}
 
-	if ( m_pPlayer->m_rgAmmo[ m_iPrimaryAmmoType ] < 1 )
+	if ( m_iClip <= 0 )
 	{
 		PlayEmptySound( );
 		m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5;
@@ -163,7 +167,7 @@ void CGauss::PrimaryAttack()
 	m_pPlayer->m_iWeaponVolume = GAUSS_PRIMARY_FIRE_VOLUME;
 	m_fPrimaryFire = TRUE;
 
-	m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] -= 1;
+	m_iClip--;
 
 	if (m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] == 2)
 		EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_STATIC, "fvox/ammo_low.wav", 1.0, ATTN_NORM);
@@ -171,7 +175,7 @@ void CGauss::PrimaryAttack()
 	StartFire();
 	m_fInAttack = 0;
 	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 1.0f;
-	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 2.1f;
+	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 1.1f;
 
 	if (m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0)
 	// HEV suit - indicate out of ammo condition
@@ -297,6 +301,16 @@ void CGauss::WeaponIdle( void )
 	}
 }
 
+void CGauss::Reload( void )
+{
+	if( m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0 || m_iClip == GAUSS_MAX_CLIP )
+		return;
+	else
+		{
+			DefaultReload( GAUSS_MAX_CLIP, GAUSS_SPIN, 0.82 );
+			m_flNextPrimaryAttack = m_flNextSecondaryAttack = 1.5;
+		}
+}
 
 class CGaussAmmo : public CBasePlayerAmmo
 {
