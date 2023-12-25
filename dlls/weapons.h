@@ -146,7 +146,7 @@ public:
 #define SNIPERRIFLE_MAX_CLIP	5
 #define CROSSBOW_MAX_CLIP		10
 #define RPG_MAX_CLIP			1
-#define GAUSS_MAX_CLIP			WEAPON_NOCLIP
+#define GAUSS_MAX_CLIP			1
 #define EGON_MAX_CLIP			WEAPON_NOCLIP
 #define HORNETGUN_MAX_CLIP		WEAPON_NOCLIP
 #define HANDGRENADE_MAX_CLIP	WEAPON_NOCLIP
@@ -825,6 +825,7 @@ public:
 
 	BOOL Deploy( void );
 	void Holster( int skiplocal = 0  );
+	void Reload( void );
 
 	void PrimaryAttack( void );
 	void SecondaryAttack( void );

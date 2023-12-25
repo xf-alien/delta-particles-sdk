@@ -35,6 +35,7 @@
 #include "gamerules.h"
 #include "game.h"
 #include "hltv.h"
+#include "pm_shared.h"
 #include "effects.h" //LRC
 #include "movewith.h" //LRC
 
