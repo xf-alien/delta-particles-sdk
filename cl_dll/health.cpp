@@ -388,8 +388,8 @@ int CHudHealth::DrawDamage(float flTime)
 		if (m_bitsDamage & giDmgFlags[i])
 		{
 			pdmg = &m_dmg[i];
-			SPR_Set(gHUD.GetSprite(m_HUD_dmg_bio + i), r, g, b );
-			SPR_DrawAdditive(0, pdmg->x, pdmg->y, &gHUD.GetSpriteRect(m_HUD_dmg_bio + i));
+			ScaledRenderer::Instance().SPR_Set(gHUD.GetSprite(m_HUD_dmg_bio + i), r, g, b );
+			ScaledRenderer::Instance().SPR_DrawAdditive(0, pdmg->x, pdmg->y, &gHUD.GetSpriteRect(m_HUD_dmg_bio + i));
 		}
 	}
 
@@ -453,7 +453,7 @@ void CHudHealth::UpdateTiles(float flTime, long bitsDamage)
 		{
 			// put this one at the bottom
 			pdmg->x = giDmgWidth/8;
-			pdmg->y = ScreenHeight - giDmgHeight * 2;
+			pdmg->y = ScaledRenderer::Instance().ScreenHeightScaled() - giDmgHeight * 2;
 			pdmg->fExpire=flTime + DMG_IMAGE_LIFE;
 			
 			// move everyone else up
