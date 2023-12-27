@@ -57,6 +57,7 @@ public:
 	MONSTERSTATE GetIdealState ( void );
 ;
 	void PainSound( void );
+	void DeathSound( void );
 	void TalkInit( void );
 	void Killed( entvars_t *pevAttacker, int iGib );
 	
@@ -317,6 +318,12 @@ void CDiana :: Precache()
 
 	PRECACHE_SOUND("diana/pain1.wav" );
 	PRECACHE_SOUND("diana/pain2.wav" );
+	PRECACHE_SOUND("diana/pain3.wav" );
+	PRECACHE_SOUND("diana/pain4.wav" );
+
+	PRECACHE_SOUND("diana/death1.wav" );
+	PRECACHE_SOUND("diana/death2.wav" );
+	PRECACHE_SOUND("diana/death3.wav" );
 
 	PRECACHE_SOUND("diana/fem_step1.wav" );
 	PRECACHE_SOUND("diana/fem_step2.wav" );
@@ -467,10 +474,25 @@ void CDiana :: PainSound ( void )
 	
 	m_painTime = gpGlobals->time + RANDOM_FLOAT(0.5, 0.75);
 
-	switch (RANDOM_LONG(0,2))
+	switch (RANDOM_LONG(0,3))
 	{
 	case 0: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/pain1.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
 	case 1: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/pain2.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
+	case 2: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/pain2.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
+	case 3: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/pain2.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
+	}
+}
+
+//=========================================================
+// DeathSound 
+//=========================================================
+void CDiana :: DeathSound ( void )
+{
+	switch (RANDOM_LONG(0,2))
+	{
+	case 0: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/death1.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
+	case 1: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/death2.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
+	case 2: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/death3.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
 	}
 }
 
