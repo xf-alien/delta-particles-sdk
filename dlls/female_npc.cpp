@@ -321,6 +321,8 @@ void CDiana :: Precache()
 	PRECACHE_SOUND("diana/pain3.wav" );
 	PRECACHE_SOUND("diana/pain4.wav" );
 
+	PRECACHE_SOUND("diana/dn_using1.wav" );
+
 	PRECACHE_SOUND("diana/death1.wav" );
 	PRECACHE_SOUND("diana/death2.wav" );
 	PRECACHE_SOUND("diana/death3.wav" );
@@ -478,8 +480,8 @@ void CDiana :: PainSound ( void )
 	{
 	case 0: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/pain1.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
 	case 1: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/pain2.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
-	case 2: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/pain2.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
-	case 3: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/pain2.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
+	case 2: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/pain3.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
+	case 3: EMIT_SOUND_DYN( ENT(pev), CHAN_VOICE, "diana/pain4.wav", 1, ATTN_NORM, 0, GetVoicePitch()); break;
 	}
 }
 
