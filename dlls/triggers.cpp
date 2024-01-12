@@ -43,6 +43,8 @@
 #define SF_TRIGGER_HURT_CLIENTONLYFIRE	16// trigger hurt will only fire its target if it is hurting a client
 #define SF_TRIGGER_HURT_CLIENTONLYTOUCH 32// only clients may touch this trigger.
 
+#define SF_TRIGGER_HURT_NO_PUNCH 512
+
 extern DLL_GLOBAL BOOL		g_fGameOver;
 
 extern void SetMovedir(entvars_t* pev);
@@ -2364,7 +2366,12 @@ void CTriggerHurt :: HurtTouch ( CBaseEntity *pOther )
 	if ( fldmg < 0 )
 		pOther->TakeHealth( -fldmg, m_bitsDamageInflict );
 	else
-		pOther->TakeDamage( pev, pev, fldmg, m_bitsDamageInflict );
+	{
+		int dmgType = m_bitsDamageInflict;
+		if (FBitSet(pev->spawnflags, SF_TRIGGER_HURT_NO_PUNCH))
+			dmgType |= DMG_NO_PUNCH;
+		pOther->TakeDamage( pev, pev, fldmg, dmgType );
+	}
 
 	// Store pain time so we can get all of the other entities on this frame
 	pev->pain_finished = gpGlobals->time;
