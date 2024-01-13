@@ -32,6 +32,7 @@ public:
 	void EXPORT RespawnUse( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
 	void EXPORT RespawnThink( void );
 	void EXPORT RespawnFadeThink( void );
+	NODE_LINKENT HandleLinkEnt(int afCapMask, bool nodeQueryStatic);
 	void DamageSound( void );
 	virtual int Classify ( void ) { return m_iClass; }
 

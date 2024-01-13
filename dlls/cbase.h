@@ -474,6 +474,9 @@ public:
 
 	enum EGON_FIRESTATE { FIRE_OFF, FIRE_CHARGE };
 	int m_fireState;
+
+	virtual float InputByMonster(CBaseMonster* pMonster) { return 0.0f; }
+	virtual NODE_LINKENT HandleLinkEnt(int afCapMask, bool nodeQueryStatic) { return NLE_PROHIBIT; }
 };
 
 //LRC- moved here from player.cpp. I'd put it in util.h with its friends, but it needs CBaseEntity to be declared.
@@ -716,6 +719,8 @@ public:
 #define bits_CAP_FLY			( 1 << 15)// can fly, move all around
 
 #define bits_CAP_DOORS_GROUP    (bits_CAP_USE | bits_CAP_AUTO_DOORS | bits_CAP_OPEN_DOORS)
+
+#define bits_CAP_MONSTERCLIPPED ( 1 << 31 )
 
 // used by suit voice to indicate damage sustained and repaired type to player
 

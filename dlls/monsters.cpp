@@ -1415,17 +1415,14 @@ float CBaseMonster :: OpenDoorAndWait( entvars_t *pevDoor )
 
 	//ALERT(at_aiconsole, "A door. ");
 	CBaseEntity *pcbeDoor = CBaseEntity::Instance(pevDoor);
-	if (pcbeDoor && !pcbeDoor->IsLockedByMaster())
+	if (pcbeDoor)
 	{
 		//ALERT(at_aiconsole, "unlocked! ");
-		pcbeDoor->Use(this, this, USE_ON, 0.0);
+		flTravelTime = pcbeDoor->InputByMonster(this);
 		//ALERT(at_aiconsole, "pevDoor->nextthink = %d ms\n", (int)(1000*pevDoor->nextthink));
 		//ALERT(at_aiconsole, "pevDoor->ltime = %d ms\n", (int)(1000*pevDoor->ltime));
 		//ALERT(at_aiconsole, "pev-> nextthink = %d ms\n", (int)(1000*pev->nextthink));
 		//ALERT(at_aiconsole, "pev->ltime = %d ms\n", (int)(1000*pev->ltime));
-
-		flTravelTime = pcbeDoor->m_fNextThink - pevDoor->ltime;
-
 		//ALERT(at_aiconsole, "Waiting %d ms\n", (int)(1000*flTravelTime));
 		if ( pcbeDoor->pev->targetname )
 		{
@@ -1439,7 +1436,7 @@ float CBaseMonster :: OpenDoorAndWait( entvars_t *pevDoor )
 				if ( VARS( pTarget->pev ) != pcbeDoor->pev &&
 						FClassnameIs ( pTarget->pev, STRING(pcbeDoor->pev->classname) ) )
 				{
-					pTarget->Use(this, this, USE_ON, 0.0);
+					pTarget->InputByMonster(this);
 				}
 			}
 		}
@@ -1489,7 +1486,8 @@ void CBaseMonster :: AdvanceRoute ( float distance )
 				if ( iLink >= 0 && WorldGraph.m_pLinkPool[iLink].m_pLinkEnt != NULL )
 				{
 					//ALERT(at_aiconsole, "A link. ");
-					if ( WorldGraph.HandleLinkEnt ( iSrcNode, WorldGraph.m_pLinkPool[iLink].m_pLinkEnt, m_afCapability, CGraph::NODEGRAPH_DYNAMIC ) )
+					const int afCapMask = m_afCapability | (FBitSet(pev->flags, FL_MONSTERCLIP) ? bits_CAP_MONSTERCLIPPED : 0);
+					if ( WorldGraph.HandleLinkEnt ( iSrcNode, WorldGraph.m_pLinkPool[iLink].m_pLinkEnt, afCapMask, CGraph::NODEGRAPH_DYNAMIC ) == NLE_NEEDS_INPUT )
 					{
 						//ALERT(at_aiconsole, "usable.");
 						entvars_t *pevDoor = WorldGraph.m_pLinkPool[iLink].m_pLinkEnt;
@@ -2835,7 +2833,9 @@ BOOL CBaseMonster :: FGetNodeRoute ( Vector vecDest )
 	// valid src and dest nodes were found, so it's safe to proceed with
 	// find shortest path
 	int iNodeHull = WorldGraph.HullIndex( this ); // make this a monster virtual function
-	iResult = WorldGraph.FindShortestPath ( iPath, iSrcNode, iDestNode, iNodeHull, m_afCapability );
+
+	const int afCapMask = m_afCapability | (FBitSet(pev->flags, FL_MONSTERCLIP) ? bits_CAP_MONSTERCLIPPED : 0);
+	iResult = WorldGraph.FindShortestPath ( iPath, MAX_PATH_SIZE, iSrcNode, iDestNode, iNodeHull, afCapMask, true );
 
 	if ( !iResult )
 	{
