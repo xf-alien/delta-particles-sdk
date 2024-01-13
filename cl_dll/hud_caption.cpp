@@ -3,6 +3,7 @@
 #include "parsemsg.h"
 #include <string.h>
 #include <stdio.h>
+#include "hud_sprite.h"
 
 bool IsValidIdentifierCharacter(char c)
 {
@@ -372,7 +373,7 @@ int CHudCaption::Draw(float flTime)
 
 	const int xpos = SUB_START_XPOS;
 	const int xmax = SUB_MAX_XPOS;
-	int ypos = ScreenHeight - hudNumberHeight - lineHeight - SUB_BORDER_LENGTH;
+	int ypos = ScreenHeight - ScaledRenderer::Instance().ScaleScreen(gHUD.m_iFontHeight + gHUD.m_iFontHeight/2) - lineHeight - SUB_BORDER_LENGTH;
 
 	int i, j;
 
