@@ -1686,6 +1686,7 @@ void CSprite::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useTy
 #define SF_ENVMODEL_DROPTOFLOOR	2
 #define SF_ENVMODEL_SOLID		4
 #define SF_ENVMODEL_INVLIGHT	8
+#define SF_ENVMODEL_CLIENTSIDEANIM 16
 
 class CEnvModel : public CBaseAnimating
 {
@@ -1707,6 +1708,8 @@ class CEnvModel : public CBaseAnimating
 	string_t m_iszSequence_Off;
 	int m_iAction_On;
 	int m_iAction_Off;
+	float m_savedFrame;
+	float m_savedAnimTime;
 };
 
 TYPEDESCRIPTION CEnvModel::m_SaveData[] =
@@ -1715,6 +1718,8 @@ TYPEDESCRIPTION CEnvModel::m_SaveData[] =
 	DEFINE_FIELD( CEnvModel, m_iszSequence_Off, FIELD_STRING ),
 	DEFINE_FIELD( CEnvModel, m_iAction_On, FIELD_INTEGER ),
 	DEFINE_FIELD( CEnvModel, m_iAction_Off, FIELD_INTEGER ),
+	DEFINE_FIELD( CEnvModel, m_savedFrame, FIELD_FLOAT ),
+	DEFINE_FIELD( CEnvModel, m_savedAnimTime, FIELD_TIME ),
 };
 
 IMPLEMENT_SAVERESTORE( CEnvModel, CBaseAnimating );
@@ -1775,13 +1780,15 @@ void CEnvModel :: Spawn( void )
 	SetBoneController( 1, 0 );
 
 	SetSequence();
-	
+
 	SetNextThink( 0.1 );
 }
 
 void CEnvModel::Precache( void )
 {
 	PRECACHE_MODEL( (char *)STRING(pev->model) );
+	pev->frame = m_savedFrame;
+	pev->animtime = m_savedAnimTime;
 }
 
 STATE CEnvModel::GetState( void )
@@ -1812,7 +1819,33 @@ void CEnvModel::Think( void )
 
 //	ALERT(at_console, "env_model Think fr=%f\n", pev->framerate);
 
-	StudioFrameAdvance ( ); // set m_fSequenceFinished if necessary
+	if (!FBitSet(pev->spawnflags, SF_ENVMODEL_CLIENTSIDEANIM))
+		StudioFrameAdvance ( ); // set m_fSequenceFinished if necessary
+	else
+	{
+		// Still do calculations, but save result to m_savedFrame
+		float flInterval = (gpGlobals->time - m_savedAnimTime);
+		if (flInterval <= 0.001)
+		{
+			m_savedAnimTime = gpGlobals->time;
+		}
+		else
+		{
+			if (!m_savedAnimTime)
+				flInterval = 0.0;
+			m_savedFrame += flInterval * m_flFrameRate * pev->framerate;
+			m_savedAnimTime = gpGlobals->time;
+
+			if (m_savedFrame < 0.0 || m_savedFrame >= 256.0)
+			{
+				if (m_fSequenceLoops)
+					m_savedFrame -= (int)(m_savedFrame / 256.0) * 256.0;
+				else
+					m_savedFrame = (m_savedFrame < 0.0) ? 0 : 255;
+				m_fSequenceFinished = TRUE;
+			}
+		}
+	}
 
 //	if (m_fSequenceLoops)
 //	{
@@ -1872,6 +1905,8 @@ void CEnvModel :: SetSequence( void )
 
 	pev->frame = 0;
 	ResetSequenceInfo( );
+	m_savedFrame = pev->frame;
+	m_savedAnimTime = pev->animtime;
 
 	if (pev->spawnflags & SF_ENVMODEL_OFF)
 	{
