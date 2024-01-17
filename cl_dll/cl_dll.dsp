@@ -318,6 +318,10 @@ SOURCE=.\hud_spectator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\hud_sprite.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\hud_update.cpp
 # End Source File
 # Begin Source File
@@ -544,6 +548,10 @@ SOURCE=.\hud_servers_priv.h
 # Begin Source File
 
 SOURCE=.\hud_spectator.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\hud_sprite.h
 # End Source File
 # Begin Source File
 
