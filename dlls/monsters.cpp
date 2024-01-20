@@ -3187,7 +3187,7 @@ int CBaseMonster :: CanPlaySequence( int interruptFlags )
 			return false;
 		}
 	}
-	else if ( !IsAlive() || m_MonsterState == MONSTERSTATE_PRONE )
+	else if ( !IsFullyAlive() || m_MonsterState == MONSTERSTATE_PRONE )
 	{
 #ifdef DEBUG_CANTPLAY
 		ALERT(at_debug, "CANTPLAY: Dead/Barnacled!\n");
@@ -3535,6 +3535,10 @@ CBaseEntity* CBaseMonster :: DropItem ( char *pszItemName, const Vector &vecPos,
 
 }
 
+BOOL CBaseMonster::IsFullyAlive()
+{
+	return !HasMemory(bits_MEMORY_KILLED) && CBaseToggle::IsAlive();
+}
 
 BOOL CBaseMonster :: ShouldFadeOnDeath( void )
 {
