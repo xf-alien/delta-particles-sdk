@@ -7,3 +7,4 @@ cl_dll/*.dll
 .vscode/
 build/
 build-*/
+CMakeLists.txt.user
