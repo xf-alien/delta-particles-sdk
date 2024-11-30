@@ -535,7 +535,7 @@ void EV_FireGlock1( event_args_t *args )
 
 	if ( EV_IsLocal( idx ) )
 	{
-//		EV_MuzzleFlash();
+		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( empty ? GLOCK_SHOOT_EMPTY : GLOCK_SHOOT, 2 );
 
 		V_PunchAxis( 0, -2.0 );
@@ -584,7 +584,7 @@ void EV_FireGlock2( event_args_t *args )
 	if ( EV_IsLocal( idx ) )
 	{
 		// Add muzzle flash to current weapon model
-//		EV_MuzzleFlash();
+		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( empty ? GLOCK_SHOOT_EMPTY : GLOCK_SHOOT, 2 );
 
 		V_PunchAxis( 0, -2.0 );
@@ -637,7 +637,7 @@ void EV_FireShotGunDouble( event_args_t *args )
 	if ( EV_IsLocal( idx ) )
 	{
 		// Add muzzle flash to current weapon model
-//		EV_MuzzleFlash();
+		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( SHOTGUN_FIRE2, 2 );
 		V_PunchAxis( 0, -5.0 );
 	}
@@ -702,7 +702,7 @@ void EV_FireShotGunSingle( event_args_t *args )
 	if ( EV_IsLocal( idx ) )
 	{
 		// Add muzzle flash to current weapon model
-//		EV_MuzzleFlash();
+		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( SHOTGUN_FIRE, 2 );
 
 		V_PunchAxis( 0, -5.0 );
@@ -777,7 +777,7 @@ void EV_FireMP5( event_args_t *args )
 	if ( EV_IsLocal( idx ) )
 	{
 		// Add muzzle flash to current weapon model
-//		EV_MuzzleFlash();
+		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( M4A1_FIRE1, 2 );
 
 		V_PunchAxis( 0, gEngfuncs.pfnRandomFloat( -4, 2 ) );
@@ -887,7 +887,7 @@ void EV_FirePython( event_args_t *args )
 		int multiplayer = gEngfuncs.GetMaxClients() == 1 ? 0 : 1;
 
 		// Add muzzle flash to current weapon model
-//		EV_MuzzleFlash();
+		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( PYTHON_FIRE1, multiplayer ? 1 : 0 );
 
 		V_PunchAxis( 0, -2.5 );
@@ -1033,7 +1033,7 @@ void EV_FireGauss( event_args_t *args )
 			if ( EV_IsLocal( idx ) )
 			{
 				// Add muzzle flash to current weapon model
-//				EV_MuzzleFlash();
+				EV_MuzzleFlash();
 			}
 			fFirstBeam = 0;
 
@@ -1857,7 +1857,7 @@ void EV_Sniperrifle( event_args_t *args )
 	if ( EV_IsLocal( idx ) )
 	{
 		// Add muzzle flash to current weapon model
-//		EV_MuzzleFlash();
+		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( empty ? SNIPERRIFLE_FIRE2 : SNIPERRIFLE_FIRE1, 2 );
 
 		V_PunchAxis( 0, -15 );
@@ -1940,7 +1940,7 @@ void EV_Deagle( event_args_t *args )
 
 	if ( EV_IsLocal( idx ) )
 	{
-//		EV_MuzzleFlash();
+		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( empty ? DEAGLE_SHOOT_EMPTY : DEAGLE_SHOOT, 2 );
 
 		V_PunchAxis( 0, -6 );
@@ -1994,7 +1994,7 @@ void EV_SMG( event_args_t *args )
 	if ( EV_IsLocal( idx ) )
 	{
 		// Add muzzle flash to current weapon model
-//		EV_MuzzleFlash();
+		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation( SMG_FIRE1,	args->iparam1 );
 		
 		V_PunchAxis( 0, gEngfuncs.pfnRandomFloat( -2, 2 ) );
