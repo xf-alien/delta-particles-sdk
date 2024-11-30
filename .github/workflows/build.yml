@@ -38,7 +38,7 @@ jobs:
         key: ${{ runner.os }}-steam-runtime
     - name: Download steam-runtime
       if: startsWith(matrix.os, 'ubuntu') && steps.cache-steam-runtime.outputs.cache-hit != 'true'
-      run: wget --no-verbose https://repo.steampowered.com/steamrt-images-scout/snapshots/0.20210610.0/com.valvesoftware.SteamRuntime.Sdk-i386-scout-sysroot.tar.gz
+      run: wget --no-verbose https://repo.steampowered.com/steamrt-images-scout/snapshots/latest-steam-client-general-availability/com.valvesoftware.SteamRuntime.Sdk-i386-scout-sysroot.tar.gz
     - name: Install steam runtime
       if: startsWith(matrix.os, 'ubuntu')
       run: |
