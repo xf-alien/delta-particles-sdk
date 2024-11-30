@@ -16,10 +16,7 @@ AbstractInput* currentInput = &goldSourceInput;
 #else
 AbstractInput* currentInput = &fwgsInput;
 #endif
-
-// These functions are not used by GoldSource but they change the Xash3D-FWGS behavior if present.
-// Comment out them until Xash3D-FWGS detection is implemented.
-/*extern "C"  void DLLEXPORT IN_ClientMoveEvent( float forwardmove, float sidemove )
+extern "C"  void DLLEXPORT IN_ClientMoveEvent( float forwardmove, float sidemove )
 {
 	currentInput->IN_ClientMoveEvent(forwardmove, sidemove);
 }
@@ -27,7 +24,7 @@ AbstractInput* currentInput = &fwgsInput;
 extern "C" void DLLEXPORT IN_ClientLookEvent( float relyaw, float relpitch )
 {
 	currentInput->IN_ClientLookEvent(relyaw, relpitch);
-}*/
+}
 
 void IN_Move( float frametime, usercmd_t *cmd )
 {
@@ -83,4 +80,14 @@ void IN_Init( void )
 	currentInput = &fwgsInput;
 #endif
 	currentInput->IN_Init();
+}
+
+void IN_ResetMouse()
+{
+	currentInput->IN_ResetMouse();
+}
+
+AbstractInput* CurrentMouseInput()
+{
+    return currentInput;
 }

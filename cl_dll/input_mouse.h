@@ -1,7 +1,5 @@
 #pragma once
-
 #include "build.h"
-
 #if !defined(INPUT_MOUSE_H)
 #define INPUT_MOUSE_H
 #include "cl_dll.h"
@@ -22,6 +20,8 @@ public:
 	virtual void IN_Commands( void ) = 0;
 	virtual void IN_Shutdown( void ) = 0;
 	virtual void IN_Init( void ) = 0;
+	virtual void IN_ResetMouse( void ) = 0;
+	virtual void Joy_AdvancedUpdate( void ) = 0;
 };
 
 class FWGSInput : public AbstractInput
@@ -38,6 +38,8 @@ public:
 	virtual void IN_Commands( void );
 	virtual void IN_Shutdown( void );
 	virtual void IN_Init( void );
+	virtual void IN_ResetMouse( void ) {}
+	virtual void Joy_AdvancedUpdate( void ) {}
 
 protected:
 	float ac_forwardmove;
@@ -51,7 +53,7 @@ protected:
 #if GOLDSOURCE_SUPPORT && ( XASH_WIN32 || ( XASH_LINUX && !XASH_ANDROID ) || XASH_APPLE ) && XASH_X86
 #define SUPPORT_GOLDSOURCE_INPUT	1
 
-#if _WIN32
+#if XASH_WIN32
 #define HSPRITE WINDOWS_HSPRITE
 #include <windows.h>
 #undef HSPRITE
@@ -79,11 +81,17 @@ public:
 	virtual void IN_Commands( void );
 	virtual void IN_Shutdown( void );
 	virtual void IN_Init( void );
+	virtual void IN_ResetMouse( void );
+	virtual void Joy_AdvancedUpdate( void );
 
 protected:
 	void IN_GetMouseDelta( int *pOutX, int *pOutY);
 	void IN_MouseMove ( float frametime, usercmd_t *cmd);
 	void IN_StartupMouse (void);
+	void IN_StartupJoystick (void);
+	int IN_ReadJoystick (void);
+	void IN_JoyMove ( float frametime, usercmd_t *cmd );
+	bool UseSDL2Joystick();
 
 	int         mouse_buttons;
 	int         mouse_oldbuttonstate;
@@ -93,5 +101,7 @@ protected:
 	void* sdl2Lib;
 };
 #endif
+
+AbstractInput* CurrentMouseInput();
 
 #endif
