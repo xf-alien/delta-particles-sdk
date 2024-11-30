@@ -109,6 +109,7 @@
 #define EF_NOINTERP				32	// don't interpolate the next frame
 #define EF_LIGHT				64	// rocket flare glow sprite
 #define EF_NODRAW				128	// don't draw entity
+#define EF_MODEL_SKY			256 // the entity is the sky model
 
 // entity flags
 #define EFLAG_SLERP				1	// do studio interpolation of this entity

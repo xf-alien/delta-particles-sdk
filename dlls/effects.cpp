@@ -1687,6 +1687,7 @@ void CSprite::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useTy
 #define SF_ENVMODEL_SOLID		4
 #define SF_ENVMODEL_INVLIGHT	8
 #define SF_ENVMODEL_CLIENTSIDEANIM 16
+#define SF_ENVMODEL_SKYMODEL	32
 
 class CEnvModel : public CBaseAnimating
 {
@@ -1774,6 +1775,10 @@ void CEnvModel :: Spawn( void )
 	if (pev->spawnflags & SF_ENVMODEL_INVLIGHT)
 	{
 		pev->effects |= EF_INVLIGHT;
+	}
+
+	if (FBitSet(pev->spawnflags, SF_ENVMODEL_SKYMODEL)) {
+		pev->effects |= EF_MODEL_SKY;
 	}
 
 	SetBoneController( 0, 0 );

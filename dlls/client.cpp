@@ -1041,7 +1041,7 @@ int AddToFullPack( struct entity_state_s *state, int e, edict_t *ent, edict_t *h
 
 	// Ignore if not the host and not touching a PVS/PAS leaf
 	// If pSet is NULL, then the test will always succeed and the entity will be added to the update
-	if ( ent != host )
+	if ( ent != host && !FBitSet(ent->v.effects, EF_MODEL_SKY) )
 	{
 		if ( !ENGINE_CHECK_VISIBILITY( (const struct edict_s *)ent, pSet ) )
 		{
