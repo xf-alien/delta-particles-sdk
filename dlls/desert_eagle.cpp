@@ -172,7 +172,7 @@ void CDeagle::DeagleFire( float flSpread , float flCycleTime, BOOL fUseAutoAim )
 	if (m_iClip == 2)
 	EMIT_SOUND(ENT(m_pPlayer->pev), CHAN_STATIC, "fvox/ammo_low.wav", 1.0, ATTN_NORM);
 
-//	m_pPlayer->pev->effects = (int)(m_pPlayer->pev->effects) | EF_MUZZLEFLASH;
+	m_pPlayer->pev->effects = (int)(m_pPlayer->pev->effects) | EF_MUZZLEFLASH;
 
 	int flags;
 
