@@ -590,7 +590,7 @@ struct CaptionProfile_t
 	int r, g, b;
 };
 
-#define CAPTION_SIZE 1100
+#define CAPTION_SIZE 1200
 
 struct Caption_t
 {
