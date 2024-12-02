@@ -118,6 +118,7 @@ set (CLDLL_SOURCES
 	saytext.cpp
 	status_icons.cpp
 	statusbar.cpp
+	steam_integration.cpp
 	studio_util.cpp
 	StudioModelRenderer.cpp
 	text_message.cpp
@@ -211,6 +212,16 @@ if(WIN32)
 	target_link_libraries( ${CLDLL_LIBRARY} user32.lib )
 	if (GOLDSOURCE_SUPPORT)
 		target_link_libraries( ${CLDLL_LIBRARY} winmm.lib )
+	endif()
+endif()
+
+if(STEAMWORKS_ENABLED)
+	if(WIN32)
+		target_link_libraries(${CLDLL_LIBRARY} ${CMAKE_SOURCE_DIR}/public/steam_api.lib)
+		include_directories (../public/)
+	else()
+		target_link_libraries(${CLDLL_LIBRARY} "-L${CMAKE_SOURCE_DIR}/public -lsteam_api")
+		include_directories (../public/)
 	endif()
 endif()
 

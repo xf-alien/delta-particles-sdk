@@ -29,6 +29,7 @@
 #include "hud_servers.h"
 #include "vgui_int.h"
 #include "vgui_TeamFortressViewport.h"
+#include "steam_integration.h"
 
 #include "r_studioint.h"
 extern engine_studio_api_t IEngineStudio;
@@ -322,6 +323,14 @@ int __MsgFunc_AllowSpec(const char *pszName, int iSize, void *pbuf)
 		return gViewPort->MsgFunc_AllowSpec( pszName, iSize, pbuf );
 	return 0;
 }
+
+int __MsgFunc_Achievement(const char *pszName, int iSize, void *pbuf)
+{
+	BEGIN_READ( pbuf, iSize );
+	const char* achievementId = READ_STRING();
+	SetAchievement(achievementId);
+	return 0;
+}
  
 // This is called every time the DLL is loaded
 void CHud :: Init( void )
@@ -363,6 +372,8 @@ void CHud :: Init( void )
 
 	HOOK_MESSAGE( Spectator );
 	HOOK_MESSAGE( AllowSpec );
+
+	HOOK_MESSAGE( Achievement );
 
 	// VGUI Menus
 	HOOK_MESSAGE( VGUIMenu );

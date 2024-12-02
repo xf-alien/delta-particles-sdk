@@ -37,6 +37,8 @@ extern "C"
 
 #include "hud_sprite.h"
 
+#include "steam_integration.h"
+
 cl_enginefunc_t gEngfuncs;
 CHud gHUD;
 TeamFortressViewport *gViewPort = NULL;
@@ -188,6 +190,7 @@ the hud variables.
 
 void DLLEXPORT HUD_Init( void )
 {
+	InitSteam();
 	InitInput();
 	gHUD.Init();
 	Scheme_Init();
@@ -272,6 +275,8 @@ void DLLEXPORT HUD_Frame( double time )
 	GetClientVoiceMgr()->Frame(time);
 
 	ScaledRenderer::Instance().HUD_Frame(time);
+
+	SteamRunCallbacks();
 }
 
 

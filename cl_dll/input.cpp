@@ -29,6 +29,7 @@ extern "C"
 
 #include "vgui_TeamFortressViewport.h"
 
+#include "steam_integration.h"
 
 extern "C" 
 {
@@ -1025,4 +1026,5 @@ void ShutdownInput (void)
 void DLLEXPORT HUD_Shutdown( void )
 {
 	ShutdownInput();
+	ShutdownSteam();
 }

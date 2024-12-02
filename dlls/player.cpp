@@ -206,6 +206,7 @@ int gmsgStatusValue = 0;
 
 int gmsgCaption = 0;
 int gmsgNightvision = 0;
+int gmsgAchievement = 0;
 
 void LinkUserMessages( void )
 {
@@ -263,6 +264,7 @@ void LinkUserMessages( void )
 
 	gmsgCaption = REG_USER_MSG("Caption", -1);
 	gmsgNightvision = REG_USER_MSG( "Nightvision", 1 );
+	gmsgAchievement = REG_USER_MSG("Achievement", -1);
 }
 
 LINK_ENTITY_TO_CLASS( player, CBasePlayer );
