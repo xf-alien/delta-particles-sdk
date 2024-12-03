@@ -20,6 +20,8 @@
 # SOFTWARE.
 #
 
+set (CMAKE_CXX_STANDARD 11)
+
 # 3.9 added captures in if(MATCHES)
 cmake_minimum_required(VERSION 3.9)
 
