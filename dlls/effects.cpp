@@ -25,6 +25,7 @@
 #include "player.h" //LRC - footstep stuff
 #include "locus.h" //LRC - locus utilities
 #include "movewith.h" //LRC - the DesiredThink system
+#include "ach_counters.h"
 
 #define	SF_GIBSHOOTER_REPEATABLE	1 // allows a gibshooter to be refired
 
@@ -4320,6 +4321,13 @@ void CItemSoda::CanTouch ( CBaseEntity *pOther )
 	if ( !pOther->IsPlayer() )
 	{
 		return;
+	}
+
+	CBasePlayer* pPlayer = (CBasePlayer*)pOther;
+	pPlayer->m_sodaDrunkCount++;
+	if (pPlayer->m_sodaDrunkCount == ACH_EMPLOYERS_EXPENSE_COUNT)
+	{
+		pPlayer->SetAchievement("ACH_EMPLOYERS_EXPENSE");
 	}
 
 	pOther->TakeHealth( 1, DMG_GENERIC );// a bit of health.

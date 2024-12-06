@@ -29,6 +29,8 @@
 #include	"animation.h"
 #include	"soundent.h"
 #include	"weapons.h"
+#include	"player.h"
+#include	"ach_counters.h"
 
 
 #define		NUM_TECHNICIAN_HEADS		3 // two heads available for technician model
@@ -1075,6 +1077,14 @@ void CTechnician::Heal( void )
     m_hTargetEnt->pev->armorvalue += 15;
     if ( m_hTargetEnt->pev->armorvalue > 100 )
         m_hTargetEnt->pev->armorvalue = 100;
+	
+	CBaseEntity* pEntity = m_hTargetEnt;
+	CBasePlayer* pPlayer = (CBasePlayer*)pEntity;
+	pPlayer->m_technicianCharges++;
+	if (pPlayer->m_technicianCharges == ACH_LOW_BATTERY_COUNT)
+	{
+		pPlayer->SetAchievement("ACH_LOW_BATTERY");
+	}
 
     // Don't heal again for 1 minute
     m_healTime = gpGlobals->time + 60;

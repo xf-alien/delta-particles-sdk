@@ -279,6 +279,7 @@ void CAGrunt :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecD
 			SetBodygroup( 0, 1);
 			GibHeadMonster( ptr->vecEndPos, FALSE );
 			HeadGibbed = TRUE;
+			ScoreForHeadGib(pevAttacker);
 		}
 	}
 	
@@ -289,12 +290,13 @@ int CAGrunt :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 {
 	Forget( bits_MEMORY_INCOVER );
 
-	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 6) ) // отдельно дл€ дробовика =/, ибо через “рейсјтак работает неправильно
+	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 6) ) // separate for shotgun =/, TraceAttack doesn't work correctly
 	{
 		SetBodygroup( 0, 1);
 
 		GibHeadMonster( HeadPos, FALSE );
 		HeadGibbed = TRUE;
+		ScoreForHeadGib(pevAttacker);
 	}
 
 	BuckshotCount = 0;

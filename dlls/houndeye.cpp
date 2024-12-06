@@ -803,6 +803,7 @@ void CHoundeye :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector ve
 			pev->body = 1;
 			GibHeadMonster( ptr->vecEndPos, FALSE );
 			HeadGibbed = TRUE;
+			ScoreForHeadGib(pevAttacker);
 			BuckshotCount = 0;
 		}
 	}
@@ -820,6 +821,7 @@ int CHoundeye :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, fl
 		pev->body = 1;
 		GibHeadMonster( HeadPos, FALSE );
 		HeadGibbed = TRUE;
+		ScoreForHeadGib(pevAttacker);
 	}
 
 	BuckshotCount = 0;

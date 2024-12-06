@@ -23,6 +23,8 @@
 #include	"schedule.h"
 #include	"game.h"
 #include	"weapons.h"
+#include	"player.h"
+#include	"ach_counters.h"
 
 //=========================================================
 // Monster's Anim Events Go Here
@@ -458,7 +460,22 @@ int CHeadCrab :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, fl
 		GibMonster();
 
 	BuckshotCount = 0;
-	return CBaseMonster::TakeDamage( pevInflictor, pevAttacker, flDamage, bitsDamageType );
+	const bool wasAlive = !HasMemory(bits_MEMORY_KILLED);
+	const int result = CBaseMonster::TakeDamage( pevInflictor, pevAttacker, flDamage, bitsDamageType );
+	const bool isDeadNow = HasMemory(bits_MEMORY_KILLED);
+	if (wasAlive && isDeadNow)
+	{
+		CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
+		if (pPlayer && pPlayer->m_pActiveItem && FClassnameIs(pPlayer->m_pActiveItem->pev, "weapon_barrett_m82a1"))
+		{
+			pPlayer->m_headcrabsKilledBySniper++;
+			if (pPlayer->m_headcrabsKilledBySniper == ACH_WASTE_AMMO_COUNT)
+			{
+				pPlayer->SetAchievement("ACH_WASTE_AMMO");	
+			}
+		}
+	}
+	return result;
 }
 
 //=========================================================

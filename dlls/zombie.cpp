@@ -391,6 +391,7 @@ void CZombie :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecD
 
 			GibHeadMonster( ptr->vecEndPos, TRUE );
 			HeadGibbed = TRUE;
+			ScoreForHeadGib(pevAttacker);
 		}
 	}
 	
@@ -422,6 +423,7 @@ int CZombie :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 
 		GibHeadMonster( HeadPos, TRUE );
 		HeadGibbed = TRUE;
+		ScoreForHeadGib(pevAttacker);
 	}
 
 	BuckshotCount = 0; 	// reset the number of shells if zombie stayed alive

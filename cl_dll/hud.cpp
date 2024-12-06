@@ -102,6 +102,8 @@ cvar_t* cl_flashlight_radius = NULL;
 cvar_t* cl_flashlight_fade_distance = NULL;
 cvar_t *cl_nvgradius = NULL;
 
+cvar_t *cl_fake_achievements = NULL;
+
 void ShutdownInput (void);
 
 //DECLARE_MESSAGE(m_Logo, Logo)
@@ -328,7 +330,16 @@ int __MsgFunc_Achievement(const char *pszName, int iSize, void *pbuf)
 {
 	BEGIN_READ( pbuf, iSize );
 	const char* achievementId = READ_STRING();
-	SetAchievement(achievementId);
+	if (cl_fake_achievements && cl_fake_achievements->value)
+	{
+		char buf[256];
+		_snprintf(buf, sizeof(buf), "Faking \"%s\"", achievementId);
+		gEngfuncs.pfnCenterPrint(buf);
+	}
+	else
+	{
+		SetAchievement(achievementId);
+	}
 	return 0;
 }
  
@@ -403,6 +414,8 @@ void CHud :: Init( void )
 	cl_flashlight_radius = CVAR_CREATE( "cl_flashlight_radius", "100", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 	cl_flashlight_fade_distance = CVAR_CREATE( "cl_flashlight_fade_distance", "600", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 	cl_nvgradius = CVAR_CREATE( "cl_nvgradius", "450", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
+
+	cl_fake_achievements = CVAR_CREATE( "cl_fake_achievements", "0", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 
 	hasHudScaleInEngine = gEngfuncs.pfnGetCvarPointer( "hud_scale" ) != NULL;
 

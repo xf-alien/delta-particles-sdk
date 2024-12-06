@@ -651,6 +651,7 @@ void CHGrunt :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecD
 
 			GibHeadMonster( ptr->vecEndPos, TRUE );
 			HeadGibbed = TRUE;
+			ScoreForHeadGib(pevAttacker);
 		}
 	}
 
@@ -673,6 +674,7 @@ int CHGrunt :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 
 		GibHeadMonster( HeadPos, TRUE );
 		HeadGibbed = TRUE;
+		ScoreForHeadGib(pevAttacker);
 	}
 
 	BuckshotCount = 0;

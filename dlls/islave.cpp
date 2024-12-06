@@ -605,12 +605,13 @@ int CISlave :: TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, floa
 	if (m_iPlayerReact == 0)
 		m_afMemory |= bits_MEMORY_PROVOKED;
 
-	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 4) ) // отдельно дл€ дробовика =/, ибо через “рейсјтак работает неправильно
+	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 4) )
 	{
 		SetBodygroup( 0, 1);
 
 		GibHeadMonster( HeadPos, FALSE );
 		HeadGibbed = TRUE;
+		ScoreForHeadGib(pevAttacker);
 	}
 
 	BuckshotCount = 0;
@@ -636,6 +637,7 @@ void CISlave::TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir
 
 			GibHeadMonster( ptr->vecEndPos, FALSE );
 			HeadGibbed = TRUE;
+			ScoreForHeadGib(pevAttacker);
 		}
 	}
 

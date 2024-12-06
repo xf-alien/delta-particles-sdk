@@ -41,6 +41,7 @@
 #include "usercmd.h"
 #include "netadr.h"
 #include "movewith.h"
+#include "ach_counters.h"
 
 extern DLL_GLOBAL ULONG		g_ulModelIndexPlayer;
 extern DLL_GLOBAL BOOL		g_fGameOver;
@@ -488,6 +489,17 @@ void ClientCommand( edict_t *pEntity )
 	else if( FStrEq( pcmd, "nightvision" ) )
 	{
 		GetClassPtr( (CBasePlayer *)pev )->NVGToggle();
+	}
+	else if ( FStrEq( pcmd, "ach_progress" ) )
+	{
+		CBasePlayer* pPlayer = GetClassPtr( (CBasePlayer *)pev );
+		ALERT(at_console, "Soda drunk: %d\n", (int)pPlayer->m_sodaDrunkCount);
+		ALERT(at_console, "Decapacitated enemies: %d\n", (int)pPlayer->m_decapitatedCount);
+		ALERT(at_console, "Controllers killed by underbarrel grenade: %d\n", (int)pPlayer->m_controllersKilledByAR);
+		ALERT(at_console, "Xen Trees destroyed: %d\n", (int)pPlayer->m_treesKilled);
+		ALERT(at_console, "Times got armor from technician: %d\n", (int)pPlayer->m_technicianCharges);
+		ALERT(at_console, "Robotic infantry killed with melee weapon: %d\n", (int)pPlayer->m_robotsKilledByMelee);
+		ALERT(at_console, "Headcrabs killed with a sniperrifle: %d\n", (int)pPlayer->m_headcrabsKilledBySniper);
 	}
 	else if ( FStrEq( pcmd, "spectate" ) && (pev->flags & FL_PROXY) )	// added for proxy support
 	{

@@ -326,6 +326,7 @@ int CBullsquid :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, f
 
 		GibHeadMonster( HeadPos, FALSE );
 		HeadGibbed = TRUE;
+		ScoreForHeadGib(pevAttacker);
 	}
 
 	BuckshotCount = 0;
@@ -706,9 +707,10 @@ void CBullsquid :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector v
 
 			GibHeadMonster( ptr->vecEndPos, FALSE );
 			HeadGibbed = TRUE;
+			ScoreForHeadGib(pevAttacker);
 		}
 	
-		flDamage /= gSkillData.monHead;			// чтоб в "голову" не прилетало слишком много урона
+		flDamage /= gSkillData.monHead;
 	}
 	
 	CBaseMonster::TraceAttack( pevAttacker, flDamage, vecDir, ptr, bitsDamageType );

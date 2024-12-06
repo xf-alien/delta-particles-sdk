@@ -332,6 +332,18 @@ public:
 	void NVGToggle();
 	void NVGTurnOn();
 	void NVGTurnOff( bool playOffSound = true );
+
+	// achievement related
+	void SetAchievement(const char* ID);
+	static CBasePlayer *PlayerInstance( entvars_t *pev );
+
+	short m_sodaDrunkCount;
+	short m_decapitatedCount;
+	short m_controllersKilledByAR;
+	short m_treesKilled;
+	short m_technicianCharges;
+	short m_robotsKilledByMelee;
+	short m_headcrabsKilledBySniper;
 };
 
 #define AUTOAIM_2DEGREES  0.0348994967025

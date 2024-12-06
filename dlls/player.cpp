@@ -38,6 +38,7 @@
 #include "pm_shared.h"
 #include "effects.h" //LRC
 #include "movewith.h" //LRC
+#include "ach_counters.h"
 
 // #define DUCKFIX
 
@@ -155,6 +156,15 @@ TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] =
 	//DEFINE_FIELD( CBasePlayer, m_fOnTarget, FIELD_BOOLEAN ), // Don't need to restore
 	//DEFINE_FIELD( CBasePlayer, m_nCustomSprayFrames, FIELD_INTEGER ), // Don't need to restore
 	DEFINE_FIELD( CBasePlayer, m_fNVGisON, FIELD_BOOLEAN ),
+
+	// Counters for achievement tracking
+	DEFINE_FIELD( CBasePlayer, m_sodaDrunkCount, FIELD_SHORT ),
+	DEFINE_FIELD( CBasePlayer, m_decapitatedCount, FIELD_SHORT ),
+	DEFINE_FIELD( CBasePlayer, m_controllersKilledByAR, FIELD_SHORT ),
+	DEFINE_FIELD( CBasePlayer, m_treesKilled, FIELD_SHORT ),
+	DEFINE_FIELD( CBasePlayer, m_technicianCharges, FIELD_SHORT ),
+	DEFINE_FIELD( CBasePlayer, m_robotsKilledByMelee, FIELD_SHORT ),
+	DEFINE_FIELD( CBasePlayer, m_headcrabsKilledBySniper, FIELD_SHORT ),
 };	
 
 
@@ -4945,6 +4955,42 @@ BOOL CBasePlayer :: SwitchWeapon( CBasePlayerItem *pWeapon )
 	}
 
 	return TRUE;
+}
+
+// Achievements
+void CBasePlayer::SetAchievement(const char* ID)
+{
+	if ( gmsgAchievement && IsNetClient() )
+	{
+		MESSAGE_BEGIN( MSG_ONE, gmsgAchievement, NULL, edict() );
+			WRITE_STRING( ID );
+		MESSAGE_END();
+	}
+}
+
+CBasePlayer* CBasePlayer::PlayerInstance(entvars_t* pev)
+{
+	if (!pev)
+		return NULL;
+	CBaseEntity* pEntity = CBaseEntity::Instance(pev);
+	if (pEntity->IsPlayer())
+		return (CBasePlayer*)pEntity;
+	return NULL;
+}
+
+void CBaseMonster::ScoreForHeadGib(entvars_t* pevAttacker)
+{
+	CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
+	if (pPlayer)
+	{
+		pPlayer->m_decapitatedCount++;
+		if (pPlayer->m_decapitatedCount == ACH_DECAPITATION_COUNT)
+			pPlayer->SetAchievement("ACH_DECAPITATION");
+		else if (pPlayer->m_decapitatedCount == ACH_REDUNANT_COUNT)
+			pPlayer->SetAchievement("ACH_REDUNANT");
+		else if (pPlayer->m_decapitatedCount == ACH_NO_BRAINS_COUNT)
+			pPlayer->SetAchievement("ACH_NO_BRAINS");
+	}
 }
 
 //=========================================================

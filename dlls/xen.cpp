@@ -19,6 +19,8 @@
 #include "effects.h"
 #include "weapons.h"
 #include "monsters.h"
+#include "player.h"
+#include "ach_counters.h"
 
 #define XEN_PLANT_GLOW_SPRITE		"sprites/flare3.spr"
 #define XEN_PLANT_HIDE_TIME			5
@@ -454,6 +456,20 @@ void CXenTree :: Killed( entvars_t *pevAttacker, int iGib )
 	}
 
 	CGib::SpawnTreeGibs( pev, 5 );	// Throw alien gibs
+
+	CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
+	if (pPlayer)
+	{
+		pPlayer->m_treesKilled++;
+		if (pPlayer->m_treesKilled == ACH_PUNISHMENT_COUNT)
+		{
+			pPlayer->SetAchievement("ACH_PUNISHMENT");
+		}
+		else if (pPlayer->m_treesKilled == ACH_DEFORESTATION_COUNT)
+		{
+			pPlayer->SetAchievement("ACH_DEFORESTATION");
+		}
+	}
 
 	//UTIL_Remove( this );
 }

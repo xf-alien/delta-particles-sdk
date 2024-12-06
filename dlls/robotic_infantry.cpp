@@ -16,6 +16,8 @@
 #include	"effects.h"
 #include	"customentity.h"
 #include	"scripted.h" //LRC
+#include	"player.h"
+#include	"ach_counters.h"
 
 int g_frinfantryQuestion;				// true if an idle rinfantry asked a question. Cleared when someone answers.
 
@@ -603,10 +605,23 @@ void Crinfantry :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector v
 //=========================================================
 int Crinfantry :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType )
 {
-
 	Forget( bits_MEMORY_INCOVER );
-
-	return CSquadMonster :: TakeDamage ( pevInflictor, pevAttacker, flDamage, bitsDamageType );
+	const bool wasAlive = !HasMemory(bits_MEMORY_KILLED);
+	const int result = CSquadMonster :: TakeDamage ( pevInflictor, pevAttacker, flDamage, bitsDamageType );
+	const bool isDeadNow = HasMemory(bits_MEMORY_KILLED);
+	if (wasAlive && isDeadNow && (bitsDamageType & DMG_CLUB) != 0)
+	{
+		CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
+		if (pPlayer)
+		{
+			pPlayer->m_robotsKilledByMelee++;
+			if (pPlayer->m_robotsKilledByMelee == ACH_MIGHT_MAKES_RIGHT_COUNT)
+			{
+				pPlayer->SetAchievement("ACH_MIGHT_MAKES_RIGHT");
+			}
+		}
+	}
+	return result;
 }
 
 //=========================================================

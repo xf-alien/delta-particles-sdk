@@ -371,6 +371,7 @@ CGrenade *CGrenade::ShootContact( entvars_t *pevOwner, Vector vecStart, Vector v
 	pGrenade->SetThink(&CGrenade:: DangerSoundThink );
 	pGrenade->SetNextThink( 0 );
 	
+	pGrenade->pev->spawnflags |= SF_GRENADE_IS_CONTACT;
 	// Explode on contact
 	pGrenade->SetTouch(&CGrenade:: ExplodeTouch );
 

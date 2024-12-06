@@ -201,6 +201,7 @@ void CHAssassin :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector v
 
 			GibHeadMonster( ptr->vecEndPos, TRUE );
 			HeadGibbed = TRUE;
+			ScoreForHeadGib(pevAttacker);
 		}
 	}
 
@@ -222,6 +223,7 @@ int CHAssassin :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, f
 
 		GibHeadMonster( HeadPos, TRUE );
 		HeadGibbed = TRUE;
+		ScoreForHeadGib(pevAttacker);
 	}
 
 	BuckshotCount = 0;

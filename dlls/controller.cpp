@@ -27,6 +27,8 @@
 #include	"weapons.h"
 #include	"squadmonster.h"
 #include	"scripted.h"
+#include	"player.h"
+#include	"ach_counters.h"
 
 //=========================================================
 // Monster's Anim Events Go Here
@@ -190,16 +192,34 @@ int CController :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, 
 	if ( IsAlive() )
 		PainSound();
 
-	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 6) ) // отдельно дл€ дробовика =/, ибо через “рейсјтак работает неправильно
+	if ( !HeadGibbed && (pev->health <= flDamage && BuckshotCount >= 6) ) // separate for shotgun =/, TraceAttack doesn't work correctly
 	{
 		pev->body = 1;
 
 		GibHeadMonster( HeadPos, FALSE );
 		HeadGibbed = TRUE;
+		ScoreForHeadGib(pevAttacker);
 	}
 
+
 	BuckshotCount = 0;
-	return CBaseMonster::TakeDamage( pevInflictor, pevAttacker, flDamage, bitsDamageType );
+	const bool wasAlive = !HasMemory(bits_MEMORY_KILLED);
+	const int result = CBaseMonster::TakeDamage( pevInflictor, pevAttacker, flDamage, bitsDamageType );
+	const bool isDeadNow = HasMemory(bits_MEMORY_KILLED);
+	if (wasAlive && isDeadNow && 
+		pevInflictor && FClassnameIs(pevInflictor, "grenade") && FBitSet(pevInflictor->spawnflags, SF_GRENADE_IS_CONTACT))
+	{
+		CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
+		if (pPlayer)
+		{
+			pPlayer->m_controllersKilledByAR++;
+			if (pPlayer->m_controllersKilledByAR == ACH_SHOOTER_VETERAN_COUNT)
+			{
+				pPlayer->SetAchievement("ACH_SHOOTER_VETERAN");
+			}
+		}
+	}
+	return result;
 }
 
 
@@ -391,7 +411,7 @@ void CController :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector 
 		
 		HeadPos = ptr->vecEndPos;
 		ptr->iHitgroup = HITGROUP_HEAD;
-		flDamage = flDamage / gSkillData.monHead;	// чтоб в "голову" не прилетало слишком много урона
+		flDamage = flDamage / gSkillData.monHead;
 
 		if ( !HeadGibbed && pev->health <= flDamage * gSkillData.monHead && flDamage * gSkillData.monHead >= 10 )
 		{
@@ -399,6 +419,7 @@ void CController :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector 
 
 			GibHeadMonster( ptr->vecEndPos, FALSE );
 			HeadGibbed = TRUE;
+			ScoreForHeadGib(pevAttacker);
 		}
 	}
 	

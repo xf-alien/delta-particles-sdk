@@ -344,14 +344,16 @@ public:
 
 	void StartPatrol( CBaseEntity *path );
 
-	CBaseEntity* DropItem ( char *pszItemName, const Vector &vecPos, const Vector &vecAng );// drop an item.
 
+	CBaseEntity* DropItem ( char *pszItemName, const Vector &vecPos, const Vector &vecAng );// drop an item.
 	//LRC
 	float	CalcRatio( CBaseEntity *pLocus )
 	{
 		/*ALERT(at_console, "monster CR: %f/%f = %f\n", pev->health, pev->max_health, pev->health / pev->max_health);*/
 		return pev->health / pev->max_health;
 	}
+
+	void ScoreForHeadGib(entvars_t* pevAttacker);
 
 	float m_flLastYawTime;
 };
