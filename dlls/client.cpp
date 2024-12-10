@@ -500,6 +500,7 @@ void ClientCommand( edict_t *pEntity )
 		ALERT(at_console, "Times got armor from technician: %d\n", (int)pPlayer->m_technicianCharges);
 		ALERT(at_console, "Robotic infantry killed with melee weapon: %d\n", (int)pPlayer->m_robotsKilledByMelee);
 		ALERT(at_console, "Headcrabs killed with a sniperrifle: %d\n", (int)pPlayer->m_headcrabsKilledBySniper);
+		ALERT(at_console, "High noon progress: %d\n", (int)pPlayer->m_highNoonKills);
 	}
 	else if ( FStrEq( pcmd, "spectate" ) && (pev->flags & FL_PROXY) )	// added for proxy support
 	{

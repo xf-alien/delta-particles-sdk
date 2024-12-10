@@ -187,6 +187,7 @@ void CPython::Precache( void )
 
 BOOL CPython::Deploy( )
 {
+	m_pPlayer->m_highNoonKills = 0;
 	g_engfuncs.pfnSetClientMaxspeed(m_pPlayer->edict(), 230 );
 	m_flCanShootTime = 0;
 	m_fCanShoot = 1;
@@ -197,6 +198,7 @@ BOOL CPython::Deploy( )
 
 void CPython::Holster( int skiplocal /* = 0 */ )
 {
+	m_pPlayer->m_highNoonKills = 0;
 	if ( m_pPlayer->m_iFOV != 0 )
 		SecondaryAttack( );
 
@@ -329,6 +331,7 @@ void CPython::Reload( void )
 	}
 	else
 	{
+		m_pPlayer->m_highNoonKills = 0;
 		DefaultReload( 6, PYTHON_RELOAD, 2.45 );
 		m_flNextPrimaryAttack = m_flNextSecondaryAttack = 3.55;
 		m_flTimeWeaponIdle = 3.55;

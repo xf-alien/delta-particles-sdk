@@ -165,6 +165,8 @@ TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] =
 	DEFINE_FIELD( CBasePlayer, m_technicianCharges, FIELD_SHORT ),
 	DEFINE_FIELD( CBasePlayer, m_robotsKilledByMelee, FIELD_SHORT ),
 	DEFINE_FIELD( CBasePlayer, m_headcrabsKilledBySniper, FIELD_SHORT ),
+
+	DEFINE_FIELD( CBasePlayer, m_highNoonKills, FIELD_SHORT ),
 };	
 
 
@@ -1980,6 +1982,8 @@ void CBasePlayer::PreThink(void)
 	// UNDONE: Do we need auto-repeat?
 	m_afButtonPressed =  buttonsChanged & pev->button;		// The ones that changed and are now down are "pressed"
 	m_afButtonReleased = buttonsChanged & (~pev->button);	// The ones that changed and aren't down are "released"
+
+	m_killedByRailgunCount = 0;
 
 	g_pGameRules->PlayerThink( this );
 

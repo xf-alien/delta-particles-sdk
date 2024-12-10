@@ -24,6 +24,7 @@
 #include	"monsters.h"
 #include	"schedule.h"
 #include	"weapons.h"
+#include	"player.h"
 
 //=========================================================
 // Monster's Anim Events Go Here
@@ -67,6 +68,7 @@ public:
 	BOOL CheckRangeAttack1 ( float flDot, float flDist ) { return FALSE; }
 	BOOL CheckRangeAttack2 ( float flDot, float flDist ) { return FALSE; }
 	int TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType );
+	void Killed( entvars_t *pevAttacker, int iGib );
 
 	virtual int ZombiePitch() {
 		return 100 + RANDOM_LONG(-5,5);
@@ -428,6 +430,20 @@ int CZombie :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 
 	BuckshotCount = 0; 	// reset the number of shells if zombie stayed alive
 	return CBaseMonster::TakeDamage( pevInflictor, pevAttacker, flDamage, bitsDamageType );
+}
+
+void CZombie::Killed(entvars_t *pevAttacker, int iGib)
+{
+	const bool wasAlive = !HasMemory(bits_MEMORY_KILLED);
+	CBaseMonster::Killed(pevAttacker, iGib);
+	if (wasAlive && pev->solid != SOLID_NOT && HeadGibbed) // lost its head but hasn't been fully gibbed
+	{
+		CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
+		if (pPlayer != NULL && pPlayer->m_pActiveItem->m_iId == WEAPON_PIPEWRENCH)
+		{
+			pPlayer->SetAchievement("ACH_JEWELRY_WORK");
+		}
+	}
 }
 
 //=========================================================

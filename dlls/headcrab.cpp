@@ -466,7 +466,7 @@ int CHeadCrab :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, fl
 	if (wasAlive && isDeadNow)
 	{
 		CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
-		if (pPlayer && pPlayer->m_pActiveItem && FClassnameIs(pPlayer->m_pActiveItem->pev, "weapon_barrett_m82a1"))
+		if (pPlayer && pPlayer->m_pActiveItem && pPlayer->m_pActiveItem->m_iId == WEAPON_BARRETT_M82A1)
 		{
 			pPlayer->m_headcrabsKilledBySniper++;
 			if (pPlayer->m_headcrabsKilledBySniper == ACH_WASTE_AMMO_COUNT)

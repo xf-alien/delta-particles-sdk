@@ -31,6 +31,7 @@
 #include "func_break.h"
 #include "scripted.h"
 #include "../engine/studio.h" //LRC
+#include "player.h"
 
 extern DLL_GLOBAL Vector		g_vecAttackDir;
 extern DLL_GLOBAL int			g_iSkillLevel;
@@ -734,6 +735,27 @@ void CBaseMonster :: Killed( entvars_t *pevAttacker, int iGib )
 
 	Remember( bits_MEMORY_KILLED );
 
+	CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
+	if (pPlayer != NULL && pPlayer->m_pActiveItem)
+	{
+		if (pPlayer->m_pActiveItem->m_iId == WEAPON_GAUSS)
+		{
+			pPlayer->m_killedByRailgunCount++;
+			if (pPlayer->m_killedByRailgunCount == 2)
+			{
+				pPlayer->SetAchievement("ACH_LINE_OF_FIRE");
+			}
+		}
+		else if (pPlayer->m_pActiveItem->m_iId == WEAPON_PYTHON)
+		{
+			pPlayer->m_highNoonKills++;
+			if (pPlayer->m_highNoonKills == 6)
+			{
+				pPlayer->SetAchievement("ACH_HIGH_NOON");
+			}
+		}
+	}
+
 	// clear the deceased's sound channels.(may have been firing or reloading when killed)
 	EMIT_SOUND(ENT(pev), CHAN_WEAPON, "common/null.wav", 1, ATTN_NORM);
 	m_IdealMonsterState = MONSTERSTATE_DEAD;
@@ -1220,7 +1242,7 @@ void RadiusDamage( Vector vecSrc, entvars_t *pevInflictor, entvars_t *pevAttacke
 	else
 		falloff = 1.0;
 
-	if ( (flRadius > 250) && (flRadius < 310) ) // Урон от взрывчатки в моде увеличен. Нужно, чтоб игрока не рвало на куски от урона до 150 ед (подствол, гранаты, рпг...) .
+	if ( (flRadius > 250) && (flRadius < 310) ) // пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 150 пїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ...) .
 		flRadius = 250;
 
 	int bInWater = (UTIL_PointContents ( vecSrc ) == CONTENTS_WATER);

@@ -344,6 +344,9 @@ public:
 	short m_technicianCharges;
 	short m_robotsKilledByMelee;
 	short m_headcrabsKilledBySniper;
+
+	short m_highNoonKills;
+	short m_killedByRailgunCount; // no need to save, just need to test for 2 or more on the same frame
 };
 
 #define AUTOAIM_2DEGREES  0.0348994967025
