@@ -582,7 +582,7 @@ bool CHudCaption::ParseCaptionsFile()
 					if (tokenLength > 0 && pfile[currentTokenStart] == '!')
 					{
 						char numbuf[8];
-						strncpy(numbuf, pfile + currentTokenStart + 1, max(tokenLength, sizeof(numbuf)-1));
+						strncpy(numbuf, pfile + currentTokenStart + 1, min(tokenLength, sizeof(numbuf)-1));
 						numbuf[sizeof(numbuf)-1] = '\0';
 
 						caption.duration = atof(numbuf);
