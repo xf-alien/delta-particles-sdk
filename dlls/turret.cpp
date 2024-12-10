@@ -1038,6 +1038,11 @@ int CBaseTurret::TakeDamage(entvars_t *pevInflictor, entvars_t *pevAttacker, flo
 		pev->takedamage = DAMAGE_NO;
 		pev->dmgtime = gpGlobals->time;
 
+		if (FBitSet(pev->flags, FL_MONSTER))
+		{
+			Fragged(pevAttacker);
+		}
+
 		ClearBits (pev->flags, FL_MONSTER); // why are they set in the first place???
 
 		SetUse(NULL);
@@ -1239,6 +1244,11 @@ int CSentry::TakeDamage(entvars_t *pevInflictor, entvars_t *pevAttacker, float f
 		pev->health = 0;
 		pev->takedamage = DAMAGE_NO;
 		pev->dmgtime = gpGlobals->time;
+
+		if (FBitSet(pev->flags, FL_MONSTER))
+		{
+			Fragged(pevAttacker);
+		}
 
 		ClearBits (pev->flags, FL_MONSTER); // why are they set in the first place???
 

@@ -277,6 +277,7 @@ public:
 	virtual int		TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, float flDamage, int bitsDamageType );
 	virtual int		TakeHealth( float flHealth, int bitsDamageType );
 	virtual void	Killed( entvars_t *pevAttacker, int iGib );
+	void Fragged( entvars_t *pevAttacker );
 	virtual int		BloodColor( void ) { return DONT_BLEED; }
 	virtual void	TraceBleed( float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType );
 //LRC- superceded by GetState ( pActivator ).

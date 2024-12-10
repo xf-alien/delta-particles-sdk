@@ -735,26 +735,7 @@ void CBaseMonster :: Killed( entvars_t *pevAttacker, int iGib )
 
 	Remember( bits_MEMORY_KILLED );
 
-	CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
-	if (pPlayer != NULL && pPlayer->m_pActiveItem)
-	{
-		if (pPlayer->m_pActiveItem->m_iId == WEAPON_GAUSS)
-		{
-			pPlayer->m_killedByRailgunCount++;
-			if (pPlayer->m_killedByRailgunCount == 2)
-			{
-				pPlayer->SetAchievement("ACH_LINE_OF_FIRE");
-			}
-		}
-		else if (pPlayer->m_pActiveItem->m_iId == WEAPON_PYTHON)
-		{
-			pPlayer->m_highNoonKills++;
-			if (pPlayer->m_highNoonKills == 6)
-			{
-				pPlayer->SetAchievement("ACH_HIGH_NOON");
-			}
-		}
-	}
+	Fragged(pevAttacker);
 
 	// clear the deceased's sound channels.(may have been firing or reloading when killed)
 	EMIT_SOUND(ENT(pev), CHAN_WEAPON, "common/null.wav", 1, ATTN_NORM);
@@ -789,6 +770,30 @@ void CBaseMonster :: Killed( entvars_t *pevAttacker, int iGib )
 	//pev->enemy = ENT( pevAttacker );//why? (sjb)
 	
 	m_IdealMonsterState = MONSTERSTATE_DEAD;
+}
+
+void CBaseEntity::Fragged(entvars_t *pevAttacker)
+{
+	CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
+	if (pPlayer != NULL && pPlayer->m_pActiveItem)
+	{
+		if (pPlayer->m_pActiveItem->m_iId == WEAPON_GAUSS)
+		{
+			pPlayer->m_killedByRailgunCount++;
+			if (pPlayer->m_killedByRailgunCount == 2)
+			{
+				pPlayer->SetAchievement("ACH_LINE_OF_FIRE");
+			}
+		}
+		else if (pPlayer->m_pActiveItem->m_iId == WEAPON_PYTHON)
+		{
+			pPlayer->m_highNoonKills++;
+			if (pPlayer->m_highNoonKills == 6)
+			{
+				pPlayer->SetAchievement("ACH_HIGH_NOON");
+			}
+		}
+	}
 }
 
 //

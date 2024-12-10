@@ -143,15 +143,15 @@ int CBarnacle::TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 		flDamage = pev->health;
 	}
 
-	if ( BuckshotCount >= 6 || flDamage >= 30 )	// достаточно много дроби попало или же просто большой урон
+	if ( BuckshotCount >= 6 || flDamage >= 30 )	// enough shells or enough damage
 	{
-		pev->body = 1;	// кускуем барнакла
+		pev->body = 1;	// gib the barnacle
 
-		CGib::SpawnRandomGibs( pev, 2, 1 ); // больше мяса!!
+		CGib::SpawnRandomGibs( pev, 2, 1 ); // more meat!
 		GibHeadMonster ( Vector (pev->origin.x, pev->origin.y, pev->origin.z - 40), FALSE );
 	}
 
-	BuckshotCount = 0; 	//обнуляем число попавших дробинок для след. выстрела (в случае, если жив остался барнакл)
+	BuckshotCount = 0;
 	return CBaseMonster::TakeDamage( pevInflictor, pevAttacker, flDamage, bitsDamageType );
 }
 
@@ -159,7 +159,7 @@ int CBarnacle::TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 void CBarnacle :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType)
 {
 		if ( (bitsDamageType & DMG_BULLET) && flDamage == gSkillData.plrDmgBuckshot )
-			BuckshotCount++; // считаем кол-во попавших дробинок, т.к. для каждой эта функция вызывается отдельно  
+			BuckshotCount++;
 
 	CBaseMonster::TraceAttack( pevAttacker, flDamage, vecDir, ptr, bitsDamageType );
 }
@@ -346,6 +346,11 @@ void CBarnacle :: BarnacleThink ( void )
 void CBarnacle :: Killed( entvars_t *pevAttacker, int iGib )
 {
 	CBaseMonster *pVictim;
+
+	if (pev->takedamage != DAMAGE_NO)
+	{
+		Fragged(pevAttacker);
+	}
 
 	pev->solid = SOLID_NOT;
 	pev->takedamage = DAMAGE_NO;

@@ -435,6 +435,11 @@ int CXenTree :: TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, flo
 
 void CXenTree :: Killed( entvars_t *pevAttacker, int iGib )
 {
+	if (pev->takedamage != DAMAGE_NO)
+	{
+		Fragged(pevAttacker);
+	}
+
 	pev->takedamage = DAMAGE_NO;
 	pev->deadflag = DEAD_DEAD;
 
