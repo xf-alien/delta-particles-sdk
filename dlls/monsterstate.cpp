@@ -50,6 +50,10 @@ void CBaseMonster :: SetState ( MONSTERSTATE State )
 			ALERT ( at_aiconsole, "Stripped\n" );
 		}
 		break;
+	case MONSTERSTATE_DEAD:
+		if (m_MonsterState != State)
+			OnDying();
+		break;
 	}
 
 	m_MonsterState = State;

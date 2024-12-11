@@ -774,6 +774,9 @@ void CBaseMonster :: Killed( entvars_t *pevAttacker, int iGib )
 
 void CBaseEntity::Fragged(entvars_t *pevAttacker)
 {
+	const int classify = Classify();
+	if (classify == CLASS_PLAYER_ALLY || classify == CLASS_HUMAN_PASSIVE)
+		return;
 	CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
 	if (pPlayer != NULL && pPlayer->m_pActiveItem)
 	{

@@ -49,6 +49,7 @@ public:
 	int BuckshotCount;
 	BOOL HeadGibbed;
 	Vector HeadPos;
+	CBasePlayer* pBeheader;
 	
 	float m_flNextFlinch;
 
@@ -68,7 +69,8 @@ public:
 	BOOL CheckRangeAttack1 ( float flDot, float flDist ) { return FALSE; }
 	BOOL CheckRangeAttack2 ( float flDot, float flDist ) { return FALSE; }
 	int TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, int bitsDamageType );
-	void Killed( entvars_t *pevAttacker, int iGib );
+	void CheckHeadAttacker( entvars_t *pevAttacker );
+	void OnDying();
 
 	virtual int ZombiePitch() {
 		return 100 + RANDOM_LONG(-5,5);
@@ -394,6 +396,7 @@ void CZombie :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecD
 			GibHeadMonster( ptr->vecEndPos, TRUE );
 			HeadGibbed = TRUE;
 			ScoreForHeadGib(pevAttacker);
+			CheckHeadAttacker(pevAttacker);
 		}
 	}
 	
@@ -426,23 +429,27 @@ int CZombie :: TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, floa
 		GibHeadMonster( HeadPos, TRUE );
 		HeadGibbed = TRUE;
 		ScoreForHeadGib(pevAttacker);
+		CheckHeadAttacker(pevAttacker);
 	}
 
 	BuckshotCount = 0; 	// reset the number of shells if zombie stayed alive
 	return CBaseMonster::TakeDamage( pevInflictor, pevAttacker, flDamage, bitsDamageType );
 }
 
-void CZombie::Killed(entvars_t *pevAttacker, int iGib)
+void CZombie::CheckHeadAttacker(entvars_t *pevAttacker)
 {
-	const bool wasAlive = !HasMemory(bits_MEMORY_KILLED);
-	CBaseMonster::Killed(pevAttacker, iGib);
-	if (wasAlive && pev->solid != SOLID_NOT && HeadGibbed) // lost its head but hasn't been fully gibbed
+	CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
+	if (pPlayer != NULL && pPlayer->m_pActiveItem != NULL && pPlayer->m_pActiveItem->m_iId == WEAPON_PIPEWRENCH)
 	{
-		CBasePlayer* pPlayer = CBasePlayer::PlayerInstance(pevAttacker);
-		if (pPlayer != NULL && pPlayer->m_pActiveItem->m_iId == WEAPON_PIPEWRENCH)
-		{
-			pPlayer->SetAchievement("ACH_JEWELRY_WORK");
-		}
+		pBeheader = pPlayer;
+	}
+}
+
+void CZombie::OnDying()
+{
+	if (pBeheader != NULL && pev->solid != SOLID_NOT && HeadGibbed) // lost its head but hasn't been fully gibbed
+	{
+		pBeheader->SetAchievement("ACH_JEWELRY_WORK");
 	}
 }
 
