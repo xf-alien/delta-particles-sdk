@@ -358,6 +358,9 @@ void CISlave :: HandleAnimEvent( MonsterEvent_t *pEvent )
 
 		case ISLAVE_AE_ZAP_POWERUP:
 		{
+			if (m_iTaskStatus == TASKSTATUS_COMPLETE)
+				break;
+
 			// speed up attack when on hard
 			if (g_iSkillLevel == SKILL_HARD)
 				pev->framerate = 1.5;
@@ -517,6 +520,9 @@ BOOL CISlave :: CheckRangeAttack2 ( float flDot, float flDist )
 void CISlave :: StartTask ( Task_t *pTask )
 {
 	ClearBeams( );
+
+	if (pTask->iTask == TASK_WAIT_FOR_MOVEMENT)
+		m_IdealActivity = ACT_IDLE;
 
 	CSquadMonster :: StartTask ( pTask );
 }
@@ -801,6 +807,7 @@ void CISlave :: ArmBeam( int side )
 	m_pBeam[m_iBeams]->SetColor( 96, 128, 16 );
 	m_pBeam[m_iBeams]->SetBrightness( 64 );
 	m_pBeam[m_iBeams]->SetNoise( 80 );
+	m_pBeam[m_iBeams]->pev->spawnflags |= SF_BEAM_TEMPORARY;
 	m_iBeams++;
 }
 
@@ -847,6 +854,7 @@ void CISlave :: WackBeam( int side, CBaseEntity *pEntity )
 	m_pBeam[m_iBeams]->SetColor( 180, 255, 96 );
 	m_pBeam[m_iBeams]->SetBrightness( 255 );
 	m_pBeam[m_iBeams]->SetNoise( 80 );
+	m_pBeam[m_iBeams]->pev->spawnflags |= SF_BEAM_TEMPORARY;
 	m_iBeams++;
 }
 
@@ -877,6 +885,7 @@ void CISlave :: ZapBeam( int side )
 	m_pBeam[m_iBeams]->SetColor( 180, 255, 96 );
 	m_pBeam[m_iBeams]->SetBrightness( 255 );
 	m_pBeam[m_iBeams]->SetNoise( 20 );
+	m_pBeam[m_iBeams]->pev->spawnflags |= SF_BEAM_TEMPORARY;
 	m_iBeams++;
 
 	pEntity = CBaseEntity::Instance(tr.pHit);
