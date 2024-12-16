@@ -46,6 +46,7 @@ public:
 	void HandleAnimEvent( MonsterEvent_t *pEvent );
 	void TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType);
 	int IgnoreConditions ( void );
+	Schedule_t* GetScheduleOfType(int Type);
 	int BuckshotCount;
 	BOOL HeadGibbed;
 	Vector HeadPos;
@@ -371,6 +372,15 @@ int CZombie::IgnoreConditions ( void )
 
 	return iIgnore;
 	
+}
+
+Schedule_t* CZombie::GetScheduleOfType(int Type)
+{
+	if (Type == SCHED_CHASE_ENEMY_FAILED && HasMemory(bits_MEMORY_BLOCKER_IS_ENEMY))
+	{
+		return CBaseMonster::GetScheduleOfType(SCHED_CHASE_ENEMY);
+	}
+	return CBaseMonster::GetScheduleOfType(Type);
 }
 
 void CZombie :: TraceAttack( entvars_t *pevAttacker, float flDamage, Vector vecDir, TraceResult *ptr, int bitsDamageType)

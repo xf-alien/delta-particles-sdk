@@ -1930,6 +1930,11 @@ void CBaseMonster :: Move ( float flInterval )
 				}
 				else
 				{
+					if (m_movementGoal == MOVEGOAL_ENEMY && pBlocker && pBlocker == m_hEnemy)
+					{
+						Remember(bits_MEMORY_BLOCKER_IS_ENEMY);
+					}
+
 					TaskFail();
 					ALERT( at_aiconsole, "%s Failed to move (%d)!\n", STRING(pev->classname), HasMemory( bits_MEMORY_MOVE_FAILED ) );
 					//ALERT( at_aiconsole, "%f, %f, %f\n", pev->origin.z, (pev->origin + (vecDir * flCheckDist)).z, m_Route[m_iRouteIndex].vecLocation.z );
