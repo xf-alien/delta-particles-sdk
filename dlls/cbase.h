@@ -167,6 +167,8 @@ public:
 	CBaseEntity			*m_pGoalEnt;// path corner we are heading towards
 	CBaseEntity			*m_pLink;// used for temporary link-list operations. 
 
+	byte m_EFlags;
+
 	CBaseEntity			*m_pMoveWith; // LRC- the entity I move with.
 	int					m_MoveWith;	//LRC- Name of that entity
 	CBaseEntity			*m_pChildMoveWith;	//LRC- one of the entities that's moving with me.
