@@ -977,7 +977,7 @@ int PM_FlyMove (void)
 
 // modify original_velocity so it parallels all of the clip planes
 //
-		if ( pmove->movetype == MOVETYPE_WALK &&
+		if ( numplanes == 1 && pmove->movetype == MOVETYPE_WALK &&
 			((pmove->onground == -1) || (pmove->friction != 1)) )	// relfect player velocity
 		{
 			for ( i = 0; i < numplanes; i++ )
@@ -2902,6 +2902,12 @@ void PM_CheckParamters( void )
 		pmove->maxspeed = min( maxspeed, pmove->maxspeed );
 	}
 
+	// Slow down, I'm pulling it! (a box maybe) but only when I'm standing on ground
+	if ( ( pmove->onground != -1 ) && ( pmove->cmd.buttons & IN_USE) )
+	{
+		pmove->maxspeed *= 1.0f / 3.0f;
+	}
+
 	if ( ( spd != 0.0 ) &&
 		 ( spd > pmove->maxspeed ) )
 	{
@@ -3027,7 +3033,9 @@ void PM_PlayerMove ( qboolean server )
 	{
 		if ( PM_CheckStuck() )
 		{
-			return;  // Can't move, we're stuck
+			PM_Duck();
+			if( PM_CheckStuck() )
+				return;  // Can't move, we're stuck
 		}
 	}
 
@@ -3076,12 +3084,6 @@ void PM_PlayerMove ( qboolean server )
 			//  it will be set immediately again next frame if necessary
 			pmove->movetype = MOVETYPE_WALK;
 		}
-	}
-
-	// Slow down, I'm pulling it! (a box maybe) but only when I'm standing on ground
-	if ( ( pmove->onground != -1 ) && ( pmove->cmd.buttons & IN_USE) )
-	{
-		VectorScale( pmove->velocity, 0.3, pmove->velocity );
 	}
 
 	// Handle movement
