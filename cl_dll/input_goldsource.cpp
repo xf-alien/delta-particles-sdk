@@ -262,6 +262,7 @@ cvar_t  *joy_advaxisz;
 cvar_t  *joy_advaxisr;
 cvar_t  *joy_advaxisu;
 cvar_t  *joy_advaxisv;
+cvar_t	*joy_supported;
 cvar_t  *joy_forwardthreshold;
 cvar_t  *joy_sidethreshold;
 cvar_t  *joy_pitchthreshold;
@@ -1587,6 +1588,7 @@ void GoldSourceInput::IN_Init (void)
 	joy_advaxisr			= gEngfuncs.pfnRegisterVariable ( "joyadvaxisr", "0", 0 );
 	joy_advaxisu			= gEngfuncs.pfnRegisterVariable ( "joyadvaxisu", "0", 0 );
 	joy_advaxisv			= gEngfuncs.pfnRegisterVariable ( "joyadvaxisv", "0", 0 );
+	joy_supported			= gEngfuncs.pfnRegisterVariable	( "joysupported", "1", 0 );
 	joy_forwardthreshold	= gEngfuncs.pfnRegisterVariable ( "joyforwardthreshold", "0.15", 0 );
 	joy_sidethreshold		= gEngfuncs.pfnRegisterVariable ( "joysidethreshold", "0.15", 0 );
 	joy_pitchthreshold		= gEngfuncs.pfnRegisterVariable ( "joypitchthreshold", "0.15", 0 );
