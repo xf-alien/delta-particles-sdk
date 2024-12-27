@@ -382,7 +382,7 @@ int CXenTree :: TakeDamage( entvars_t* pevInflictor, entvars_t* pevAttacker, flo
 		vecTemp = pevInflictor->origin - ( pev->absmin + ( pev->size * 0.5 ) );
 	}
 
-	if ( bitsDamageType & DMG_BULLET && flDamage < 36 )
+	if ( bitsDamageType & DMG_BULLET && flDamage <= 10 )
 		flDamage *= 0.1;
 
 	if ( bitsDamageType & DMG_BLAST || flDamage >= 50 )
