@@ -2209,9 +2209,16 @@ Schedule_t* Crinfantry :: GetScheduleOfType ( int Type )
 			}
 			else
 			{
-				if ( OccupySlot( bits_SLOTS_R_INFANTRY_GRENADE ) && RANDOM_LONG(0,1) )
+				if (FBitSet(pev->weapons, R_INFANTRY_HANDGRENADE))
 				{
-					return &slrinfantryGrenadeCover[ 0 ];
+					if ( OccupySlot( bits_SLOTS_R_INFANTRY_GRENADE ) && RANDOM_LONG(0,1) )
+					{
+						return &slrinfantryGrenadeCover[ 0 ];
+					}
+					else
+					{
+						return &slrinfantryTakeCover[ 0 ];
+					}
 				}
 				else
 				{

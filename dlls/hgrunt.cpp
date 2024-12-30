@@ -2442,9 +2442,16 @@ Schedule_t* CHGrunt :: GetScheduleOfType ( int Type )
 			}
 			else
 			{
-				if ( OccupySlot( bits_SLOTS_HGRUNT_GRENADE ) && RANDOM_LONG(0,1) )
+				if (FBitSet(pev->weapons, HGRUNT_HANDGRENADE))
 				{
-					return &slGruntGrenadeCover[ 0 ];
+					if ( OccupySlot( bits_SLOTS_HGRUNT_GRENADE ) && RANDOM_LONG(0,1) )
+					{
+						return &slGruntGrenadeCover[ 0 ];
+					}
+					else
+					{
+						return &slGruntTakeCover[ 0 ];
+					}
 				}
 				else
 				{
