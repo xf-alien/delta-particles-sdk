@@ -101,6 +101,7 @@ cvar_t* cl_flashlight_custom = NULL;
 cvar_t* cl_flashlight_radius = NULL;
 cvar_t* cl_flashlight_fade_distance = NULL;
 cvar_t *cl_nvgradius = NULL;
+cvar_t* cl_weapon_wallpuff = NULL;
 
 cvar_t *cl_fake_achievements = NULL;
 
@@ -414,6 +415,7 @@ void CHud :: Init( void )
 	cl_flashlight_radius = CVAR_CREATE( "cl_flashlight_radius", "100", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 	cl_flashlight_fade_distance = CVAR_CREATE( "cl_flashlight_fade_distance", "600", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 	cl_nvgradius = CVAR_CREATE( "cl_nvgradius", "450", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
+	cl_weapon_wallpuff = CVAR_CREATE( "cl_weapon_wallpuff", "1", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 
 	cl_fake_achievements = CVAR_CREATE( "cl_fake_achievements", "0", FCVAR_CLIENTDLL|FCVAR_ARCHIVE );
 
@@ -513,6 +515,15 @@ int CHud :: GetSpriteIndex( const char *SpriteName )
 	return -1; // invalid sprite
 }
 
+void CHud::LoadWallPuffSprites()
+{
+	const char* wallPuffPaths[sizeof(wallPuffs)/sizeof(wallPuffs[0])] = {"sprites/wall_puff1.spr"};
+	for (int i=0; i<sizeof(wallPuffs)/sizeof(wallPuffs[0]); ++i)
+	{
+		wallPuffs[i] = const_cast<model_t*>(gEngfuncs.GetSpritePointer(gEngfuncs.pfnSPR_Load(wallPuffPaths[i])));
+	}
+}
+
 void CHud :: VidInit( void )
 {
 #ifdef ENGINE_DEBUG
@@ -602,6 +613,8 @@ void CHud :: VidInit( void )
 
 	// assumption: number_1, number_2, etc, are all listed and loaded sequentially
 	m_HUD_number_0 = GetSpriteIndex( "number_0" );
+
+	LoadWallPuffSprites();
 
 	m_iFontHeight = m_rgrcRects[m_HUD_number_0].bottom - m_rgrcRects[m_HUD_number_0].top;
 

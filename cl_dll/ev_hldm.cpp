@@ -323,7 +323,140 @@ void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName )
 		}
 	}
 }
-void EV_HLDM_DecalGunshot( pmtrace_t *pTrace, int iBulletType, bool isSky )
+
+
+void EV_WallPuff_Wind( struct tempent_s *te, float frametime, float currenttime )
+{
+	static bool xWindDirection = true;
+	static bool yWindDirection = true;
+	static float xWindMagnitude;
+	static float yWindMagnitude;
+
+	if ( te->entity.curstate.frame > 7.0 )
+	{
+		te->entity.baseline.origin.x = 0.97 * te->entity.baseline.origin.x;
+		te->entity.baseline.origin.y = 0.97 * te->entity.baseline.origin.y;
+		te->entity.baseline.origin.z = 0.97 * te->entity.baseline.origin.z + 0.7;
+		if ( te->entity.baseline.origin.z > 70.0 )
+			te->entity.baseline.origin.z = 70.0;
+	}
+
+	if ( te->entity.curstate.frame > 6.0 )
+	{
+		xWindMagnitude += 0.075;
+		if ( xWindMagnitude > 5.0 )
+			xWindMagnitude = 5.0;
+
+		yWindMagnitude += 0.075;
+		if ( yWindMagnitude > 5.0 )
+			yWindMagnitude = 5.0;
+
+		if( xWindDirection )
+			te->entity.baseline.origin.x += xWindMagnitude;
+		else
+			te->entity.baseline.origin.x -= xWindMagnitude;
+
+		if( yWindDirection )
+			te->entity.baseline.origin.y += yWindMagnitude;
+		else
+			te->entity.baseline.origin.y -= yWindMagnitude;
+
+		if ( !gEngfuncs.pfnRandomLong(0, 10) && yWindMagnitude > 3.0 )
+		{
+			yWindMagnitude = 0;
+			yWindDirection = !yWindDirection;
+		}
+		if ( !gEngfuncs.pfnRandomLong(0, 10) && xWindMagnitude > 3.0 )
+		{
+			xWindMagnitude = 0;
+			xWindDirection = !xWindDirection;
+		}
+	}
+}
+
+void EV_SmokeRise( struct tempent_s *te, float frametime, float currenttime )
+{
+	if ( te->entity.curstate.frame > 7.0 )
+	{
+		te->entity.baseline.origin = 0.97f * te->entity.baseline.origin;
+		te->entity.baseline.origin.z += 0.7f;
+
+		if( te->entity.baseline.origin.z > 70.0f )
+			te->entity.baseline.origin.z = 70.0f;
+	}
+}
+
+void EV_HugWalls(TEMPENTITY *te, pmtrace_s *ptr)
+{
+	Vector norm = te->entity.baseline.origin.Normalize();
+	float len = te->entity.baseline.origin.Length();
+
+	/*const Vector innerNormal = ptr->plane.normal;
+	Vector v = CrossProduct(norm, innerNormal);
+	Vector projection = CrossProduct(innerNormal, v);*/
+	Vector projection = CrossProduct( CrossProduct(norm, ptr->plane.normal), ptr->plane.normal);
+
+	/*if( len <= 2000.0f )
+		len *= 1.5;
+	else len = 3000.0f;*/
+
+	te->entity.baseline.origin = projection * len;
+}
+
+void EV_CreateShotSmoke(int type, Vector origin, Vector dir, int speed, float scale, int r, int g, int b, bool wind, Vector velocity = Vector(0,0,0), int framerate = 35 )
+{
+	TEMPENTITY *te = NULL;
+	void ( *callback )( struct tempent_s *ent, float frametime, float currenttime ) = NULL;
+	model_t* wallPuffSprite = nullptr;
+
+	switch( type )
+	{
+	case SMOKE_WALLPUFF:
+		wallPuffSprite = gHUD.wallPuffs[gEngfuncs.pfnRandomLong(0, (sizeof(gHUD.wallPuffs)/sizeof(gHUD.wallPuffs[0]))-1)];
+		break;
+	default:
+		gEngfuncs.Con_DPrintf("Unknown smoketype %d\n", type);
+		return;
+	}
+
+	if( wind )
+		callback = EV_WallPuff_Wind;
+	else
+		callback = EV_SmokeRise;
+
+
+	te = gEngfuncs.pEfxAPI->CL_TempEntAlloc( origin, wallPuffSprite );
+
+	if( te )
+	{
+		te->callback = callback;
+		te->hitcallback = EV_HugWalls;
+		te->flags |= FTENT_SPRANIMATE | FTENT_COLLIDEALL | FTENT_CLIENTCUSTOM;
+		te->entity.curstate.rendermode = kRenderTransAdd;
+		te->entity.curstate.rendercolor.r = r;
+		te->entity.curstate.rendercolor.g = g;
+		te->entity.curstate.rendercolor.b = b;
+		te->entity.curstate.renderamt = gEngfuncs.pfnRandomLong( 120, 180 );
+		te->entity.curstate.scale = scale;
+		te->entity.baseline.origin = speed * dir;
+		te->entity.curstate.framerate = framerate;
+		te->frameMax = wallPuffSprite->numframes;
+		te->die = gEngfuncs.GetClientTime() + (float)te->frameMax / framerate;
+		te->entity.curstate.frame = 0;
+
+		if( velocity != Vector(0,0,0) )
+		{
+			velocity.x *= 0.9;
+			velocity.y *= 0.9;
+			velocity.z *= 0.5;
+			te->entity.baseline.origin = te->entity.baseline.origin + velocity;
+		}
+	}
+}
+
+extern cvar_t* cl_weapon_wallpuff;
+
+void EV_HLDM_DecalGunshot( pmtrace_t *pTrace, int iBulletType, char cTextureType, bool isSky )
 {
 	physent_t *pe;
 
@@ -332,7 +465,7 @@ void EV_HLDM_DecalGunshot( pmtrace_t *pTrace, int iBulletType, bool isSky )
 
 	pe = gEngfuncs.pEventAPI->EV_GetPhysent( pTrace->ent );
 
-	if ( pe && pe->solid == SOLID_BSP )
+	if ( pe && (pe->solid == SOLID_BSP || pe->movetype == MOVETYPE_PUSHSTEP) )
 	{
 		switch( iBulletType )
 		{
@@ -349,6 +482,37 @@ void EV_HLDM_DecalGunshot( pmtrace_t *pTrace, int iBulletType, bool isSky )
 			// smoke and decal
 			EV_HLDM_GunshotDecalTrace( pTrace, EV_HLDM_DamageDecal( pe ) );
 			break;
+		}
+
+		if (cl_weapon_wallpuff && cl_weapon_wallpuff->value)
+		{
+			int r, g, b;
+			r = g = b = 50;
+			if (cTextureType == CHAR_TEX_WOOD)
+			{
+				r = 75;
+				g = 42;
+				b = 15;
+			}
+			float scale = 0.5f;
+			switch (iBulletType)
+			{
+			case BULLET_PLAYER_14MM:
+				scale = 1.0f;
+				break;
+			case BULLET_PLAYER_357:
+				scale = 0.75f;
+				break;
+			case BULLET_PLAYER_44:
+				scale = 0.6f;
+				break;
+			case BULLET_PLAYER_556MM:
+				scale = 0.6f;
+				break;
+			default:
+				break;
+			}
+			EV_CreateShotSmoke( SMOKE_WALLPUFF, pTrace->endpos + pTrace->plane.normal * 5, pTrace->plane.normal, 25, scale, r, g, b, true );
 		}
 	}
 }
@@ -469,13 +633,13 @@ void EV_HLDM_FireBullets( int idx, float *forward, float *right, float *up, int 
 			case BULLET_PLAYER_9MM:
 				break;
 			case BULLET_PLAYER_556MM:
-				shouldPlayTextureSound = shouldPlayGunshotEffect = !tracer;
+				shouldPlayTextureSound = !tracer;
 				break;
 			case BULLET_PLAYER_45ACP:
-				shouldPlayTextureSound = shouldPlayGunshotEffect = !tracer;
+				shouldPlayTextureSound = !tracer;
 				break;
 			case BULLET_PLAYER_14MM:
-				shouldPlayTextureSound = shouldPlayGunshotEffect = !tracer;
+				shouldPlayTextureSound = !tracer;
 				break;
 			case BULLET_PLAYER_BUCKSHOT:
 				shouldPlayTextureSound = iShot == 1;
@@ -495,7 +659,7 @@ void EV_HLDM_FireBullets( int idx, float *forward, float *right, float *up, int 
 				}
 				if ( shouldPlayGunshotEffect )
 				{
-					EV_HLDM_DecalGunshot( &tr, iBulletType, isSky );
+					EV_HLDM_DecalGunshot( &tr, iBulletType, cTextureType, isSky );
 				}
 			}
 		}

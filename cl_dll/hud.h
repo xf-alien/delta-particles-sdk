@@ -34,6 +34,8 @@
 #include "ammo.h"
 #include "dlight.h"
 
+#include "com_model.h"
+
 #define DHN_DRAWZERO 1
 #define DHN_2DIGITS  2
 #define DHN_3DIGITS  4
@@ -822,6 +824,9 @@ public:
 
 	bool m_iHardwareMode;
 	bool hasHudScaleInEngine;
+
+	void LoadWallPuffSprites();
+	model_t* wallPuffs[1];
 };
 
 class TeamFortressViewport;
