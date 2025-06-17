@@ -1379,6 +1379,8 @@ case TASK_GET_PATH_TO_BESTSCENT:
 
 				if (m_pCine->m_fMoveTo != 6)
 					pev->origin = m_pGoalEnt->pev->origin;
+				if (m_pCine->m_fMoveTo == 4)
+					UTIL_SetOrigin(this, pev->origin);
 			}
 
 			TaskComplete();
