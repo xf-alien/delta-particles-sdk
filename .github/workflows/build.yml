@@ -7,13 +7,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-2019]
+        os: [ubuntu-latest, windows-latest]
         steamworks: [steam, non-steam]
         include:
           - os: ubuntu-latest
             cc: gcc
             cxx: g++
-          - os: windows-2019
+          - os: windows-latest
             cc: cl
             cxx: cl
     env:
@@ -72,7 +72,7 @@ jobs:
     - name: Build on Windows
       if: startsWith(matrix.os, 'windows')
       run: |
-        cmake -G "Visual Studio 16 2019" -A Win32 -B build -DCMAKE_INSTALL_PREFIX="dist" -DSTEAMWORKS_ENABLED=${{ env.STEAMWORKS_ENABLED }}
+        cmake -A Win32 -B build -DCMAKE_INSTALL_PREFIX="dist" -DSTEAMWORKS_ENABLED=${{ env.STEAMWORKS_ENABLED }}
         msbuild -verbosity:normal /property:Configuration=Release build/INSTALL.vcxproj
 
     - name: Extract branch name
