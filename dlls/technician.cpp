@@ -1138,8 +1138,8 @@ void CDeadTechnician :: Spawn( )
 	// Corpses have less health
 	pev->health			= 8;//gSkillData.scientistHealth;
 
-	int oldBody = pev->body;
-	pev->body = (oldBody % NUM_TECHNICIAN_HEADS) + NUM_TECHNICIAN_HEADS * 0;
+	if ( pev->body == -1 || pev->body == BLANK )
+		pev->body = RANDOM_LONG(0, NUM_TECHNICIAN_HEADS-2);
 	m_bloodColor = BLOOD_COLOR_RED;
 
 	pev->sequence = LookupSequence( m_szPoses[m_iPose] );
@@ -1147,11 +1147,6 @@ void CDeadTechnician :: Spawn( )
 	{
 		ALERT ( at_debug, "Dead technician with bad pose\n" );
 	}
-
-	if ( pev->body == 2 )
-	pev->body = 0;
-
-	SetBodygroup( 2, 0);
 
 	MonsterInitDead();
 }
