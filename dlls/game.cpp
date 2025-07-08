@@ -47,6 +47,7 @@ cvar_t  mp_chattime = {"mp_chattime","10", FCVAR_SERVER };
 
 cvar_t	findnearestnodefix = { "findnearestnodefix", "0", FCVAR_SERVER };
 cvar_t	linearmovedonefix = { "linearmovedonefix", "1", FCVAR_SERVER };
+cvar_t	npc_tridepth = { "npc_tridepth", "2", FCVAR_SERVER };
 
 // Engine Cvars
 cvar_t 	*g_psv_gravity = NULL;
@@ -562,6 +563,7 @@ void GameDLLInit( void )
 
 	CVAR_REGISTER (&findnearestnodefix);
 	CVAR_REGISTER (&linearmovedonefix);
+	CVAR_REGISTER (&npc_tridepth);
 
 // REGISTER CVARS FOR SKILL LEVEL STUFF
 	// Agrunt
