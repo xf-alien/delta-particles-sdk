@@ -5,3 +5,4 @@ SERVER_INSTALL_DIR=dlls # Where put server dll
 CLIENT_INSTALL_DIR=cl_dlls # Where put client dll 
 SERVER_LIBRARY_NAME=delta_particles # Library name for PC platforms
 STEAMWORKS_ENABLED=OFF # Enable steam integration
+STEAMWORKS_ENABLED_LEGACY=OFF # Enable steam integration

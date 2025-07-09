@@ -1,7 +1,7 @@
 #include "steam_integration.h"
 #include "cl_dll.h"
 
-#if STEAMWORKS_ENABLED
+#if STEAMWORKS_ENABLED || STEAMWORKS_ENABLED_LEGACY
 #include "steam/steam_api.h"
 
 static void OutputDebugString(const char* str)
@@ -154,7 +154,7 @@ CSteamAchievements*	g_SteamAchievements = NULL;
 
 void InitSteam()
 {
-#if STEAMWORKS_ENABLED
+#if STEAMWORKS_ENABLED || STEAMWORKS_ENABLED_LEGACY
     bool bRet = SteamAPI_Init();
     if (bRet)
     {
@@ -171,7 +171,7 @@ void InitSteam()
 
 void ShutdownSteam()
 {
-#if STEAMWORKS_ENABLED
+#if STEAMWORKS_ENABLED || STEAMWORKS_ENABLED_LEGACY
     SteamAPI_Shutdown();
     if (g_SteamAchievements)
     {
@@ -183,14 +183,14 @@ void ShutdownSteam()
 
 void SteamRunCallbacks()
 {
-#if STEAMWORKS_ENABLED
+#if STEAMWORKS_ENABLED || STEAMWORKS_ENABLED_LEGACY
 	SteamAPI_RunCallbacks();
 #endif
 }
 
 void SetAchievement(const char* ID)
 {
-#if STEAMWORKS_ENABLED
+#if STEAMWORKS_ENABLED || STEAMWORKS_ENABLED_LEGACY
     if (g_SteamAchievements)
 	    g_SteamAchievements->SetAchievement(ID);
 #endif
