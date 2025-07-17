@@ -4357,7 +4357,10 @@ void CBasePlayer :: UpdateClientData( void )
 				m_iFlashBattery--;
 				
 				if (!m_iFlashBattery)
+				{
 					FlashlightTurnOff();
+					NVGTurnOff();
+				}
 			}
 		}
 		else
