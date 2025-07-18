@@ -36,6 +36,8 @@ float g_fFadeDuration; //negative = fading out
 extern BEAM *pBeam;
 extern BEAM *pBeam2;
 
+extern float g_lastFOV;
+
 /// USER-DEFINED SERVER MESSAGE HANDLERS
 
 int CHud :: MsgFunc_ResetHUD(const char *pszName, int iSize, void *pbuf )
@@ -62,6 +64,8 @@ int CHud :: MsgFunc_ResetHUD(const char *pszName, int iSize, void *pbuf )
 	//LRC - reset fog
 	g_fStartDist = 0;
 	g_fEndDist = 0;
+
+	g_lastFOV = 0.0f;
 
 	return 1;
 }
